@@ -831,8 +831,11 @@
   .story-figure { margin: 48px 0; }
 
   .story-figure img {
+    display: block;
+    max-width: 320px;
     width: 100%;
     height: auto;
+    margin: 0 auto;
     border-radius: 8px;
     box-shadow: 0 16px 40px rgba(0,0,0,0.12);
   }
@@ -1067,7 +1070,93 @@
     .manifesto-text { font-size: 28px; }
     .audience h2, .reviews h2, .inside h2 { font-size: 38px; }
   }
-</style>
+
+  /* ───────── MONTH STRUCTURE ───────── */
+  .month {
+    background: var(--paper);
+    padding: 100px 24px;
+  }
+  .month-inner { max-width: 1100px; margin: 0 auto; }
+  .month-header { text-align: center; margin-bottom: 64px; }
+  .month-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 5vw, 68px);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-top: 16px;
+  }
+  .month-header em { font-style: italic; color: var(--orange); }
+  .month-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .month-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 36px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    border: 1px solid rgba(26,26,26,0.06);
+  }
+  .month-base { background: var(--turquoise-soft); }
+  .month-flow { background: var(--sand); }
+  .month-tag {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    background: rgba(255,255,255,0.55);
+    padding: 6px 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .month-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .month-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .month-card ul li {
+    padding: 8px 0 8px 24px;
+    position: relative;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .month-card ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .month-card p { font-size: 16px; line-height: 1.55; margin-bottom: 20px; }
+  .month-progression {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    color: var(--sea-deep);
+  }
+  .month-arrow { color: var(--orange); font-weight: 600; }
+
+  @media (max-width: 768px) {
+    .month { padding: 60px 16px; }
+    .month-grid { grid-template-columns: 1fr; gap: 20px; }
+    .month-card { padding: 28px 24px; }
+  }
+
+  </style>
 </head>
 <body>
 
@@ -1157,16 +1246,60 @@
 
     <div class="feature f3">
       <div class="feature-num">— 03</div>
-      <h3>Сессии <em>«вопрос-ответ»</em></h3>
-      <p>Раз в две недели — живой созвон. Разбираем то, что не помещается в чате.</p>
-      <div class="freq">2×/мес</div>
+      <h3><em>Вводный</em> созвон</h3>
+      <p>Показываю и рассказываю, как работать с AI: с чего начать, какие инструменты под какие задачи, как встроить в свою рутину.</p>
+      <div class="freq">1×/мес</div>
     </div>
 
     <div class="feature f4">
       <div class="feature-num">— 04</div>
-      <h3><em>Вайбкодим</em> вместе</h3>
-      <p>Создаём своими руками: сайт, бота-помощника, контент-машину. Без Python и магии — только Claude и вы.</p>
-      <div class="freq">2–3×/мес</div>
+      <h3><em>Вайбкодим</em> в прямом эфире</h3>
+      <p>Отвечаю на вопросы и вместе собираем проект вживую — сайт, бот, контент-машина. Без Python и магии.</p>
+      <div class="freq">1×/мес</div>
+    </div>
+
+    <div class="feature f5">
+      <div class="feature-num">— 05</div>
+      <h3><em>Q&amp;A</em> по сложным запросам</h3>
+      <p>Третий созвон месяца — разбираем глубокие задачи, помогаю решить то, что застопорилось.</p>
+      <div class="freq">1×/мес</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ MONTH STRUCTURE ═══════════ -->
+<section class="month">
+  <div class="month-inner">
+    <header class="month-header reveal">
+      <div class="section-label">как устроен месяц</div>
+      <h2>База + новый <em>инструмент</em> каждый месяц</h2>
+    </header>
+
+    <div class="month-grid reveal-stagger">
+      <div class="month-card month-base">
+        <div class="month-tag">База доступна сразу</div>
+        <h3>Заходите — и получаете базу</h3>
+        <ul>
+          <li>Какие сейчас есть AI-инструменты</li>
+          <li>Под какие задачи каждый подходит</li>
+          <li>Как установить и настроить</li>
+          <li>Как оплатить из России</li>
+        </ul>
+      </div>
+
+      <div class="month-card month-flow">
+        <div class="month-tag">Каждый месяц</div>
+        <h3>Разбираем новые инструменты</h3>
+        <p>Двигаемся от простого к сложному: сначала то, что внедряется за вечер, потом — связки и автоматизации, потом — свои мини-проекты.</p>
+        <div class="month-progression">
+          <span>простое</span>
+          <span class="month-arrow">→</span>
+          <span>связки</span>
+          <span class="month-arrow">→</span>
+          <span>проекты</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1277,8 +1410,7 @@
         <ul class="price-features">
           <li>3 поста-урока в неделю с инструментом для внедрения</li>
           <li>Ежедневные ответы на ваши вопросы в чате</li>
-          <li>2 живые сессии «вопрос-ответ» в Zoom</li>
-          <li>2–3 встречи «Вайбкодим вместе» в месяц</li>
+          <li>3 живых созвона в месяц: вводный, вайбкодим вместе, Q&amp;A по сложным запросам</li>
           <li>Все шаблоны и промпты — навсегда ваши</li>
         </ul>
 
