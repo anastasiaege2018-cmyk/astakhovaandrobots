@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Спасибо за оплату — The Breeze</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #EADAD0;
+    --sand-deep: #D4B995;
+    --sea: #3F6683;
+    --sea-deep: #1F3A52;
+    --orange: #D34C1C;
+    --yellow-bright: #F0DC2A;
+    --ink: #1A1A1A;
+    --paper: #F5EDE4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    line-height: 1.5;
+  }
+  .card {
+    max-width: 560px;
+    width: 100%;
+    background: #fff;
+    border-radius: 24px;
+    padding: 56px 40px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(31, 58, 82, 0.12);
+  }
+  .eyebrow {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(36px, 6vw, 56px);
+    line-height: 1.05;
+    margin-bottom: 24px;
+    color: var(--sea-deep);
+  }
+  h1 em {
+    color: var(--orange);
+    font-style: italic;
+  }
+  p {
+    font-size: 17px;
+    color: rgba(26, 26, 26, 0.75);
+    margin-bottom: 32px;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 36px;
+    background: var(--orange);
+    color: var(--paper);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 18px;
+    border-radius: 100px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(211, 76, 28, 0.3);
+  }
+  .note {
+    margin-top: 32px;
+    font-size: 14px;
+    color: rgba(26, 26, 26, 0.5);
+  }
+  .home-link {
+    margin-top: 16px;
+    display: inline-block;
+    font-size: 14px;
+    color: var(--sea);
+    text-decoration: none;
+  }
+  .home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="eyebrow">~ ты в потоке ~</div>
+    <h1>Спасибо!<br>Добро пожаловать в&nbsp;<em>клуб</em></h1>
+    <p>Жми кнопку ниже — попадёшь в Telegram-чат The&nbsp;Breeze. Там тебя уже ждёт первый пост-урок и тёплая среда.</p>
+    <a href="https://t.me/+ibLTFF8bCx80MGQ6" class="cta" target="_blank" rel="noopener">Зайти в клуб →</a>
+    <div class="note">Если кнопка не открывается — скопируй ссылку:<br>https://t.me/+ibLTFF8bCx80MGQ6</div>
+    <a href="/" class="home-link">← вернуться на сайт</a>
+  </div>
+</body>
+</html>
