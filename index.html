@@ -399,7 +399,7 @@
 
   .feature.f1 { grid-column: span 7; min-height: 320px; background: var(--orange); color: var(--paper); }
   .feature.f2 { grid-column: span 5; min-height: 320px; background: var(--turquoise); color: var(--paper); }
-  .feature.f3 { grid-column: span 5; min-height: 280px; background: var(--sand); color: var(--ink); }
+  .feature.f3 { grid-column: span 12; min-height: 280px; background: var(--sand); color: var(--ink); padding-right: 180px; }
   .feature.f4 { grid-column: span 7; min-height: 280px; background: var(--yellow-bright); color: var(--ink); }
 
   .feature-num { font-family: 'Fraunces', serif; font-style: italic; font-size: 14px; opacity: 0.6; margin-bottom: 24px; }
@@ -414,17 +414,18 @@
   }
 
   .feature h3 em { font-style: italic; }
-  .feature p { font-size: 16px; line-height: 1.5; max-width: 380px; opacity: 0.9; }
+  .feature p { font-size: 16px; line-height: 1.5; max-width: 560px; opacity: 0.9; padding-bottom: 8px; }
 
   .feature .freq {
     position: absolute;
-    bottom: 32px;
+    bottom: 28px;
     right: 32px;
     font-family: 'Fraunces', serif;
     font-style: italic;
-    font-size: 60px;
+    font-size: 48px;
     line-height: 1;
     opacity: 0.85;
+    pointer-events: none;
   }
 
   /* ───────── AUDIENCE АККОРДЕОН ───────── */
@@ -1030,6 +1031,7 @@
 
     .inside-header, .reviews-header { grid-template-columns: 1fr; gap: 32px; }
     .inside-grid { grid-template-columns: 1fr; }
+    .feature.f3 { padding-right: 32px; }
     .feature.f1, .feature.f2, .feature.f3, .feature.f4 { grid-column: 1 / -1; }
     .feature { padding: 32px 24px; min-height: 240px !important; }
     .feature h3 { font-size: 28px; }
@@ -1381,7 +1383,7 @@
   <div class="pricing-inner">
 
     <div class="pricing-image reveal">
-      <img src="tariff.jpg" alt="">
+      <img src="tariff.png" alt="">
     </div>
 
     <div class="pricing-text reveal">
