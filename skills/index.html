@@ -546,14 +546,6 @@
     <li>Это способ вынести из головы свои процессы и превратить их в <strong>переиспользуемые рычажки</strong> внутри Claude.</li>
   </ol>
 
-  <div class="screenshot-placeholder">
-    <div class="screenshot-placeholder-inner">
-      <div class="icon">🖼</div>
-      <div class="label">Скрин: общая схема — что такое Skill</div>
-      <div class="caption">~ диаграмма «папка → SKILL.md → шаблоны» ~</div>
-    </div>
-  </div>
-
   <hr>
 
   <!-- ─── КОГДА НАДО ─── -->
@@ -589,11 +581,32 @@
   <h3>2. Custom Skills</h3>
   <p>Навыки под твои процессы. Сделаны тобой, командой или сообществом. Готовая библиотека на GitHub: <a href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank">awesome-claude-skills</a></p>
 
-  <div class="screenshot-placeholder">
-    <div class="screenshot-placeholder-inner">
-      <div class="icon">🖼</div>
-      <div class="label">Скрин: страница awesome-claude-skills на GitHub</div>
-      <div class="caption">~ перейди по ссылке выше и сделай скрин главной страницы ~</div>
+  <div class="callout green">
+    <div class="callout-icon">💬</div>
+    <div class="callout-body">
+      <p><strong>Не понимаешь, какой скилл тебе подходит?</strong> Открой репозиторий в Chrome → запусти расширение Claude → попроси: <em>«разбери эту библиотеку скиллов и подскажи 3–5 штук под мою задачу: [опиши свою задачу]»</em>. Сэкономишь час листания.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── КАК СКАЧАТЬ С GITHUB ─── -->
+  <h2>📥 Как скачать скилл с GitHub и поставить себе</h2>
+
+  <p>Каждый custom-skill на GitHub — это папка с файлами. Чтобы он заработал в твоём Claude, надо скачать папку и упаковать в ZIP.</p>
+
+  <ol class="steps">
+    <li><strong>Открой репозиторий нужного скилла</strong>Например, <a href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank">awesome-claude-skills</a>. Внутри — много папок, каждая = отдельный скилл со своим <code>SKILL.md</code>.</li>
+    <li><strong>Скачай весь репо одним ZIP</strong>Зелёная кнопка <strong>Code</strong> справа сверху → <strong>Download ZIP</strong>. Файл прилетит в Downloads.</li>
+    <li><strong>Распакуй ZIP и найди нужную папку</strong>Двойной клик на ZIP → внутри будут все скиллы. Найди ту, что хочешь поставить.</li>
+    <li><strong>Упакуй именно эту папку обратно в ZIP</strong>Правый клик на папке → <strong>Сжать</strong> (Mac) или <strong>Отправить → Сжатая папка</strong> (Windows). Получится <code>имя-скилла.zip</code>.</li>
+    <li><strong>Загрузи в Claude</strong>Открой Customize → Skills → кнопка <strong>+</strong> сверху → <strong>Upload skill</strong> → выбери ZIP. Скилл подключился.</li>
+  </ol>
+
+  <div class="callout yellow">
+    <div class="callout-icon">⚡</div>
+    <div class="callout-body">
+      <p><strong>Лайфхак для одной папки.</strong> Если нужен один скилл, а не целый репо — открой <a href="https://download-directory.github.io/" target="_blank">download-directory.github.io</a>, вставь ссылку на нужную папку → получишь её одним ZIP без лишнего.</p>
     </div>
   </div>
 
@@ -628,10 +641,15 @@
 
   <h3>Способ 1 — из списка Skills</h3>
   <ol>
-    <li>Открой список скиллов в настройках</li>
-    <li>Нажми <strong>Try in chat</strong> / <strong>Open in chat</strong> (если кнопка есть)</li>
-    <li>Откроется чат с уже «наготове» скиллом — давай задачу</li>
+    <li>Открой список скиллов в настройках (Customize → Skills)</li>
+    <li>Кликни на нужный скилл — справа откроется его карточка с описанием и тумблером</li>
+    <li>Если включён — Claude сам подхватит его, когда задача подойдёт</li>
   </ol>
+
+  <figure class="screenshot">
+    <img src="img/03-skills-panel.png" alt="Список Skills с описанием выбранного">
+    <figcaption>Список твоих скиллов слева. Справа — описание и тумблер вкл/выкл</figcaption>
+  </figure>
 
   <h3>Способ 2 — из обычного чата</h3>
   <ol>
