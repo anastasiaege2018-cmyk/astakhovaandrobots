@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок №2 · Серфим со скиллами — The Breeze</title>
+<meta name="description" content="Урок №2 клуба The Breeze. Что такое Claude Skills, как их подключить и использовать. Задание недели.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #37352f;
+    --text-mute: #787774;
+    --text-light: #9b9a97;
+    --divider: #ebebea;
+    --hover: #f7f6f3;
+
+    /* Notion-style callout colors */
+    --yellow-bg: #fdecc8;
+    --yellow-text: #5c3a00;
+    --yellow-border: #f0c860;
+
+    --blue-bg: #d3e5ef;
+    --blue-text: #143a5d;
+    --blue-border: #8bb9d5;
+
+    --green-bg: #dbeddb;
+    --green-text: #1f3a1f;
+    --green-border: #8fbf8f;
+
+    --pink-bg: #fbe4e4;
+    --pink-text: #6e1a1a;
+    --pink-border: #e89090;
+
+    --purple-bg: #ebe1f1;
+    --purple-text: #3b1a55;
+    --purple-border: #b89dcc;
+
+    --gray-bg: #f1f1ef;
+    --gray-text: #37352f;
+
+    --orange: #d9730d;
+    --link: #2e60c2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 64px 24px 120px;
+  }
+
+  /* ─── Eyebrow ─── */
+  .eyebrow {
+    color: var(--text-mute);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  /* ─── Headings ─── */
+  h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    color: var(--text);
+  }
+
+  h2 {
+    font-size: 26px;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin-top: 56px;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+
+  h3 {
+    font-size: 18px;
+    line-height: 1.3;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  p {
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  p strong { font-weight: 600; }
+
+  a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+
+  a:hover { text-decoration-thickness: 2px; }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 48px 0;
+  }
+
+  /* ─── Inline code ─── */
+  code {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 0.88em;
+    background: var(--gray-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #c93838;
+  }
+
+  /* ─── Code block (prompt or terminal) ─── */
+  .code-block {
+    background: var(--gray-bg);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+
+  /* ─── Callouts ─── */
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 16px 18px;
+    border-radius: 6px;
+    margin: 20px 0;
+    align-items: flex-start;
+  }
+
+  .callout-icon {
+    font-size: 20px;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+
+  .callout-body { flex: 1; line-height: 1.5; }
+  .callout-body p { margin-bottom: 8px; }
+  .callout-body p:last-child { margin-bottom: 0; }
+
+  .callout.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+  .callout.blue { background: var(--blue-bg); color: var(--blue-text); }
+  .callout.green { background: var(--green-bg); color: var(--green-text); }
+  .callout.pink { background: var(--pink-bg); color: var(--pink-text); }
+  .callout.purple { background: var(--purple-bg); color: var(--purple-text); }
+  .callout.gray { background: var(--gray-bg); color: var(--text); }
+
+  .callout strong { font-weight: 600; }
+
+  /* ─── Meta-info bar (как у Notion в шапке) ─── */
+  .meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 40px;
+    padding: 16px 0;
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    font-size: 14px;
+    color: var(--text-mute);
+  }
+
+  .meta-bar div { display: flex; gap: 8px; align-items: center; }
+  .meta-bar strong { color: var(--text); font-weight: 500; }
+
+  /* ─── Lists ─── */
+  ul, ol {
+    margin: 12px 0;
+    padding-left: 26px;
+  }
+
+  ul li, ol li {
+    margin-bottom: 8px;
+    line-height: 1.55;
+  }
+
+  ul li::marker { color: var(--text-mute); }
+
+  /* ─── Checklist ─── */
+  .checklist {
+    list-style: none;
+    padding-left: 0;
+    margin: 16px 0;
+  }
+
+  .checklist li {
+    padding-left: 32px;
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  .checklist li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #2e8e3f;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  /* ─── Toggle (Notion expand/collapse) ─── */
+  details {
+    margin: 12px 0;
+    border-radius: 4px;
+  }
+
+  details summary {
+    cursor: pointer;
+    padding: 6px 0;
+    font-weight: 500;
+    list-style: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  details summary::-webkit-details-marker { display: none; }
+
+  details summary::before {
+    content: '▸';
+    color: var(--text-mute);
+    transition: transform 0.15s;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 12px;
+  }
+
+  details[open] summary::before { transform: rotate(90deg); }
+
+  details > div { padding: 6px 0 12px 20px; color: var(--text); }
+
+  /* ─── Screenshot ─── */
+  figure.screenshot {
+    margin: 24px 0;
+    border-radius: 8px;
+    background: var(--gray-bg);
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  figure.screenshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  figure.screenshot figcaption {
+    color: var(--text-mute);
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 12px 6px;
+    font-style: italic;
+  }
+
+  /* ─── Placeholder (когда скрина ещё нет) ─── */
+  .screenshot-placeholder {
+    margin: 24px 0;
+    background: var(--gray-bg);
+    border-radius: 8px;
+    padding: 6px;
+  }
+
+  .screenshot-placeholder-inner {
+    background: #fafaf9;
+    border-radius: 4px;
+    padding: 32px 24px;
+    text-align: center;
+    border: 1px dashed #d0cfca;
+  }
+
+  .screenshot-placeholder-inner .icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+  }
+
+  .screenshot-placeholder-inner .label {
+    color: var(--text-mute);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .screenshot-placeholder-inner .caption {
+    color: var(--text-light);
+    font-size: 12px;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ─── Card grid (для сценариев) ─── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .card {
+    background: var(--hover);
+    border-radius: 6px;
+    padding: 16px 18px;
+    border: 1px solid var(--divider);
+  }
+
+  .card .tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--orange);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    margin: 0 0 6px 0;
+    font-weight: 600;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--text-mute);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ─── Numbered steps ─── */
+  .steps {
+    counter-reset: s;
+    list-style: none;
+    padding-left: 0;
+    margin: 20px 0;
+  }
+
+  .steps li {
+    counter-increment: s;
+    padding-left: 44px;
+    position: relative;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .steps li::before {
+    content: counter(s);
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 28px;
+    height: 28px;
+    background: var(--yellow-bg);
+    color: var(--yellow-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .steps li strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  /* ─── Deadline-row ─── */
+  .deadline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 24px 0;
+  }
+
+  .deadline-cell {
+    background: var(--gray-bg);
+    padding: 18px 14px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .deadline-cell .label {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .deadline-cell .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .deadline-cell .sub {
+    font-size: 13px;
+    color: var(--text-mute);
+    margin-top: 4px;
+  }
+
+  /* ─── Footer ─── */
+  .end {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 14px;
+  }
+
+  .end .wave {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: var(--orange);
+  }
+
+  .end-back {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--text-mute);
+    font-size: 14px;
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid var(--divider);
+    border-radius: 100px;
+    transition: all 0.15s;
+  }
+
+  .end-back:hover {
+    background: var(--hover);
+    color: var(--text);
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 640px) {
+    .page { padding: 40px 18px 80px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 22px; margin-top: 40px; }
+    .grid { grid-template-columns: 1fr; }
+    .deadline { grid-template-columns: 1fr; }
+    .meta-bar { gap: 12px; flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<main class="page">
+
+  <!-- ─── HEADER ─── -->
+  <div class="eyebrow">📘 Урок №2 · The Breeze</div>
+  <h1>Серфим со скиллами 🌊</h1>
+
+  <p style="font-size: 18px; color: var(--text-mute); margin-bottom: 28px;">
+    Как один раз описать процесс — и получать готовый результат, больше не описывая. В любом чате, на любом устройстве.
+  </p>
+
+  <div class="meta-bar">
+    <div><span>⏱</span> <strong>15 минут</strong> на настройку</div>
+    <div><span>🎯</span> Первый рабочий <strong>Skill</strong></div>
+    <div><span>📱</span> Делаем на компе, пользуемся <strong>везде</strong></div>
+  </div>
+
+  <!-- ─── ОПОРНАЯ ИДЕЯ ─── -->
+  <div class="callout yellow">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <p><strong>Скилл — это «навык» для Claude.</strong> Один раз описала процесс — дальше Claude сам подгружает инструкции, когда видит задачу. Никаких «копирую из заметок тот промпт».</p>
+    </div>
+  </div>
+
+  <!-- ─── ЗАДАНИЕ ─── -->
+  <h2>🎯 Задание этой недели</h2>
+
+  <p>Цель — почувствовать на своей шкуре, как меняется работа, когда вместо промптов у тебя <strong>навыки</strong>.</p>
+
+  <ol class="steps">
+    <li><strong>Выбрать готовый Skill</strong>от Anthropic или из подборки сообщества на GitHub: <a href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank">awesome-claude-skills</a></li>
+    <li><strong>Протестировать на своей задаче</strong>включить, прогнать на реальном кейсе, посмотреть, как меняется результат</li>
+    <li><strong>(со звёздочкой) Создать свой Skill</strong>через мета-навык <code>skill-creator</code> — описываешь свой процесс, Claude собирает скилл за тебя</li>
+  </ol>
+
+  <div class="callout blue">
+    <div class="callout-icon">🔑</div>
+    <div class="callout-body">
+      <p><strong>Что понадобится:</strong> Claude минимум на тарифе <strong>Pro</strong>. На бесплатном Skills пока недоступны. Если ещё не оплатила — самое время.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗА ЧТО Я ЛЮБЛЮ ─── -->
+  <h2>За что я полюбила Skills</h2>
+
+  <ul>
+    <li><strong>Просто убирают рутину.</strong> Один раз описала процесс — дальше Claude делает сам.</li>
+    <li><strong>Сделала раз → работает везде.</strong> В любом чате, в проекте, на телефоне.</li>
+    <li><strong>Не забивают контекст.</strong> Claude сам решает, когда подключать скилл. Лишнего в чате не появится.</li>
+    <li><strong>Не просто пишут — реально делают.</strong> В скилл можно вшить шаблоны и сценарии: получаешь готовый отчёт, разбор таблицы, презентацию — а не просто текст.</li>
+    <li><strong>Экономят и деньги, и внимание.</strong> Вместо десятка сервисов под мелкие задачи — один Claude под твои процессы.</li>
+  </ul>
+
+  <hr>
+
+  <!-- ─── ПО-ЧЕЛОВЕЧЕСКИ ─── -->
+  <h2>По-человечески: что такое скилл</h2>
+
+  <ol>
+    <li>Скилл — это <strong>папка с инструкциями</strong>, шаблонами и иногда мини-скриптами. Claude автоматически её открывает, когда твоя задача совпадает с тем, что в навыке описано.</li>
+    <li>Внутри: <strong>описание процесса и примеры хорошего результата</strong>, иногда шаблоны документов — всё, что нужно, чтобы повторить твой стандарт.</li>
+    <li>Когда задаёшь задачу, похожую на описание скилла (например, «оформи саммари созвона по моему шаблону»), Claude <strong>сам берёт навык</strong> и работает по нему.</li>
+    <li>Один и тот же скилл <strong>работает одинаково везде</strong>: в любом чате, в проекте, на телефоне.</li>
+    <li>Это способ вынести из головы свои процессы и превратить их в <strong>переиспользуемые рычажки</strong> внутри Claude.</li>
+  </ol>
+
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: общая схема — что такое Skill</div>
+      <div class="caption">~ диаграмма «папка → SKILL.md → шаблоны» ~</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── КОГДА НАДО ─── -->
+  <h2>Когда стоит делать скилл</h2>
+
+  <p>Если совпадает хотя бы один пункт — пора заводить скилл:</p>
+
+  <ul class="checklist">
+    <li>Задача <strong>повторяется</strong> — хотя бы раз в неделю или для разных клиентов</li>
+    <li>Есть <strong>фиксированная структура результата</strong> — таблица, шаблон, отчёт, письмо</li>
+    <li>Есть <strong>пошаговый алгоритм</strong>, который соответствует твоим стандартам</li>
+    <li>Хочется иметь этот процесс <strong>под рукой в любом чате</strong> — без перепечатывания промпта</li>
+  </ul>
+
+  <div class="callout gray">
+    <div class="callout-icon">📚</div>
+    <div class="callout-body">
+      <p><strong>Логика трёх уровней:</strong></p>
+      <p>→ <strong>Project</strong> с файлами даёт <em>контекст</em> (что вокруг)</p>
+      <p>→ <strong>История чата</strong> даёт <em>локальный контекст</em> (о чём говорим прямо сейчас)</p>
+      <p>→ <strong>Skill</strong> даёт <em>процедуру</em> (как именно делать)</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ДВА ТИПА ─── -->
+  <h2>Два типа Skills</h2>
+
+  <h3>1. Anthropic Skills</h3>
+  <p>Готовые навыки от команды Anthropic. Claude вызывает их <strong>автоматически</strong>, когда видит подходящую задачу. Уже умеют: Excel, Word, PowerPoint, PDF — создавать и править документы со смысловой логикой.</p>
+
+  <h3>2. Custom Skills</h3>
+  <p>Навыки под твои процессы. Сделаны тобой, командой или сообществом. Готовая библиотека на GitHub: <a href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank">awesome-claude-skills</a></p>
+
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: страница awesome-claude-skills на GitHub</div>
+      <div class="caption">~ перейди по ссылке выше и сделай скрин главной страницы ~</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── КАК ВКЛЮЧИТЬ ─── -->
+  <h2>Где посмотреть и как включить</h2>
+
+  <ol class="steps">
+    <li><strong>Открой Settings</strong>В углу нажми на свой аватар → <strong>Settings</strong>.</li>
+    <li><strong>Найди раздел Customize</strong>Anthropic недавно перенесли Skills из Capabilities в <strong>Customize</strong>. Если случайно зайдёшь в Capabilities — там будет подсказка «Skills have moved to Customize».</li>
+    <li><strong>Открой Skills и включи нужный</strong>Там список всех навыков — Anthropic и твоих. По каждому: название, описание, триггер и тумблер вкл/выкл.</li>
+  </ol>
+
+  <figure class="screenshot">
+    <img src="img/01-menu-settings.png" alt="Открой Settings из меню профиля">
+    <figcaption>1. Кликаешь по своему профилю в углу → <strong>Settings</strong></figcaption>
+  </figure>
+
+  <figure class="screenshot">
+    <img src="img/02-capabilities.png" alt="В разделе Capabilities видно, что Skills переехали в Customize">
+    <figcaption>2. Если зашла в Capabilities — увидишь подсказку, что Skills <em>moved to Customize</em></figcaption>
+  </figure>
+
+  <figure class="screenshot">
+    <img src="img/03-skills-panel.png" alt="Skills панель с твоими навыками">
+    <figcaption>3. В Customize → Skills видны все навыки. Тумблер справа — вкл/выкл</figcaption>
+  </figure>
+
+  <!-- ─── КАК ПОЛЬЗОВАТЬСЯ ─── -->
+  <h2>Как запустить скилл в работу</h2>
+
+  <h3>Способ 1 — из списка Skills</h3>
+  <ol>
+    <li>Открой список скиллов в настройках</li>
+    <li>Нажми <strong>Try in chat</strong> / <strong>Open in chat</strong> (если кнопка есть)</li>
+    <li>Откроется чат с уже «наготове» скиллом — давай задачу</li>
+  </ol>
+
+  <h3>Способ 2 — из обычного чата</h3>
+  <ol>
+    <li>Открой новый чат с Claude</li>
+    <li>Сформулируй задачу так, чтобы она попадала в описание скилла. Например: <em>«Оформи саммари созвона по моему шаблону»</em></li>
+    <li>Или прямо подсказывай: <em>«Используй skill &lt;название_скилла&gt; для этой задачи»</em></li>
+  </ol>
+
+  <div class="callout green">
+    <div class="callout-icon">🧠</div>
+    <div class="callout-body">
+      <p>В размышлениях Claude сам пишет, какой конкретно skill он берёт или НЕ берёт в работу — можно посмотреть и понять логику.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── 8 СЦЕНАРИЕВ ─── -->
+  <h2>8 сценариев — куда пристроить скилл уже сегодня</h2>
+
+  <p>Чтобы было понятно, как это всё применить под наши с вами задачи:</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="tag">образование · общепит</div>
+      <h3>Шаблонизатор отчётов</h3>
+      <p>«Оформи отчёт по моему шаблону» — один раз описала структуру, дальше пихаешь свежие данные. Время падает в 3 раза.</p>
+    </div>
+
+    <div class="card">
+      <div class="tag">HR · поиск работы</div>
+      <h3>Регламенты one-to-one и фидбек</h3>
+      <p>Скилл с твоей структурой встречи, скриптами вопросов и саммари по итогам — всё в одном стандарте.</p>
+    </div>
+
+    <div class="card">
+      <div class="tag">психология</div>
+      <h3>Анкета первичной консультации</h3>
+      <p>Из голосового или заметок превращает встречу в структурированную анкету клиента — по твоему стандарту.</p>
+    </div>
+
+    <div class="card">
+      <div class="tag">караоке · общепит</div>
+      <h3>Разбор выручки по неделям</h3>
+      <p>«Разбери таблицу выручки» — выдаёт паттерны, лучшие/худшие дни и 3 идеи действий. Запускаешь раз в неделю.</p>
+    </div>
+
+    <div class="card">
+      <div class="tag">тендеры</div>
+      <h3>Разбор ТЗ по чек-листу</h3>
+      <p>Анализирует ТЗ по твоему стандарту: резюме, красные флаги, требования, вопросы. Каждый новый тендер — по одному алгоритму.</p>
+    </div>
+
+    <div class="card">
+      <div class="tag">контент · блог</div>
+      <h3>Пост в твоём голосе</h3>
+      <p>В скилле — твой стиль, аудитория, стоп-слова. Кидаешь идею — получаешь черновик в твоей подаче.</p>
+    </div>
+
+    <div class="card">
+      <div class="tag">бьюти-бизнес</div>
+      <h3>Карточка клиентки + апселл</h3>
+      <p>Из переписки или заметок собирает карточку: что брала, что обсуждали, какие апселлы предложить дальше.</p>
+    </div>
+
+    <div class="card">
+      <div class="tag">для всех</div>
+      <h3>Бренд-гайдлайны</h3>
+      <p>Твои цвета, шрифты, тон, логика подачи. Любой документ выходит в едином стиле, без правок «сделай в моём».</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗАДАНИЕ СО ЗВЁЗДОЧКОЙ ─── -->
+  <h2>⭐ Задание со звёздочкой: создай свой скилл</h2>
+
+  <p>Для тех, кто хочет уйти дальше: создай свой скилл через мета-навык <code>skill-creator</code>. Звучит сложно — на деле минут 20.</p>
+
+  <div class="callout pink">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body">
+      <p>Перед стартом проверь в <strong>Settings → Capabilities</strong>, что включена опция исполнения кода. Без неё skill-creator не будет работать на полную.</p>
+    </div>
+  </div>
+
+  <figure class="screenshot">
+    <img src="img/04-code-execution.png" alt="Code execution and file creation — тумблер ON">
+    <figcaption>В Capabilities → Code execution. Верхний тумблер должен быть ON</figcaption>
+  </figure>
+
+  <ol class="steps">
+    <li><strong>Найди skill-creator в списке скиллов и открой новый чат</strong>Это мета-навык: помогает создавать другие навыки.</li>
+    <li><strong>Опиши свой процесс</strong>Что хочешь автоматизировать. Skill-creator задаст уточняющие вопросы.</li>
+    <li><strong>Покажи примеры</strong>Бренд-гайды, образцы хороших отчётов, шаблоны писем. Чем точнее примеры — тем точнее скилл.</li>
+    <li><strong>Skill-creator соберёт структуру</strong>Папка с понятным именем, файл <code>SKILL.md</code> внутри, доп. файлы рядом.</li>
+    <li><strong>Загрузи готовый скилл</strong>Через <strong>Upload skill</strong>. Прогони на реальной задаче — посмотри, как меняется результат.</li>
+    <li><strong>Бонус: добавь в Cursor / Windsurf</strong>Если работаешь с кодом — там тоже можно использовать свои скиллы.</li>
+  </ol>
+
+  <h3>Структура папки скилла</h3>
+
+  <div class="code-block">skill-имя/
+  ├── SKILL.md         ← обязательный «мозг» навыка
+  ├── reference.md     ← длинные инструкции
+  ├── examples.md      ← примеры хорошего результата
+  ├── templates/       ← шаблоны документов
+  └── script.py        ← скрипты, если нужны</div>
+
+  <p style="font-size: 14px; color: var(--text-mute);">
+    Архивируешь ИМЕННО ПАПКУ (не отдельные файлы) → получается <code>skill-имя.zip</code>, внутри папка <code>skill-имя/</code> и в ней <code>SKILL.md</code>.
+  </p>
+
+  <hr>
+
+  <!-- ─── ЧТО ПРИСЛАТЬ ─── -->
+  <h2>📬 Что прислать в чат клуба</h2>
+
+  <ul>
+    <li>📸 <strong>Скрин экрана с твоим Skill</strong> в настройках Claude (раздел Skills)</li>
+    <li>📄 <strong>Короткий пример использования.</strong> Сырые данные «до» + результат «после» работы скилла. Какой выбрала и почему?</li>
+    <li>🧠 <strong>1–2 инсайта.</strong> Какой процесс стал проще. Насколько часто ты его делаешь.</li>
+    <li>⏱ <strong>Оценка времени.</strong> Сколько заняла настройка и первый успешный прогон скилла.</li>
+  </ul>
+
+  <div class="deadline">
+    <div class="deadline-cell">
+      <div class="label">⏰ Дедлайн</div>
+      <div class="value">вторник</div>
+      <div class="sub">до 23:59 МСК</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🌊 Вайбы</div>
+      <div class="value">+1 вайб</div>
+      <div class="sub">за выполнение</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🏷 Хештег</div>
+      <div class="value">#серфим</div>
+      <div class="sub">в посте/комменте</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── НА ЗАМЕТКУ ─── -->
+  <h2>🌊 Серферам на заметку</h2>
+
+  <div class="callout gray">
+    <div class="callout-icon">💬</div>
+    <div class="callout-body">
+      <p><strong>Кнопки «включить скилл прямо в диалоге» нет.</strong> Claude решает сам, когда подключать. Чтобы он внимательнее смотрел в Skills — добавь в Custom Instructions:</p>
+    </div>
+  </div>
+
+  <div class="code-block">Твоя обязанность — перед каждым ответом проверять описание
+доступных Skills и при малейшем совпадении задачи с описанием
+Skill загружать его и работать через него.
+Приоритет: сначала Skills, потом общие знания.</div>
+
+  <ul>
+    <li><strong>Описание скилла важнее, чем кажется.</strong> Claude решает по полю <code>description</code>, что подключать. Пиши в формате <em>«Используй этот Skill, когда…»</em>, а не «вообще про всё».</li>
+    <li><strong>Один скилл — одна задача.</strong> Не пихай в один и саммари созвонов, и генерацию лендингов, и проверку договоров. Лучше три маленьких, чем один монстр.</li>
+    <li><strong>Чем компактнее SKILL.md — тем лучше.</strong> Структуры «Назначение / Вход / Выход / Правила / Примеры» обычно достаточно.</li>
+    <li><strong>Не зашивай в скилл секреты.</strong> Никаких API-ключей, паролей, приватных URL. Skills — это документация и алгоритмы, а не сейф.</li>
+    <li><strong>Не загружается?</strong> Проверь, что архив содержит ПАПКУ с <code>SKILL.md</code> внутри, а не разрозненные файлы. И что YAML-шапка в начале правильно оформлена.</li>
+  </ul>
+
+  <hr>
+
+  <!-- ─── АЛЬТЕРНАТИВЫ ─── -->
+  <h2>🌀 Похожее в других экосистемах</h2>
+
+  <details>
+    <summary><strong>Gemini Apps &amp; Workflows</strong> — для тех, кто живёт в Google</summary>
+    <div>
+      Сценарии и источники внутри экосистемы Google (Docs, Drive, Sheets). Удобно, если основная работа там. <a href="https://gemini.google.com/" target="_blank">gemini.google.com</a>
+    </div>
+  </details>
+
+  <details>
+    <summary><strong>Notion AI + шаблоны</strong> — если живёшь в Notion</summary>
+    <div>
+      Автоматизация заметок и баз в рамках воркспейса. Меньше гибкости вне Notion, но если ты там — ок. <a href="https://www.notion.so/product/ai" target="_blank">notion.so/ai</a>
+    </div>
+  </details>
+
+  <!-- ─── END ─── -->
+  <div class="end">
+    <div class="wave">~ серфим ~</div>
+    <p>с любовью, Настя ✦</p>
+    <a href="/" class="end-back">← обратно в клуб</a>
+  </div>
+
+</main>
+
+</body>
+</html>
