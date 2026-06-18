@@ -125,7 +125,7 @@
   .code-block {
     background: var(--gray-bg);
     border-radius: 6px;
-    padding: 18px 20px;
+    padding: 46px 20px 18px;
     margin: 16px 0;
     font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
     font-size: 13.5px;
@@ -142,6 +142,39 @@
     padding: 1px 6px;
     border-radius: 4px;
     font-weight: 600;
+  }
+
+  /* Copy button */
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ffffff;
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .copy-btn:hover {
+    background: var(--yellow-bg);
+    color: var(--yellow-text);
+    border-color: var(--yellow-text);
+  }
+
+  .copy-btn.copied {
+    background: #dbeddb;
+    color: #1f3a1f;
+    border-color: #1f3a1f;
   }
 
   .copy-hint {
@@ -460,18 +493,24 @@
     </div>
   </div>
 
-  <div class="screenshot-placeholder">
-    <div class="screenshot-placeholder-inner">
-      <div class="icon">🖼</div>
-      <div class="label">Скрин: пример Artifact в правой панели Claude</div>
-      <div class="caption">~ как выглядит «живая» страница в чате ~</div>
-    </div>
-  </div>
-
   <div class="callout blue">
     <div class="callout-icon">🆓</div>
     <div class="callout-body">
       <p><strong>Pro не обязателен.</strong> Artifacts работают на бесплатном тарифе Claude. Если ещё не оплатила — это твой урок без блокеров.</p>
+    </div>
+  </div>
+
+  <div class="callout purple">
+    <div class="callout-icon">🛠</div>
+    <div class="callout-body">
+      <p><strong>Хочешь подставить свои картинки и серьёзно дотюнить дизайн?</strong> Лучше открой Claude в <strong>Cowork-режиме</strong> (это Claude в десктопном приложении с доступом к твоей папке). Складываешь картинки в папку, говоришь Claude: «возьми из папки фото и подставь в карусель вместо плейсхолдеров» — и он подставит их прямо в HTML. Artifacts в обычном чате так не умеют.</p>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-icon">📁</div>
+    <div class="callout-body">
+      <p><strong>Делаешь карусели регулярно?</strong> Один раз сделай дамп профиля: в отдельном чате расскажи Claude о себе, своём блоге, аудитории, стиле и стоп-словах → попроси: <em>«выгрузи всё в файл .md»</em>. Сохрани этот файл. Дальше в каждый новый чат с промптом для карусели <strong>прикрепляй этот .md</strong> — текст будет звучать в твоём ТОВ с первого раза, без правок.</p>
     </div>
   </div>
 
@@ -583,7 +622,7 @@
     </div>
   </div>
 
-  <div class="code-block">Создай интерактивную Instagram-карусель в формате Artifact как одностраничное веб-приложение (HTML/CSS/JS в одном файле, без внешних библиотек).
+  <div class="code-block"><button class="copy-btn" type="button" aria-label="Скопировать промпт">📋 Скопировать</button>Создай интерактивную Instagram-карусель в формате Artifact как одностраничное веб-приложение (HTML/CSS/JS в одном файле, без внешних библиотек).
 
 Главное требование:
 это должно визуально восприниматься именно как Instagram-карусель для экспертного блога, а не как обычная веб-страница с кнопками. По стилю и подаче — максимально близко к современным Instagram-каруселям: крупные акцентные заголовки, чистая вёрстка, выразительная типографика, карточная композиция, ощущение «готового поста».
@@ -658,7 +697,7 @@
     </div>
   </div>
 
-  <div class="code-block">Сделай интерактивную Instagram-карусель в формате Artifact из моего готового текста.
+  <div class="code-block"><button class="copy-btn" type="button" aria-label="Скопировать промпт">📋 Скопировать</button>Сделай интерактивную Instagram-карусель в формате Artifact из моего готового текста.
 
 Мой текст:
 """
@@ -759,15 +798,15 @@
   <ol class="steps">
     <li><strong>Сначала собери черновик в Claude</strong>В новом чате попроси: <em>«Сделай контент для карусели на 7 слайдов на тему [твоя тема]. Для каждого слайда: заголовок до 8 слов + одна мысль в 1–2 предложения + один совет. Тон тёплый, без воды».</em> Получишь готовую структуру текстом.</li>
     <li><strong>Открой Gamma → New → Generate</strong>На <a href="https://gamma.app/" target="_blank">gamma.app</a> создай аккаунт (бесплатно), нажми <strong>New → Generate</strong>.</li>
-    <li><strong>Выбери формат</strong>Gamma спросит, что генерировать — выбери <strong>Social</strong> или <strong>Cards</strong> для карусели (Presentation тоже подходит, если нужны широкие слайды).</li>
+    <li><strong>Выбери формат</strong>Gamma спросит, что генерировать — выбери <strong>Social</strong> или <strong>Cards</strong> для карусели (Presentation тоже подходит, если нужны широкие слайды).
+      <figure class="screenshot" style="margin: 16px 0 8px;">
+        <img src="img/06-gamma-formats.png" alt="Gamma — выбор формата">
+        <figcaption>Выбор формата: Social / Cards / Presentation</figcaption>
+      </figure>
+    </li>
     <li><strong>Вставь черновик от Claude</strong>Gamma попросит описать тему — вставь структуру из Claude и нажми <strong>Generate</strong>. Через 30 секунд готовая презентация в редакторе.</li>
     <li><strong>Экспорти как картинки</strong>В меню <strong>Share → Export → PNG</strong>. Скачиваешь каждый слайд как картинку.</li>
   </ol>
-
-  <figure class="screenshot">
-    <img src="img/06-gamma-formats.png" alt="Gamma — выбор формата">
-    <figcaption>Выбор формата в Gamma: Social / Cards / Presentation</figcaption>
-  </figure>
 
   <div class="callout gray">
     <div class="callout-icon">⚖️</div>
@@ -830,20 +869,6 @@
     <li><strong>Визуал тоже можно крутить.</strong> Скажи: <em>«сделай ещё 3 цветовых концепции этой карусели»</em> — Claude перерисует. Выбери ту, что попадает в твой блог.</li>
   </ul>
 
-  <div class="callout purple">
-    <div class="callout-icon">🛠</div>
-    <div class="callout-body">
-      <p><strong>Хочешь подставить свои картинки и серьёзно дотюнить дизайн?</strong> Лучше открой Claude в <strong>Cowork-режиме</strong> (это Claude в десктопном приложении с доступом к твоей папке). Складываешь картинки в папку, говоришь Claude: «возьми из папки фото и подставь в карусель вместо плейсхолдеров» — и он подставит их прямо в HTML. Artifacts в обычном чате так не умеют.</p>
-    </div>
-  </div>
-
-  <div class="callout green">
-    <div class="callout-icon">📁</div>
-    <div class="callout-body">
-      <p><strong>Делаешь карусели регулярно?</strong> Один раз сделай дамп профиля: в отдельном чате расскажи Claude о себе, своём блоге, аудитории, стиле и стоп-словах → попроси: <em>«выгрузи всё в файл .md»</em>. Сохрани этот файл. Дальше в каждый новый чат с промптом для карусели <strong>прикрепляй этот .md</strong> — текст будет звучать в твоём ТОВ с первого раза, без правок.</p>
-    </div>
-  </div>
-
   <hr>
 
   <!-- ─── АЛЬТЕРНАТИВЫ ─── -->
@@ -863,6 +888,45 @@
   </div>
 
 </main>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var block = btn.parentElement.cloneNode(true);
+      var clone = block.querySelector('.copy-btn');
+      if (clone) clone.remove();
+      var text = block.textContent.trim();
+      var done = function() {
+        var original = '📋 Скопировать';
+        btn.textContent = '✓ Скопировано';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function() {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          done();
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
