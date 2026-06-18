@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок №3 · Карусели за 5 минут — The Breeze</title>
+<meta name="description" content="Урок №3 клуба The Breeze. Как сделать Instagram-карусель за 5 минут через Claude Artifacts или Gamma.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #37352f;
+    --text-mute: #787774;
+    --text-light: #9b9a97;
+    --divider: #ebebea;
+    --hover: #f7f6f3;
+
+    --yellow-bg: #fdecc8;
+    --yellow-text: #5c3a00;
+    --blue-bg: #d3e5ef;
+    --blue-text: #143a5d;
+    --green-bg: #dbeddb;
+    --green-text: #1f3a1f;
+    --pink-bg: #fbe4e4;
+    --pink-text: #6e1a1a;
+    --purple-bg: #ebe1f1;
+    --purple-text: #3b1a55;
+    --gray-bg: #f1f1ef;
+
+    --orange: #d9730d;
+    --link: #2e60c2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--yellow-bg); color: var(--yellow-text); }
+
+  .page {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 64px 24px 120px;
+  }
+
+  .eyebrow {
+    color: var(--text-mute);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    color: var(--text);
+  }
+
+  h2 {
+    font-size: 26px;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin-top: 56px;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+
+  h3 {
+    font-size: 18px;
+    line-height: 1.3;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  p {
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  p strong { font-weight: 600; }
+
+  a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+
+  a:hover { text-decoration-thickness: 2px; }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 48px 0;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 0.88em;
+    background: var(--gray-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #c93838;
+  }
+
+  /* Code block (промпт) */
+  .code-block {
+    background: var(--gray-bg);
+    border-radius: 6px;
+    padding: 18px 20px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    position: relative;
+  }
+
+  .code-block .placeholder {
+    background: var(--yellow-bg);
+    color: var(--yellow-text);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .copy-hint {
+    color: var(--text-light);
+    font-size: 12px;
+    margin-top: -8px;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  /* Callouts */
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 16px 18px;
+    border-radius: 6px;
+    margin: 20px 0;
+    align-items: flex-start;
+  }
+
+  .callout-icon { font-size: 20px; line-height: 1.4; flex-shrink: 0; }
+  .callout-body { flex: 1; line-height: 1.5; }
+  .callout-body p { margin-bottom: 8px; }
+  .callout-body p:last-child { margin-bottom: 0; }
+
+  .callout.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+  .callout.blue { background: var(--blue-bg); color: var(--blue-text); }
+  .callout.green { background: var(--green-bg); color: var(--green-text); }
+  .callout.pink { background: var(--pink-bg); color: var(--pink-text); }
+  .callout.purple { background: var(--purple-bg); color: var(--purple-text); }
+  .callout.gray { background: var(--gray-bg); color: var(--text); }
+
+  .callout strong { font-weight: 600; }
+
+  /* Meta bar */
+  .meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 40px;
+    padding: 16px 0;
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    font-size: 14px;
+    color: var(--text-mute);
+  }
+
+  .meta-bar div { display: flex; gap: 8px; align-items: center; }
+  .meta-bar strong { color: var(--text); font-weight: 500; }
+
+  ul, ol { margin: 12px 0; padding-left: 26px; }
+  ul li, ol li { margin-bottom: 8px; line-height: 1.55; }
+  ul li::marker { color: var(--text-mute); }
+
+  /* Steps */
+  .steps {
+    counter-reset: s;
+    list-style: none;
+    padding-left: 0;
+    margin: 20px 0;
+  }
+
+  .steps li {
+    counter-increment: s;
+    padding-left: 44px;
+    position: relative;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .steps li::before {
+    content: counter(s);
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 28px;
+    height: 28px;
+    background: var(--yellow-bg);
+    color: var(--yellow-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .steps li strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  /* Path tabs */
+  .path-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 64px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--text);
+  }
+
+  .path-header .badge {
+    background: var(--text);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .path-header h2 {
+    margin: 0;
+    font-size: 26px;
+  }
+
+  /* Topic list */
+  .topic-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .topic-list .topic {
+    background: var(--hover);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .topic .niche {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--orange);
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* Screenshot */
+  figure.screenshot {
+    margin: 24px 0;
+    border-radius: 8px;
+    background: var(--gray-bg);
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  figure.screenshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  figure.screenshot figcaption {
+    color: var(--text-mute);
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 12px 6px;
+    font-style: italic;
+  }
+
+  .screenshot-placeholder {
+    margin: 24px 0;
+    background: var(--gray-bg);
+    border-radius: 8px;
+    padding: 6px;
+  }
+
+  .screenshot-placeholder-inner {
+    background: #fafaf9;
+    border-radius: 4px;
+    padding: 32px 24px;
+    text-align: center;
+    border: 1px dashed #d0cfca;
+  }
+
+  .screenshot-placeholder-inner .icon { font-size: 28px; margin-bottom: 8px; opacity: 0.5; }
+  .screenshot-placeholder-inner .label { color: var(--text-mute); font-size: 13px; font-weight: 500; }
+  .screenshot-placeholder-inner .caption { color: var(--text-light); font-size: 12px; margin-top: 6px; font-style: italic; }
+
+  /* Deadline row */
+  .deadline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 24px 0;
+  }
+
+  .deadline-cell {
+    background: var(--gray-bg);
+    padding: 18px 14px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .deadline-cell .label {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .deadline-cell .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .deadline-cell .sub {
+    font-size: 13px;
+    color: var(--text-mute);
+    margin-top: 4px;
+  }
+
+  /* Compare table */
+  .compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+
+  .compare th, .compare td {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .compare th {
+    background: var(--hover);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .compare tr.highlight td {
+    background: var(--yellow-bg);
+    font-weight: 500;
+    color: var(--yellow-text);
+  }
+
+  /* Footer */
+  .end {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 14px;
+  }
+
+  .end .wave {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: var(--orange);
+  }
+
+  .end-back {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--text-mute);
+    font-size: 14px;
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid var(--divider);
+    border-radius: 100px;
+    transition: all 0.15s;
+  }
+
+  .end-back:hover { background: var(--hover); color: var(--text); }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 18px 80px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 22px; margin-top: 40px; }
+    .topic-list { grid-template-columns: 1fr; }
+    .deadline { grid-template-columns: 1fr; }
+    .meta-bar { gap: 12px; flex-direction: column; }
+    .compare { font-size: 13px; }
+    .compare th, .compare td { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<main class="page">
+
+  <div class="eyebrow">📘 Урок №3 · The Breeze</div>
+  <h1>Карусель за 5 минут 📳</h1>
+
+  <p style="font-size: 18px; color: var(--text-mute); margin-bottom: 28px;">
+    Описала тему — получила 7 готовых слайдов для Instagram. Без Canva, без дизайнера, без двух дней.
+  </p>
+
+  <div class="meta-bar">
+    <div><span>⏱</span> <strong>5–10 минут</strong></div>
+    <div><span>🆓</span> Бесплатной версии <strong>хватит</strong></div>
+    <div><span>📱</span> Делать можно с <strong>телефона и компа</strong></div>
+  </div>
+
+  <!-- ─── ГЛАВНАЯ ИДЕЯ ─── -->
+  <div class="callout yellow">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <p><strong>Artifact — это «живая» страница в чате с Claude.</strong> Ты описываешь, что хочешь, — получаешь готовый интерактивный визуал прямо в окне чата. Можно листать, переключать темы, поправлять на лету.</p>
+    </div>
+  </div>
+
+  <!-- ─── ЗАДАНИЕ ─── -->
+  <h2>🎯 Задание этой недели</h2>
+
+  <p>Цель — выпустить одну живую карусель под СВОЮ тему. Никакой Canva, никакого дизайнера. 5 минут — и пост.</p>
+
+  <ol class="steps">
+    <li><strong>Выбрать тему карусели</strong>Возьми из списка ниже или придумай свою — что-то полезное для твоей аудитории.</li>
+    <li><strong>Отправить промпт в Claude</strong>Промпт уже готов — копируешь, вставляешь свою тему вместо жёлтой плашки.</li>
+    <li><strong>Сохранить 7 слайдов скринами</strong>Прокликать каждый, скринить, сложить в Telegram-чат клуба.</li>
+  </ol>
+
+  <div class="callout blue">
+    <div class="callout-icon">🆓</div>
+    <div class="callout-body">
+      <p><strong>Pro не обязателен.</strong> Artifacts работают на бесплатном тарифе Claude. Если ты ещё не оплатила — это твой урок без блокеров.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗА ЧТО ─── -->
+  <h2>За что я полюбила этот формат</h2>
+
+  <ul>
+    <li><strong>Контент за минуты, не за дни.</strong> Описала структуру и тему → получила готовый визуал. Не нужны дизайнер и даже Canva.</li>
+    <li><strong>Живой прототип вместо статики.</strong> Карусель с кнопками, анимациями и переключателем темы. Можно покрутить, показать, докрутить в том же чате.</li>
+    <li><strong>Один шаблон — бесконечные темы.</strong> Тот же промпт под чеклисты, лайфхаки, мифы, ошибки. Сегодня — пост в блог, завтра — лид-магнит.</li>
+    <li><strong>Главное — это бесплатно.</strong> Раньше: дизайнер на фрилансе 3–5 тысяч ₽ и 1–3 дня. Теперь: 0 ₽ и 5 минут.</li>
+  </ul>
+
+  <hr>
+
+  <!-- ─── ГДЕ ПРИМЕНИТЬ ─── -->
+  <h2>Где это пригодится</h2>
+
+  <ul>
+    <li><strong>Экспертный пост в блог</strong> — превратить список «5 ошибок» / «7 лайфхаков» в визуальную карусель</li>
+    <li><strong>Учебный материал</strong> — структурировать урок или гайд в формате слайдов</li>
+    <li><strong>Презентация идеи клиенту</strong> — после встречи прислать не саммари в Word, а карусель «вот мои выводы»</li>
+    <li><strong>Лид-магнит</strong> — «7 шагов до …» в обмен на подписку</li>
+    <li><strong>Чек-лист команде</strong> — внутренние гайды, регламенты, памятки</li>
+  </ul>
+
+  <!-- ═══ PATH A — ARTIFACTS ═══ -->
+  <div class="path-header">
+    <span class="badge">ПУТЬ А</span>
+    <h2>Claude Artifacts — главный способ</h2>
+  </div>
+
+  <p>Это самый универсальный путь: бесплатно, гибко, можно подкрутить под себя. Получается интерактивный прототип, из которого делаются скриншоты для Instagram.</p>
+
+  <h3>Шаг 1. Выбери свою тему</h3>
+
+  <p>Возьми одну из этих или придумай свою:</p>
+
+  <div class="topic-list">
+    <div class="topic">
+      <span class="niche">главная</span>
+      5 задач, которые я отдала AI на этой неделе
+    </div>
+    <div class="topic">
+      <span class="niche">контент / блог</span>
+      7 ошибок, из-за которых посты не цепляют
+    </div>
+    <div class="topic">
+      <span class="niche">HR / поиск работы</span>
+      5 признаков, что пора менять работу
+    </div>
+    <div class="topic">
+      <span class="niche">психология</span>
+      7 фраз, которые ломают разговор с близким
+    </div>
+    <div class="topic">
+      <span class="niche">бьюти-бизнес</span>
+      5 услуг, которые повышают средний чек
+    </div>
+    <div class="topic">
+      <span class="niche">караоке / общепит</span>
+      7 фишек, чтобы будни приносили выручку
+    </div>
+    <div class="topic">
+      <span class="niche">тендеры</span>
+      5 красных флагов в техзадании
+    </div>
+    <div class="topic">
+      <span class="niche">образование</span>
+      7 шагов организовать самоподготовку ребёнку
+    </div>
+  </div>
+
+  <div class="callout purple">
+    <div class="callout-icon">✨</div>
+    <div class="callout-body">
+      <p><strong>Можно придумать свою.</strong> Любой список «5–7 пунктов на тему X» отлично ложится в формат карусели. Если сомневаешься в теме — спроси Claude отдельно: <em>«Дай 10 идей карусели под мою нишу: [твоя ниша]»</em>.</p>
+    </div>
+  </div>
+
+  <h3>Шаг 2. Открой Claude и отправь промпт</h3>
+
+  <p>Зайди на <a href="https://claude.ai/" target="_blank">claude.ai</a>, открой новый чат, скопируй промпт ниже. Замени жёлтую плашку «Тема карусели» на свою.</p>
+
+  <div class="code-block">Создай интерактивную Instagram-карусель в формате Artifact как одностраничное веб-приложение (HTML/CSS/JS в одном файле, без внешних библиотек).
+
+Главное требование:
+это должно визуально восприниматься именно как Instagram-карусель для экспертного блога, а не как обычная веб-страница с кнопками. По стилю и подаче — максимально близко к современным Instagram-каруселям: крупные акцентные заголовки, чистая вёрстка, выразительная типографика, карточная композиция, ощущение «готового поста».
+
+Тема карусели:
+«<span class="placeholder">ВСТАВЬ СВОЮ ТЕМУ</span>»
+
+Формат:
+- 7 слайдов
+- соотношение сторон 4:5
+- адаптивно под мобильный
+- вся композиция центрирована
+
+Структура:
+1. Обложка: цепкий заголовок + обещание пользы — самый сильный слайд
+2–6. Пять основных пунктов
+7. Финальный CTA: «сохрани», «отправь подруге», «подпишись»
+
+Контент каждого слайда:
+- заголовок до 8 слов
+- 1 ключевая мысль в 1–2 коротких предложениях
+- мини-блок «Что делать вместо этого» (или «Как сделать иначе»)
+- текст плотный, без воды
+- тон: тёплый, экспертный, по-человечески
+
+Визуально:
+- не делай как обычный сайт или презентацию
+- никаких больших веб-кнопок
+- каждый слайд — дизайнерская карточка для Instagram
+- крупный заголовок, воздух, аккуратные отступы
+- современный clean-стиль
+- ощущение premium / expert blog
+
+Обязательная safe-area (рамка):
+- вокруг каждого слайда — аккуратная видимая рамка области захвата
+- внутри рамки — весь ключевой контент в формате 4:5
+- рамка постоянная на всех слайдах
+- за пределами рамки — минимум интерфейса
+
+Интерактив:
+- верхний прогресс-бар
+- индикатор «Слайд X / 7»
+- точки-индикаторы внизу
+- кнопки назад/далее (ненавязчивые)
+- переключатель light/dark
+- плавные анимации (fade + лёгкий slide)
+
+Дизайн:
+- 2 темы: light и dark
+- акцентный цвет для CTA и активных элементов
+- читаемая типографика
+- мягкие градиенты, тонкие разделители
+- запрещено: «прокачаем», «мощно», «успешный успех»
+
+Контент слайдов придумай сам, на русском.
+Тексты — короткие, сильные, под реальный экспертный пост.
+
+Технически:
+- один HTML-файл
+- весь CSS и JS внутри
+- без внешних библиотек
+- без ошибок в консоли
+
+Сначала сделай визуал, потом интерактив. Покажи готовый artifact сразу.</div>
+
+  <p class="copy-hint">~ скопируй блок выше, замени тему, отправь Claude в новом чате ~</p>
+
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: как выглядит Artifact в правой панели Claude</div>
+      <div class="caption">~ первый слайд карусели в режиме предпросмотра ~</div>
+    </div>
+  </div>
+
+  <h3>Шаг 3. Проверь интерактив</h3>
+
+  <p>Прокликай карусель сразу, чтобы убедиться:</p>
+
+  <ul>
+    <li>Стрелки «Далее / Назад» переключают слайды</li>
+    <li>Точки внизу работают — можно прыгнуть на 4-й слайд напрямую</li>
+    <li>Переключатель light/dark — обе темы выглядят прилично</li>
+    <li>Прогресс-бар сверху показывает «Слайд X / 7»</li>
+    <li>Контент внутри рамки 4:5 — не вылезает за края</li>
+  </ul>
+
+  <div class="callout green">
+    <div class="callout-icon">🛠</div>
+    <div class="callout-body">
+      <p><strong>Что-то не так?</strong> Просто напиши Claude в этот же чат: <em>«перегруппируй слайд 3 — слишком много текста»</em> или <em>«сделай тёмную тему контрастнее»</em>. Он перерисует artifact на лету.</p>
+    </div>
+  </div>
+
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: пример готовой карусели — обложка + один слайд</div>
+      <div class="caption">~ хорошо видна рамка 4:5 для скрина ~</div>
+    </div>
+  </div>
+
+  <h3>Шаг 4. Сохрани 7 слайдов</h3>
+
+  <p>Artifact — это страница в браузере, а не пост. Чтобы выложить в Instagram, нужны скриншоты каждого слайда.</p>
+
+  <ul>
+    <li><strong>Mac:</strong> <code>Cmd + Shift + 4</code> → выдели область внутри рамки</li>
+    <li><strong>Windows:</strong> <code>Win + Shift + S</code> → область</li>
+    <li><strong>Телефон:</strong> обычный скриншот + кадрирование по рамке</li>
+  </ul>
+
+  <p>Получается 7 картинок = карусель готова к публикации.</p>
+
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: как делать скрин области в Mac (Cmd+Shift+4)</div>
+    </div>
+  </div>
+
+  <!-- ═══ PATH B — GAMMA ═══ -->
+  <div class="path-header">
+    <span class="badge">ПУТЬ Б</span>
+    <h2>Gamma — если хочется красиво и сразу</h2>
+  </div>
+
+  <p>Если артефакты кажутся «техничными» и хочется получить более полированный, дизайнерский визуал без возни со скринами — есть второй путь через <a href="https://gamma.app/" target="_blank">Gamma</a>. Это онлайн-сервис, который умеет делать слайды и карусели из текстового описания.</p>
+
+  <div class="callout pink">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body">
+      <p><strong>Gamma бесплатна, но с лимитом.</strong> На стартовом тарифе 400 кредитов на создание (хватает на 1–2 проекта). Дальше — платно либо ждёшь обновление баланса. Хороший вариант для разового красивого результата.</p>
+    </div>
+  </div>
+
+  <h3>Как через Gamma</h3>
+
+  <ol class="steps">
+    <li><strong>Сначала собери черновик в Claude</strong>В новом чате попроси: <em>«Сделай контент для карусели на 7 слайдов на тему [твоя тема]. Для каждого слайда: заголовок до 8 слов + одна мысль в 1–2 предложения + один совет. Тон тёплый, без воды».</em> Получишь готовую структуру текстом.</li>
+    <li><strong>Открой Gamma → New presentation → Generate</strong>На <a href="https://gamma.app/" target="_blank">gamma.app</a> создай аккаунт (бесплатно), нажми <strong>New → Generate</strong>.</li>
+    <li><strong>Вставь черновик от Claude как Prompt</strong>Gamma попросит описать, что генерировать. Вставь структуру из Claude, выбери <strong>Cards</strong> (если есть такой формат) или <strong>Presentation</strong>.</li>
+    <li><strong>Выбери стиль и сгенерируй</strong>Gamma предложит шаблоны — выбери минималистичный, нажми <strong>Generate</strong>. Через 30 секунд готовая презентация в редакторе.</li>
+    <li><strong>Экспорти как картинки</strong>В меню <strong>Share → Export → PNG</strong>. Скачиваешь каждый слайд как картинку.</li>
+  </ol>
+
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: Gamma «New presentation → Generate»</div>
+      <div class="caption">~ окно генерации с полем для промпта ~</div>
+    </div>
+  </div>
+
+  <div class="callout gray">
+    <div class="callout-icon">⚖️</div>
+    <div class="callout-body">
+      <p><strong>Когда что выбирать.</strong></p>
+      <p>→ Хочешь интерактив, гибкость, бесплатно — <strong>Artifacts</strong>.</p>
+      <p>→ Хочешь сразу полированный визуал, без скринов — <strong>Gamma</strong>.</p>
+      <p>→ Попробуй оба и выбери, что тебе ближе. У всех разный вкус.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЧТО ПРИСЛАТЬ ─── -->
+  <h2>📬 Что прислать в чат клуба</h2>
+
+  <ul>
+    <li>📸 <strong>Скрины своей карусели</strong> — все 7 слайдов или коллажем</li>
+    <li>🎯 <strong>Какую тему взяла</strong> — из списка или своя</li>
+    <li>🧠 <strong>Как думаешь применить</strong> — в блог, для клиента, для команды</li>
+  </ul>
+
+  <div class="deadline">
+    <div class="deadline-cell">
+      <div class="label">⏰ Дедлайн</div>
+      <div class="value">вторник</div>
+      <div class="sub">до 23:59 МСК</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🌊 Вайбы</div>
+      <div class="value">+1 вайб</div>
+      <div class="sub">за выполнение</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🏷 Хештег</div>
+      <div class="value">#серфим</div>
+      <div class="sub">в посте/комменте</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗАДАНИЕ СО ЗВЁЗДОЧКОЙ ─── -->
+  <h2>⭐ Задание со звёздочкой</h2>
+
+  <p>Прогони тот же промпт в <strong>ChatGPT Canvas</strong> и в <strong>Gemini</strong>. Сравни результат с Claude Artifacts. Чьё лучше зашло — расскажи в чате.</p>
+
+  <p>Это база для следующего урока (вайбкодинг) — поймёшь, как разные модели понимают визуальные задачи.</p>
+
+  <hr>
+
+  <!-- ─── НА ЗАМЕТКУ ─── -->
+  <h2>🌊 Серферам на заметку</h2>
+
+  <ul>
+    <li><strong>Промпт — это бриф дизайнеру.</strong> Чем конкретнее ты описала формат (4:5, прогресс-бар, темы, рамка) — тем точнее результат с первого раза. «Сделай красиво» = лотерея.</li>
+    <li><strong>Artifact ≠ готовый пост.</strong> Это интерактивная страница. Для Instagram нужны скрины. Это 2 минуты.</li>
+    <li><strong>Один артефакт — много форматов.</strong> Спроси Claude: <em>«адаптируй эту карусель в формат 9:16 для сторис»</em> — получишь второй вариант без переделки.</li>
+    <li><strong>Не перегружай слайды.</strong> Заголовок до 8 слов, мысль — 1–2 предложения. Не читается с телефона за 3 секунды — сокращай. Или попроси Claude: <em>«дай 3 более лаконичные версии»</em>.</li>
+    <li><strong>Визуал тоже можно крутить.</strong> Скажи: <em>«сделай ещё 3 цветовых концепции этой карусели»</em> — Claude перерисует. Выбери ту, что попадает в твой блог.</li>
+  </ul>
+
+  <hr>
+
+  <!-- ─── СРАВНЕНИЕ ─── -->
+  <h2>💰 Что по деньгам и времени</h2>
+
+  <table class="compare">
+    <thead>
+      <tr>
+        <th>Способ</th>
+        <th>Цена</th>
+        <th>Срок</th>
+        <th>Что не очень</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Дизайнер на фрилансе</td>
+        <td>3 000–5 000 ₽</td>
+        <td>1–3 дня</td>
+        <td>Каждая правка = доплата</td>
+      </tr>
+      <tr>
+        <td>Canva вручную</td>
+        <td>Бесплатно</td>
+        <td>40–60 мин</td>
+        <td>Шаблонный вид, нет интерактива</td>
+      </tr>
+      <tr class="highlight">
+        <td><strong>Claude Artifacts</strong></td>
+        <td><strong>Бесплатно</strong></td>
+        <td><strong>5–7 мин</strong></td>
+        <td><strong>Скрин, а не нативный пост</strong></td>
+      </tr>
+      <tr>
+        <td>Gamma</td>
+        <td>Бесплатно с лимитом</td>
+        <td>3–5 мин</td>
+        <td>Шаблоны, меньше гибкости</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- ─── АЛЬТЕРНАТИВЫ ─── -->
+  <h2>🌀 Похожее в других сервисах</h2>
+
+  <ul>
+    <li><strong>ChatGPT Canvas</strong> — аналог Artifacts в ChatGPT. Менее стабильно для сложных HTML, но норм для простых каруселей. Plus $20/мес.</li>
+    <li><strong>Canva</strong> — статичные шаблоны, проще если нужен «вот сейчас и без итераций». Бесплатно с ограничениями.</li>
+    <li><strong>Gamma</strong> — ИИ-генерация презентаций. 400 бесплатных кредитов на старте.</li>
+  </ul>
+
+  <!-- ─── END ─── -->
+  <div class="end">
+    <div class="wave">~ серфим ~</div>
+    <p>с любовью, Настя ✦</p>
+    <a href="/" class="end-back">← обратно в клуб</a>
+  </div>
+
+</main>
+
+</body>
+</html>
