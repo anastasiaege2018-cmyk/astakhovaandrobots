@@ -443,7 +443,7 @@
   <h1>Карусель за 5 минут 📳</h1>
 
   <p style="font-size: 18px; color: var(--text-mute); margin-bottom: 28px;">
-    Описала тему — получила 7 готовых слайдов для Instagram. Без Canva, без дизайнера, без двух дней.
+    Описала тему — получила готовые слайды для Instagram, LinkedIn, ВК. Без дизайнеров, без сторонних приложений, без дополнительных расходов.
   </p>
 
   <div class="meta-bar">
@@ -460,21 +460,18 @@
     </div>
   </div>
 
-  <!-- ─── ЗАДАНИЕ ─── -->
-  <h2>🎯 Задание этой недели</h2>
-
-  <p>Цель — выпустить одну живую карусель под СВОЮ тему. Никакой Canva, никакого дизайнера. 5 минут — и пост.</p>
-
-  <ol class="steps">
-    <li><strong>Выбрать тему карусели</strong>Возьми из списка ниже или придумай свою — что-то полезное для твоей аудитории.</li>
-    <li><strong>Отправить промпт в Claude</strong>Промпт уже готов — копируешь, вставляешь свою тему вместо жёлтой плашки.</li>
-    <li><strong>Сохранить 7 слайдов скринами</strong>Прокликать каждый, скринить, сложить в Telegram-чат клуба.</li>
-  </ol>
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: пример Artifact в правой панели Claude</div>
+      <div class="caption">~ как выглядит «живая» страница в чате ~</div>
+    </div>
+  </div>
 
   <div class="callout blue">
     <div class="callout-icon">🆓</div>
     <div class="callout-body">
-      <p><strong>Pro не обязателен.</strong> Artifacts работают на бесплатном тарифе Claude. Если ты ещё не оплатила — это твой урок без блокеров.</p>
+      <p><strong>Pro не обязателен.</strong> Artifacts работают на бесплатном тарифе Claude. Если ещё не оплатила — это твой урок без блокеров.</p>
     </div>
   </div>
 
@@ -485,7 +482,6 @@
 
   <ul>
     <li><strong>Контент за минуты, не за дни.</strong> Описала структуру и тему → получила готовый визуал. Не нужны дизайнер и даже Canva.</li>
-    <li><strong>Живой прототип вместо статики.</strong> Карусель с кнопками, анимациями и переключателем темы. Можно покрутить, показать, докрутить в том же чате.</li>
     <li><strong>Один шаблон — бесконечные темы.</strong> Тот же промпт под чеклисты, лайфхаки, мифы, ошибки. Сегодня — пост в блог, завтра — лид-магнит.</li>
     <li><strong>Главное — это бесплатно.</strong> Раньше: дизайнер на фрилансе 3–5 тысяч ₽ и 1–3 дня. Теперь: 0 ₽ и 5 минут.</li>
   </ul>
@@ -511,7 +507,26 @@
 
   <p>Это самый универсальный путь: бесплатно, гибко, можно подкрутить под себя. Получается интерактивный прототип, из которого делаются скриншоты для Instagram.</p>
 
-  <h3>Шаг 1. Выбери свою тему</h3>
+  <h3>Шаг 1. Найди Artifacts в Claude</h3>
+
+  <p>Это короткий путь по интерфейсу — 3 микро-скрина. Просто пройди по ним:</p>
+
+  <figure class="screenshot">
+    <img src="img/01-where-to-find.png" alt="Где найти Artifacts в Claude">
+    <figcaption>1.1 · Где найти Artifacts</figcaption>
+  </figure>
+
+  <figure class="screenshot">
+    <img src="img/02-create-new.png" alt="Создаём новый artifact">
+    <figcaption>1.2 · Создаём новый</figcaption>
+  </figure>
+
+  <figure class="screenshot">
+    <img src="img/03-choose-format.png" alt="Выбираем формат">
+    <figcaption>1.3 · Выбираем формат</figcaption>
+  </figure>
+
+  <h3>Шаг 2. Выбери свою тему</h3>
 
   <p>Возьми одну из этих или придумай свою:</p>
 
@@ -557,9 +572,16 @@
     </div>
   </div>
 
-  <h3>Шаг 2. Открой Claude и отправь промпт</h3>
+  <h3>Шаг 3. Отправь промпт</h3>
 
-  <p>Зайди на <a href="https://claude.ai/" target="_blank">claude.ai</a>, открой новый чат, скопируй промпт ниже. Замени жёлтую плашку «Тема карусели» на свою.</p>
+  <p>Тут — два варианта. Выбери свой:</p>
+
+  <div class="callout gray">
+    <div class="callout-icon">📝</div>
+    <div class="callout-body">
+      <p><strong>Сценарий А · Claude напишет текст сам.</strong> Когда у тебя нет готового поста — Claude сам придумает 7 пунктов под твою тему и оформит их. Замени жёлтую плашку «Тема карусели» на свою.</p>
+    </div>
+  </div>
 
   <div class="code-block">Создай интерактивную Instagram-карусель в формате Artifact как одностраничное веб-приложение (HTML/CSS/JS в одном файле, без внешних библиотек).
 
@@ -627,17 +649,56 @@
 
 Сначала сделай визуал, потом интерактив. Покажи готовый artifact сразу.</div>
 
-  <p class="copy-hint">~ скопируй блок выше, замени тему, отправь Claude в новом чате ~</p>
+  <p class="copy-hint">~ замени жёлтую плашку с темой и отправь Claude в новом чате ~</p>
 
-  <div class="screenshot-placeholder">
-    <div class="screenshot-placeholder-inner">
-      <div class="icon">🖼</div>
-      <div class="label">Скрин: как выглядит Artifact в правой панели Claude</div>
-      <div class="caption">~ первый слайд карусели в режиме предпросмотра ~</div>
+  <div class="callout gray">
+    <div class="callout-icon">✍️</div>
+    <div class="callout-body">
+      <p><strong>Сценарий Б · У тебя уже есть готовый пост.</strong> Claude НЕ будет переписывать — только разложит твой текст на 5–7 слайдов и оформит. Твой тон и формулировки сохраняются.</p>
     </div>
   </div>
 
-  <h3>Шаг 3. Проверь интерактив</h3>
+  <div class="code-block">Сделай интерактивную Instagram-карусель в формате Artifact из моего готового текста.
+
+Мой текст:
+"""
+<span class="placeholder">ВСТАВЬ СВОЙ ПОСТ</span>
+"""
+
+Задача:
+- разбить мой текст на 5–7 логичных частей (слайдов)
+- сохранить мои формулировки и тон — НЕ переписывай
+- сильные фразы — выделить заголовками
+- НЕ добавляй своих советов и слов
+
+Формат:
+- 5–7 слайдов
+- соотношение 4:5
+- адаптивно под мобильный
+- safe-area рамка вокруг каждого слайда
+
+Структура:
+1. Обложка: цепкая фраза или вопрос из моего текста
+2–6. Ключевые мысли, разбитые по слайдам
+Финал: тот вывод или призыв, что есть в моём тексте
+
+Интерактив и дизайн — современный clean-стиль:
+- верхний прогресс-бар «Слайд X / N»
+- точки внизу + кнопки навигации
+- переключатель light/dark
+- плавные анимации (fade + slide)
+- premium / expert-blog подача
+
+Технически:
+- один HTML-файл, всё внутри
+- без внешних библиотек
+- без ошибок в консоли
+
+Покажи рабочий artifact сразу.</div>
+
+  <p class="copy-hint">~ замени плашку на свой текст и отправь Claude в новом чате ~</p>
+
+  <h3>Шаг 4. Проверь интерактив</h3>
 
   <p>Прокликай карусель сразу, чтобы убедиться:</p>
 
@@ -656,15 +717,12 @@
     </div>
   </div>
 
-  <div class="screenshot-placeholder">
-    <div class="screenshot-placeholder-inner">
-      <div class="icon">🖼</div>
-      <div class="label">Скрин: пример готовой карусели — обложка + один слайд</div>
-      <div class="caption">~ хорошо видна рамка 4:5 для скрина ~</div>
-    </div>
-  </div>
+  <figure class="screenshot">
+    <img src="img/04-result.png" alt="Готовая карусель в Claude">
+    <figcaption>Готовый результат — карусель в чате с Claude</figcaption>
+  </figure>
 
-  <h3>Шаг 4. Сохрани 7 слайдов</h3>
+  <h3>Шаг 5. Сохрани 7 слайдов</h3>
 
   <p>Artifact — это страница в браузере, а не пост. Чтобы выложить в Instagram, нужны скриншоты каждого слайда.</p>
 
@@ -676,13 +734,6 @@
 
   <p>Получается 7 картинок = карусель готова к публикации.</p>
 
-  <div class="screenshot-placeholder">
-    <div class="screenshot-placeholder-inner">
-      <div class="icon">🖼</div>
-      <div class="label">Скрин: как делать скрин области в Mac (Cmd+Shift+4)</div>
-    </div>
-  </div>
-
   <!-- ═══ PATH B — GAMMA ═══ -->
   <div class="path-header">
     <span class="badge">ПУТЬ Б</span>
@@ -690,6 +741,11 @@
   </div>
 
   <p>Если артефакты кажутся «техничными» и хочется получить более полированный, дизайнерский визуал без возни со скринами — есть второй путь через <a href="https://gamma.app/" target="_blank">Gamma</a>. Это онлайн-сервис, который умеет делать слайды и карусели из текстового описания.</p>
+
+  <figure class="screenshot">
+    <img src="img/05-gamma.png" alt="Gamma — главный экран">
+    <figcaption>Главный экран Gamma — здесь начинается генерация</figcaption>
+  </figure>
 
   <div class="callout pink">
     <div class="callout-icon">⚠️</div>
@@ -702,19 +758,16 @@
 
   <ol class="steps">
     <li><strong>Сначала собери черновик в Claude</strong>В новом чате попроси: <em>«Сделай контент для карусели на 7 слайдов на тему [твоя тема]. Для каждого слайда: заголовок до 8 слов + одна мысль в 1–2 предложения + один совет. Тон тёплый, без воды».</em> Получишь готовую структуру текстом.</li>
-    <li><strong>Открой Gamma → New presentation → Generate</strong>На <a href="https://gamma.app/" target="_blank">gamma.app</a> создай аккаунт (бесплатно), нажми <strong>New → Generate</strong>.</li>
-    <li><strong>Вставь черновик от Claude как Prompt</strong>Gamma попросит описать, что генерировать. Вставь структуру из Claude, выбери <strong>Cards</strong> (если есть такой формат) или <strong>Presentation</strong>.</li>
-    <li><strong>Выбери стиль и сгенерируй</strong>Gamma предложит шаблоны — выбери минималистичный, нажми <strong>Generate</strong>. Через 30 секунд готовая презентация в редакторе.</li>
+    <li><strong>Открой Gamma → New → Generate</strong>На <a href="https://gamma.app/" target="_blank">gamma.app</a> создай аккаунт (бесплатно), нажми <strong>New → Generate</strong>.</li>
+    <li><strong>Выбери формат</strong>Gamma спросит, что генерировать — выбери <strong>Social</strong> или <strong>Cards</strong> для карусели (Presentation тоже подходит, если нужны широкие слайды).</li>
+    <li><strong>Вставь черновик от Claude</strong>Gamma попросит описать тему — вставь структуру из Claude и нажми <strong>Generate</strong>. Через 30 секунд готовая презентация в редакторе.</li>
     <li><strong>Экспорти как картинки</strong>В меню <strong>Share → Export → PNG</strong>. Скачиваешь каждый слайд как картинку.</li>
   </ol>
 
-  <div class="screenshot-placeholder">
-    <div class="screenshot-placeholder-inner">
-      <div class="icon">🖼</div>
-      <div class="label">Скрин: Gamma «New presentation → Generate»</div>
-      <div class="caption">~ окно генерации с полем для промпта ~</div>
-    </div>
-  </div>
+  <figure class="screenshot">
+    <img src="img/06-gamma-formats.png" alt="Gamma — выбор формата">
+    <figcaption>Выбор формата в Gamma: Social / Cards / Presentation</figcaption>
+  </figure>
 
   <div class="callout gray">
     <div class="callout-icon">⚖️</div>
@@ -740,7 +793,7 @@
   <div class="deadline">
     <div class="deadline-cell">
       <div class="label">⏰ Дедлайн</div>
-      <div class="value">вторник</div>
+      <div class="value">вт · 23.06</div>
       <div class="sub">до 23:59 МСК</div>
     </div>
     <div class="deadline-cell">
@@ -777,47 +830,19 @@
     <li><strong>Визуал тоже можно крутить.</strong> Скажи: <em>«сделай ещё 3 цветовых концепции этой карусели»</em> — Claude перерисует. Выбери ту, что попадает в твой блог.</li>
   </ul>
 
-  <hr>
+  <div class="callout purple">
+    <div class="callout-icon">🛠</div>
+    <div class="callout-body">
+      <p><strong>Хочешь подставить свои картинки и серьёзно дотюнить дизайн?</strong> Лучше открой Claude в <strong>Cowork-режиме</strong> (это Claude в десктопном приложении с доступом к твоей папке). Складываешь картинки в папку, говоришь Claude: «возьми из папки фото и подставь в карусель вместо плейсхолдеров» — и он подставит их прямо в HTML. Artifacts в обычном чате так не умеют.</p>
+    </div>
+  </div>
 
-  <!-- ─── СРАВНЕНИЕ ─── -->
-  <h2>💰 Что по деньгам и времени</h2>
-
-  <table class="compare">
-    <thead>
-      <tr>
-        <th>Способ</th>
-        <th>Цена</th>
-        <th>Срок</th>
-        <th>Что не очень</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Дизайнер на фрилансе</td>
-        <td>3 000–5 000 ₽</td>
-        <td>1–3 дня</td>
-        <td>Каждая правка = доплата</td>
-      </tr>
-      <tr>
-        <td>Canva вручную</td>
-        <td>Бесплатно</td>
-        <td>40–60 мин</td>
-        <td>Шаблонный вид, нет интерактива</td>
-      </tr>
-      <tr class="highlight">
-        <td><strong>Claude Artifacts</strong></td>
-        <td><strong>Бесплатно</strong></td>
-        <td><strong>5–7 мин</strong></td>
-        <td><strong>Скрин, а не нативный пост</strong></td>
-      </tr>
-      <tr>
-        <td>Gamma</td>
-        <td>Бесплатно с лимитом</td>
-        <td>3–5 мин</td>
-        <td>Шаблоны, меньше гибкости</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="callout green">
+    <div class="callout-icon">📁</div>
+    <div class="callout-body">
+      <p><strong>Делаешь карусели регулярно?</strong> Один раз сделай дамп профиля: в отдельном чате расскажи Claude о себе, своём блоге, аудитории, стиле и стоп-словах → попроси: <em>«выгрузи всё в файл .md»</em>. Сохрани этот файл. Дальше в каждый новый чат с промптом для карусели <strong>прикрепляй этот .md</strong> — текст будет звучать в твоём ТОВ с первого раза, без правок.</p>
+    </div>
+  </div>
 
   <hr>
 
