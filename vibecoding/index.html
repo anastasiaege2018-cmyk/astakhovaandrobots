@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок №4 · Вайбкодим первое приложение — The Breeze</title>
+<meta name="description" content="Урок №4 клуба The Breeze. Введение в вайбкодинг через Claude Code + библиотека терминов + первое приложение.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #37352f;
+    --text-mute: #787774;
+    --text-light: #9b9a97;
+    --divider: #ebebea;
+    --hover: #f7f6f3;
+
+    --yellow-bg: #fdecc8;
+    --yellow-text: #5c3a00;
+    --blue-bg: #d3e5ef;
+    --blue-text: #143a5d;
+    --green-bg: #dbeddb;
+    --green-text: #1f3a1f;
+    --pink-bg: #fbe4e4;
+    --pink-text: #6e1a1a;
+    --purple-bg: #ebe1f1;
+    --purple-text: #3b1a55;
+    --gray-bg: #f1f1ef;
+
+    --orange: #d9730d;
+    --link: #2e60c2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--yellow-bg); color: var(--yellow-text); }
+
+  .page {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 64px 24px 120px;
+  }
+
+  .eyebrow {
+    color: var(--text-mute);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    color: var(--text);
+  }
+
+  h2 {
+    font-size: 26px;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin-top: 56px;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+
+  h3 {
+    font-size: 18px;
+    line-height: 1.3;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  p { margin-bottom: 14px; color: var(--text); }
+  p strong { font-weight: 600; }
+
+  a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+
+  a:hover { text-decoration-thickness: 2px; }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 48px 0;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 0.88em;
+    background: var(--gray-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #c93838;
+  }
+
+  .code-block {
+    background: var(--gray-bg);
+    border-radius: 6px;
+    padding: 46px 20px 18px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    position: relative;
+  }
+
+  .code-block .placeholder {
+    background: var(--yellow-bg);
+    color: var(--yellow-text);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ffffff;
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .copy-btn:hover { background: var(--yellow-bg); color: var(--yellow-text); border-color: var(--yellow-text); }
+  .copy-btn.copied { background: #dbeddb; color: #1f3a1f; border-color: #1f3a1f; }
+
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 16px 18px;
+    border-radius: 6px;
+    margin: 20px 0;
+    align-items: flex-start;
+  }
+  .callout-icon { font-size: 20px; line-height: 1.4; flex-shrink: 0; }
+  .callout-body { flex: 1; line-height: 1.5; }
+  .callout-body p { margin-bottom: 8px; }
+  .callout-body p:last-child { margin-bottom: 0; }
+  .callout.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+  .callout.blue { background: var(--blue-bg); color: var(--blue-text); }
+  .callout.green { background: var(--green-bg); color: var(--green-text); }
+  .callout.pink { background: var(--pink-bg); color: var(--pink-text); }
+  .callout.purple { background: var(--purple-bg); color: var(--purple-text); }
+  .callout.gray { background: var(--gray-bg); color: var(--text); }
+  .callout strong { font-weight: 600; }
+
+  .meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 40px;
+    padding: 16px 0;
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    font-size: 14px;
+    color: var(--text-mute);
+  }
+  .meta-bar div { display: flex; gap: 8px; align-items: center; }
+  .meta-bar strong { color: var(--text); font-weight: 500; }
+
+  ul, ol { margin: 12px 0; padding-left: 26px; }
+  ul li, ol li { margin-bottom: 8px; line-height: 1.55; }
+  ul li::marker { color: var(--text-mute); }
+
+  .steps {
+    counter-reset: s;
+    list-style: none;
+    padding-left: 0;
+    margin: 20px 0;
+  }
+  .steps li {
+    counter-increment: s;
+    padding-left: 44px;
+    position: relative;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .steps li::before {
+    content: counter(s);
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 28px;
+    height: 28px;
+    background: var(--yellow-bg);
+    color: var(--yellow-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .steps li strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  /* Terms library — cards */
+  .term-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .term-card {
+    background: var(--hover);
+    border: 1px solid var(--divider);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .term-card .term-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .term-card .term-emoji { font-size: 18px; }
+  .term-card .term-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .term-card .term-meta {
+    font-size: 12px;
+    color: var(--text-mute);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* Tool cards (где будем вайбкодить) */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .tool {
+    background: var(--hover);
+    border: 1px solid var(--divider);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .tool.main {
+    background: var(--yellow-bg);
+    border-color: var(--yellow-text);
+  }
+  .tool .tool-icon {
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .tool .tool-name {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .tool .tool-name .badge {
+    display: inline-block;
+    background: var(--yellow-text);
+    color: white;
+    padding: 1px 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 500;
+    margin-left: 6px;
+    letter-spacing: 0.04em;
+    vertical-align: 1px;
+  }
+  .tool.main .tool-name { color: var(--yellow-text); }
+  .tool .tool-desc {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .tool.main .tool-desc { color: var(--yellow-text); }
+
+  /* Idea cards — grid */
+  .idea-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .idea {
+    background: var(--hover);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .idea .idea-emoji {
+    font-size: 18px;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .idea strong { font-weight: 600; }
+
+  /* Screenshot */
+  figure.screenshot {
+    margin: 24px 0;
+    border-radius: 8px;
+    background: var(--gray-bg);
+    padding: 6px;
+    overflow: hidden;
+  }
+  figure.screenshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+  figure.screenshot figcaption {
+    color: var(--text-mute);
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 12px 6px;
+    font-style: italic;
+  }
+  .screenshot-placeholder {
+    margin: 24px 0;
+    background: var(--gray-bg);
+    border-radius: 8px;
+    padding: 6px;
+  }
+  .screenshot-placeholder-inner {
+    background: #fafaf9;
+    border-radius: 4px;
+    padding: 32px 24px;
+    text-align: center;
+    border: 1px dashed #d0cfca;
+  }
+  .screenshot-placeholder-inner .icon { font-size: 28px; margin-bottom: 8px; opacity: 0.5; }
+  .screenshot-placeholder-inner .label { color: var(--text-mute); font-size: 13px; font-weight: 500; }
+  .screenshot-placeholder-inner .caption { color: var(--text-light); font-size: 12px; margin-top: 6px; font-style: italic; }
+  .screenshot-placeholder-inner .filename {
+    display: inline-block;
+    background: var(--gray-bg);
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+
+  /* Deadline row */
+  .deadline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 24px 0;
+  }
+  .deadline-cell {
+    background: var(--gray-bg);
+    padding: 18px 14px;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .deadline-cell .label { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-mute); margin-bottom: 8px; font-weight: 600; }
+  .deadline-cell .value { font-size: 18px; font-weight: 700; color: var(--text); }
+  .deadline-cell .sub { font-size: 13px; color: var(--text-mute); margin-top: 4px; }
+
+  /* Edit toolbar */
+  .edit-toolbar {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+    display: flex;
+    gap: 6px;
+    background: #ffffff;
+    border: 1px solid var(--divider);
+    border-radius: 100px;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .edit-toolbar button {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .edit-toolbar button:hover { background: var(--hover); }
+  .edit-toolbar button.active { background: var(--yellow-bg); color: var(--yellow-text); }
+
+  body.editing { caret-color: var(--orange); }
+  body.editing [contenteditable="true"]:focus {
+    outline: 2px dashed var(--orange);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* Footer */
+  .end {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 14px;
+  }
+  .end .wave { font-size: 24px; margin-bottom: 8px; color: var(--orange); }
+  .end-back {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--text-mute);
+    font-size: 14px;
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid var(--divider);
+    border-radius: 100px;
+    transition: all 0.15s;
+  }
+  .end-back:hover { background: var(--hover); color: var(--text); }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 18px 80px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 22px; margin-top: 40px; }
+    .term-grid, .idea-grid { grid-template-columns: 1fr; }
+    .deadline { grid-template-columns: 1fr; }
+    .meta-bar { gap: 12px; flex-direction: column; }
+    .edit-toolbar { right: 8px; top: 8px; padding: 3px; }
+    .edit-toolbar button { padding: 5px 10px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Edit toolbar -->
+<div class="edit-toolbar">
+  <button id="editToggle" type="button">✏️ Редактировать</button>
+  <button id="downloadHtml" type="button" style="display:none;">💾 Скачать</button>
+</div>
+
+<main class="page">
+
+  <div class="eyebrow">📘 Урок №4 · The Breeze</div>
+  <h1>Вайбкодим первое приложение 🤠</h1>
+
+  <p style="font-size: 18px; color: var(--text-mute); margin-bottom: 28px;">
+    Описываешь словами что хочешь — Claude пишет код. Получаешь рабочее приложение, сайт или бота. Без программирования. По-настоящему.
+  </p>
+
+  <div class="meta-bar">
+    <div><span>⏱</span> <strong>1–3 часа</strong> на первый проект</div>
+    <div><span>💳</span> Claude <strong>Pro</strong></div>
+    <div><span>📱</span> Делать с <strong>компа</strong></div>
+  </div>
+
+  <!-- ─── ГЛАВНАЯ ИДЕЯ ─── -->
+  <div class="callout yellow">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <p><strong>«Вайбкодинг» — это когда ты не пишешь код руками.</strong> Ты описываешь словами на русском, что хочешь. Claude переводит это в код, кладёт в свой репозиторий, запускает, чинит ошибки и делает следующую правку. Ты — продакт-менеджер. Claude — твой разработчик в кармане.</p>
+    </div>
+  </div>
+
+  <!-- ─── ЧТО ПОНАДОБИТСЯ ─── -->
+  <h2>Что понадобится</h2>
+
+  <ul>
+    <li><strong>Аккаунт Claude (минимум Pro).</strong> Бесплатной версии не хватит — нужен Claude Code.</li>
+    <li><strong>GitHub-аккаунт.</strong> Это «облачное хранилище» для твоего кода. Бесплатный.</li>
+    <li><strong>(опц.) Облачный сервер</strong> — нужен только если твой проект должен работать круглосуточно в интернете (бот, веб-сервис). Берётся, например, на <a href="https://beget.com/" target="_blank">Beget</a>.</li>
+    <li><strong>(опц.) Домен</strong> — нужен только для сайта, чтобы он жил по красивому адресу <code>имя.ру</code>, а не «голому» IP.</li>
+    <li><strong>(опц.) Токены</strong> — отдельные оплаты, если проект использует внешние сервисы (например, генерация картинок через API).</li>
+  </ul>
+
+  <div class="callout blue">
+    <div class="callout-icon">🆓</div>
+    <div class="callout-body">
+      <p><strong>На старте достаточно Claude Pro + GitHub.</strong> Сервер, домен и токены подключаются позже, если проект до них дорос. Не покупай сразу всё.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ГДЕ БУДЕМ ─── -->
+  <h2>Где будем вайбкодить</h2>
+
+  <p>Главный инструмент — <strong>Claude Code</strong>. Это режим Claude, где он не просто разговаривает, а реально пишет код в твой репозиторий и запускает его.</p>
+
+  <div class="tool-grid">
+    <div class="tool main">
+      <div class="tool-icon">🟧</div>
+      <div>
+        <div class="tool-name">Claude Code<span class="badge">главный</span></div>
+        <div class="tool-desc">Веб-версия по адресу <a href="https://claude.ai/code" target="_blank">claude.ai/code</a>. Подключается к твоему GitHub, видит весь проект, делает изменения через Pull Request. Нужна подписка Pro+.</div>
+      </div>
+    </div>
+
+    <div class="tool">
+      <div class="tool-icon">💜</div>
+      <div>
+        <div class="tool-name">Lovable</div>
+        <div class="tool-desc"><a href="https://lovable.dev/" target="_blank">lovable.dev</a> — сервис «вайбкодинг для не-разработчиков». Делает сайты и веб-приложения. Бесплатно с лимитом, потом подписка.</div>
+      </div>
+    </div>
+
+    <div class="tool">
+      <div class="tool-icon">⚡</div>
+      <div>
+        <div class="tool-name">Cursor</div>
+        <div class="tool-desc">Десктопный редактор кода с AI внутри. Тот же Claude/GPT, но в редакторе на твоём компьютере. Хорош, если хочешь чуть больше контроля.</div>
+      </div>
+    </div>
+
+    <div class="tool">
+      <div class="tool-icon">🌀</div>
+      <div>
+        <div class="tool-name">Replit, Bolt, v0</div>
+        <div class="tool-desc">Похожие сервисы. Каждый со своими акцентами: Replit — учебный, Bolt — быстрый MVP, v0 от Vercel — красивый UI.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT: drop file at img/01-claude-code.png to render -->
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: интерфейс Claude Code</div>
+      <div class="caption">~ как выглядит claude.ai/code изнутри ~</div>
+      <div class="filename">img/01-claude-code.png</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── БИБЛИОТЕКА ТЕРМИНОВ ─── -->
+  <h2>📚 Библиотека терминов</h2>
+
+  <p>Чтобы не теряться в разговоре с разработчиками и AI — несколько слов, которые встретятся первой же неделей.</p>
+
+  <div class="term-grid">
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">🌐</span> Домен</div>
+      <div class="term-desc">Имя сайта, которое люди вводят в браузер. Например, <code>astakhovaandrobots.ru</code>. Покупается на год.</div>
+      <div class="term-meta">где: reg.ru, beget.com, namecheap</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">🖥️</span> Облачный сервер (VPS)</div>
+      <div class="term-desc">Виртуальный компьютер в дата-центре, который работает 24/7. Там может «жить» твой бот или сайт.</div>
+      <div class="term-meta">где: <a href="https://beget.com/" target="_blank">Beget</a>, Timeweb, Yandex Cloud</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">🐙</span> GitHub</div>
+      <div class="term-desc">«Гугл-докс для кода». Облачная платформа, где хранится код проекта, и куда заходит Claude, чтобы его править.</div>
+      <div class="term-meta">github.com — бесплатно</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">📦</span> Репозиторий (репо)</div>
+      <div class="term-desc">Папка одного проекта на GitHub. Внутри — все файлы кода + история изменений. Один проект = один репозиторий.</div>
+      <div class="term-meta">создаётся в один клик</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">🍴</span> Форк (fork)</div>
+      <div class="term-desc">Копия чужого репозитория в твой аккаунт. Берёшь готовый проект → форкаешь → правишь под себя. Оригинал не трогается.</div>
+      <div class="term-meta">отличие от clone — fork в облаке</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">💾</span> Коммит (commit)</div>
+      <div class="term-desc">«Сохранение» в истории проекта. Одна правка — один коммит, с описанием что именно изменилось.</div>
+      <div class="term-meta">Claude делает их сам</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">📤</span> Push</div>
+      <div class="term-desc">Отправка твоих коммитов из локальной копии в облачный репозиторий на GitHub.</div>
+      <div class="term-meta">«загрузить наверх»</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">🤝</span> Pull Request (PR)</div>
+      <div class="term-desc">«Запрос на слияние». Claude собирает свои правки → создаёт PR → ты смотришь diff (что изменилось) → принимаешь или просишь поправить.</div>
+      <div class="term-meta">главный момент проверки</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">🌿</span> Ветка (branch)</div>
+      <div class="term-desc">Параллельная линия изменений. <code>main</code> — стабильная версия. Все новые правки делаются в отдельных ветках, чтобы не сломать main.</div>
+      <div class="term-meta">Claude создаёт ветку под каждый чат</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-name"><span class="term-emoji">📜</span> README</div>
+      <div class="term-desc">Главный файл-описание проекта в репо. Что это, зачем, как запустить. Видно сразу при заходе в репо.</div>
+      <div class="term-meta">Claude сам напишет</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗАДАНИЕ ─── -->
+  <h2>🎯 Задание этой недели</h2>
+
+  <p>Завайбкодить своё первое работающее приложение/сайт/бота. Что-то, чем ты сама могла бы пользоваться.</p>
+
+  <h3>Пример: трекер личных финансов</h3>
+
+  <p>Хороший первый проект, потому что простой по логике и сразу полезный:</p>
+
+  <ul>
+    <li>Загружаешь выгрузку из банка (CSV или PDF)</li>
+    <li>Настраиваешь свои категории трат: «продукты», «дети», «такси», «развлечения»</li>
+    <li>Указываешь цель накопления — например, отпуск на 200 000 ₽</li>
+    <li>Следишь за динамикой расходов: где «утекает» больше всего, где можно сократить</li>
+    <li>Получаешь простую визуализацию: графики, проценты, прогноз</li>
+  </ul>
+
+  <h3>Или любая другая идея</h3>
+
+  <div class="idea-grid">
+    <div class="idea">
+      <span class="idea-emoji">🧩</span>
+      <strong>Браузерное расширение</strong> — для упрощения какой-то твоей повторяющейся задачи в Chrome.
+    </div>
+    <div class="idea">
+      <span class="idea-emoji">📝</span>
+      <strong>Сервис подписания документов</strong> — загружаешь PDF, ставишь подпись, сохраняешь.
+    </div>
+    <div class="idea">
+      <span class="idea-emoji">📊</span>
+      <strong>Аналитика</strong> — небольшой дашборд под свой бизнес/процесс/клиентов.
+    </div>
+    <div class="idea">
+      <span class="idea-emoji">🔎</span>
+      <strong>Поисковая машина</strong> — по твоим заметкам, документам или базе знаний.
+    </div>
+    <div class="idea">
+      <span class="idea-emoji">🤖</span>
+      <strong>Telegram-бот</strong> — для напоминаний, сбора заявок, ответов клиентам.
+    </div>
+    <div class="idea">
+      <span class="idea-emoji">📅</span>
+      <strong>Планировщик</strong> — личный или для семьи, со своей логикой.
+    </div>
+  </div>
+
+  <div class="callout purple">
+    <div class="callout-icon">💭</div>
+    <div class="callout-body">
+      <p><strong>Не знаешь, что выбрать? — Посмотри референсы на <a href="https://aistudio.google.com/apps" target="_blank">aistudio.google.com/apps</a>.</strong> Там сотни мини-приложений, сделанных людьми за пару часов. Часто хватает одной идеи оттуда, чтобы сразу понять «вот это я и хочу».</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ПРОЦЕСС ─── -->
+  <h2>Процесс — 6 шагов</h2>
+
+  <p>Каждый твой проект проходит через одну и ту же логику. Запомни — пригодится на любом следующем.</p>
+
+  <ol class="steps">
+    <li>
+      <strong>1. Идея</strong>
+      Что ты хочешь сделать. Одна-две фразы человеческим языком: «приложение, в которое я загружаю выгрузку из банка, оно показывает мне куда уходят деньги».
+    </li>
+    <li>
+      <strong>2. Логика работы</strong>
+      Из чего состоит. Что делает пользователь, что выдаёт система. Можно нарисовать на бумаге или попросить Claude собрать карту в виде списка.
+    </li>
+    <li>
+      <strong>3. ТЗ</strong>
+      Техническое задание. Открываешь чат с Claude и пишешь: «помоги мне написать ТЗ для приложения [описание]. Спрашивай уточняющие вопросы». Через 5–10 вопросов получаешь готовое ТЗ.
+    </li>
+    <li>
+      <strong>4. Запуск</strong>
+      Открываешь <a href="https://claude.ai/code" target="_blank">claude.ai/code</a> → подключаешь GitHub → создаёшь новый репозиторий → даёшь Claude задачу из ТЗ. Он создаёт ветку, пишет код, делает Pull Request.
+    </li>
+    <li>
+      <strong>5. Проверка</strong>
+      Открываешь свою копию проекта (можно сразу через GitHub Pages или Vercel) → тестируешь → записываешь, что работает, а что нет. Скриншоти ошибки.
+    </li>
+    <li>
+      <strong>6. Фиксим лаги</strong>
+      Возвращаешься в Claude Code, пишешь: «вот скрин, вот что не работает: [описание]. Поправь.» Он создаёт новый PR с исправлением. Цикл «правка → проверка → правка» повторяется, пока не норм.
+    </li>
+  </ol>
+
+  <!-- SCREENSHOT: drop file at img/02-process-flow.png to render -->
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: процесс в действии — Claude делает PR в твой репо</div>
+      <div class="filename">img/02-process-flow.png</div>
+    </div>
+  </div>
+
+  <h3>Промпт для старта (можно копировать)</h3>
+
+  <div class="code-block"><button class="copy-btn" type="button">📋 Скопировать</button>Я хочу собрать веб-приложение: <span class="placeholder">ОПИШИ СВОЮ ИДЕЮ В 2–3 ПРЕДЛОЖЕНИЯ</span>.
+
+Перед тем как писать код, помоги мне собрать ТЗ. Задай мне 5–10 уточняющих вопросов:
+- кто пользователь и какую задачу решает
+- какие основные сценарии (что пользователь делает)
+- что на входе (данные, файлы) и что на выходе
+- какой стек подойдёт — простой и понятный для не-разработчика
+- что в первой версии (MVP), что — на потом
+
+После моих ответов собери:
+1) короткое ТЗ на 1 страницу
+2) список первых 5 задач для реализации MVP
+3) рекомендованный стек (язык, фреймворк, где разворачивать)
+
+Не пиши код, пока я не подтвержу ТЗ.</div>
+
+  <hr>
+
+  <!-- ─── ЧТО ПРИСЛАТЬ ─── -->
+  <h2>📬 Что прислать в чат клуба</h2>
+
+  <ul>
+    <li>🔗 <strong>Что завайбкодила</strong> — название и одна фраза, что это</li>
+    <li>📸 <strong>Скриншот или ссылка</strong> на работающую версию (или PR, если до конца не дошло)</li>
+    <li>⏱ <strong>Сколько заняло времени</strong> от идеи до первой рабочей версии</li>
+    <li>🧠 <strong>Один инсайт</strong> — что узнала про себя или процесс</li>
+    <li>🏷 Хештег <strong>#серфим</strong></li>
+  </ul>
+
+  <div class="deadline">
+    <div class="deadline-cell">
+      <div class="label">⏰ Дедлайн</div>
+      <div class="value">вт · 30.06</div>
+      <div class="sub">до 23:59 МСК</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🌊 Вайбы</div>
+      <div class="value">+2 вайба</div>
+      <div class="sub">за выполнение</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🏷 Хештег</div>
+      <div class="value">#серфим</div>
+      <div class="sub">в посте/комменте</div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT: drop file at img/03-result.png to render -->
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: твоё первое работающее приложение</div>
+      <div class="caption">~ финальный результат, который пришлёшь в чат ~</div>
+      <div class="filename">img/03-result.png</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗВЁЗДОЧКА ─── -->
+  <h2>⭐ Задание со звёздочкой</h2>
+
+  <p>Не учебный проект, а <strong>реальный продукт для своей задачи</strong>:</p>
+
+  <ul>
+    <li>Бот для автоматизации одной конкретной рутины (твоей или команды)</li>
+    <li>Внутренняя база документов вместо Notion / Confluence — с git-управлением через Cursor</li>
+    <li>Расширение для Chrome под одну твою повторяющуюся боль</li>
+    <li>Минимальный сайт-визитка с логикой, специфичной под твою нишу</li>
+  </ul>
+
+  <p style="font-style: italic; color: var(--text-mute); margin-top: 16px;">Если получится — это твой первый собственный «soft-проект», запущенный своими руками без программиста.</p>
+
+  <hr>
+
+  <!-- ─── НА ЗАМЕТКУ ─── -->
+  <h2>🌊 Серферам на заметку</h2>
+
+  <ul>
+    <li><strong>Один Pull Request = одно логическое изменение.</strong> Не пихай в один чат «сделай авторизацию + поправь дизайн + добавь экспорт». Лучше три отдельных чата.</li>
+    <li><strong>Если AI ушёл в цикл багов</strong> — забей и начни новый чат. Старый засорился контекстом, новый Claude вспомнит твой ТЗ с нуля.</li>
+    <li><strong>Если сделал не то</strong> — уточняй задачу подробнее. AI не телепат: «сделай красиво» работает хуже, чем «сделай шапку с тёмным фоном, белым текстом и логотипом слева».</li>
+    <li><strong>Не давай Claude доступа к main-ветке репозитория</strong> на старте. Только через Pull Request. Так ты успеешь посмотреть его правки до того, как они станут частью проекта.</li>
+    <li><strong>Сохраняй промпты, которые сработали.</strong> Это и есть твоё know-how. С каждым проектом копилка растёт.</li>
+    <li><strong>Сервер и домен — НЕ покупай сразу.</strong> Сначала проверь, что проект вообще нужен. На GitHub Pages бесплатно можно вывесить любой сайт за 2 минуты.</li>
+  </ul>
+
+  <hr>
+
+  <!-- ─── АЛЬТЕРНАТИВЫ ─── -->
+  <h2>🌀 А где брать идеи</h2>
+
+  <ul>
+    <li><strong><a href="https://aistudio.google.com/apps" target="_blank">aistudio.google.com/apps</a></strong> — главное место. Сотни мини-приложений от Google, многие — с кодом, который можно форкнуть и адаптировать.</li>
+    <li><strong><a href="https://github.com/trending" target="_blank">github.com/trending</a></strong> — что популярно сейчас в open-source. Часто простые штуки.</li>
+    <li><strong><a href="https://www.producthunt.com/" target="_blank">Product Hunt</a></strong> — что стартапы запускают каждый день. Хороший источник свежих идей.</li>
+    <li><strong>Свои реальные боли.</strong> Самое сильное место — что у тебя в работе или жизни делается руками каждый день. Это и есть твой первый продукт.</li>
+  </ul>
+
+  <!-- ─── END ─── -->
+  <div class="end">
+    <div class="wave">~ серфим ~</div>
+    <p>с любовью, Настя ✦</p>
+    <a href="/" class="end-back">← обратно в клуб</a>
+  </div>
+
+</main>
+
+<script>
+  // Copy buttons
+  document.querySelectorAll('.copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var block = btn.parentElement.cloneNode(true);
+      var clone = block.querySelector('.copy-btn');
+      if (clone) clone.remove();
+      var text = block.textContent.trim();
+      var done = function() {
+        btn.textContent = '✓ Скопировано';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = '📋 Скопировать';
+          btn.classList.remove('copied');
+        }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else { fallback(); }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  });
+
+  // Edit mode toggle
+  var editToggle = document.getElementById('editToggle');
+  var downloadBtn = document.getElementById('downloadHtml');
+  editToggle.addEventListener('click', function() {
+    var on = document.body.classList.toggle('editing');
+    if (on) {
+      document.querySelector('main').setAttribute('contenteditable', 'true');
+      editToggle.classList.add('active');
+      editToggle.textContent = '✓ Редактирую';
+      downloadBtn.style.display = 'inline-block';
+    } else {
+      document.querySelector('main').removeAttribute('contenteditable');
+      editToggle.classList.remove('active');
+      editToggle.textContent = '✏️ Редактировать';
+      downloadBtn.style.display = 'none';
+    }
+  });
+
+  // Download edited HTML
+  downloadBtn.addEventListener('click', function() {
+    var copy = document.documentElement.cloneNode(true);
+    // Clean editing artifacts
+    copy.querySelector('main')?.removeAttribute('contenteditable');
+    copy.querySelector('body')?.classList.remove('editing');
+    var html = '<!DOCTYPE html>\n' + copy.outerHTML;
+    var blob = new Blob([html], { type: 'text/html' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'vibecoding-index.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
