@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
+<html lang="ru"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Урок №4 · Вайбкодим первое приложение — The Breeze</title>
 <meta name="description" content="Урок №4 клуба The Breeze. Введение в вайбкодинг через Claude Code + библиотека терминов + первое приложение.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #ffffff;
@@ -160,6 +159,83 @@
   }
   .copy-btn:hover { background: var(--yellow-bg); color: var(--yellow-text); border-color: var(--yellow-text); }
   .copy-btn.copied { background: #dbeddb; color: #1f3a1f; border-color: #1f3a1f; }
+
+  /* Resizable image (editor) */
+  .resizable-image {
+    display: inline-block;
+    position: relative;
+    resize: none;
+    overflow: hidden;
+    max-width: 100%;
+    width: 60%;
+    margin: 16px 0;
+    border-radius: 6px;
+    vertical-align: top;
+    line-height: 0;
+  }
+  .resizable-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+  }
+  body.editing .resizable-image {
+    outline: 1px dashed transparent;
+    outline-offset: 2px;
+    cursor: pointer;
+    resize: both;
+  }
+  body.editing .resizable-image:hover { outline-color: var(--orange); }
+  body.editing .resizable-image.selected { outline: 2px solid var(--orange); }
+
+  .image-toolbar {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 6px;
+    background: #ffffff;
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 4px;
+    display: none;
+    gap: 4px;
+    align-items: center;
+    z-index: 5;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    line-height: 1.2;
+  }
+  .resizable-image.selected .image-toolbar { display: flex; }
+  body:not(.editing) .image-toolbar { display: none !important; }
+  .image-toolbar button {
+    background: transparent;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text);
+  }
+  .image-toolbar button:hover { background: var(--hover); }
+  .image-toolbar button.del { color: #c93838; }
+  .image-toolbar button.del:hover { background: var(--pink-bg); }
+  .image-toolbar .sep { width: 1px; height: 18px; background: var(--divider); display: inline-block; }
+
+  /* Drop overlay when dragging image files */
+  .editor-drop-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(217, 115, 13, 0.06);
+    border: 3px dashed var(--orange);
+    pointer-events: none;
+    z-index: 999;
+    display: none;
+  }
+  body.dragging-image .editor-drop-overlay { display: block; }
 
   .callout {
     display: flex;
@@ -478,13 +554,16 @@
   }
 </style>
 </head>
-<body>
+<body class="">
 
 <!-- Edit toolbar -->
 <div class="edit-toolbar">
   <button id="editToggle" type="button">✏️ Редактировать</button>
-  <button id="downloadHtml" type="button" style="display:none;">💾 Скачать</button>
+  <button id="imgInsert" type="button" style="display: none;">🖼 Картинка</button>
+  <button id="downloadHtml" type="button" style="display: none;">💾 Скачать</button>
 </div>
+<div class="editor-drop-overlay"></div>
+<input type="file" id="imgFile" accept="image/*" style="display: none;" multiple>
 
 <main class="page">
 
@@ -492,8 +571,7 @@
   <h1>Вайбкодим первое приложение 🤠</h1>
 
   <p style="font-size: 18px; color: var(--text-mute); margin-bottom: 28px;">
-    Описываешь словами что хочешь — Claude пишет код. Получаешь рабочее приложение, сайт или бота. Без программирования. По-настоящему.
-  </p>
+    Описываешь словами что хочешь — Claude пишет код. Получаешь рабочее приложение, сайт или бота. Без программирования.&nbsp;</p>
 
   <div class="meta-bar">
     <div><span>⏱</span> <strong>1–3 часа</strong> на первый проект</div>
@@ -505,7 +583,7 @@
   <div class="callout yellow">
     <div class="callout-icon">💡</div>
     <div class="callout-body">
-      <p><strong>«Вайбкодинг» — это когда ты не пишешь код руками.</strong> Ты описываешь словами на русском, что хочешь. Claude переводит это в код, кладёт в свой репозиторий, запускает, чинит ошибки и делает следующую правку. Ты — продакт-менеджер. Claude — твой разработчик в кармане.</p>
+      <p><strong>«Вайбкодинг» — это когда ты не пишешь код руками.</strong> Ты описываешь словами на русском, что хочешь. Claude переводит это в код, кладёт в свой репозиторий (дом), запускает, чинит ошибки и делает следующую правку. Ты — продакт-менеджер (специалист, создающий продукт). Claude — твой разработчик в кармане.</p>
     </div>
   </div>
 
@@ -513,11 +591,11 @@
   <h2>Что понадобится</h2>
 
   <ul>
-    <li><strong>Аккаунт Claude (минимум Pro).</strong> Бесплатной версии не хватит — нужен Claude Code.</li>
+    <li><strong>Аккаунт Claude (минимум Pro)</strong></li>
     <li><strong>GitHub-аккаунт.</strong> Это «облачное хранилище» для твоего кода. Бесплатный.</li>
-    <li><strong>(опц.) Облачный сервер</strong> — нужен только если твой проект должен работать круглосуточно в интернете (бот, веб-сервис). Берётся, например, на <a href="https://beget.com/" target="_blank">Beget</a>.</li>
-    <li><strong>(опц.) Домен</strong> — нужен только для сайта, чтобы он жил по красивому адресу <code>имя.ру</code>, а не «голому» IP.</li>
-    <li><strong>(опц.) Токены</strong> — отдельные оплаты, если проект использует внешние сервисы (например, генерация картинок через API).</li>
+    <li><strong>*Облачный сервер</strong> — нужен только если твой проект должен работать круглосуточно в интернете (бот, веб-сервис). Покупаем, например, на <a href="https://beget.com/" target="_blank">Beget</a>.</li>
+    <li><strong>*Домен</strong> — нужен только для сайта, чтобы он жил по красивому адресу <code>имя.ру</code>.</li>
+    <li><strong>*Токены</strong> — отдельные оплаты, если проект использует внешние сервисы (например, генерация картинок через API).</li>
   </ul>
 
   <div class="callout blue">
@@ -562,21 +640,8 @@
     <div class="tool">
       <div class="tool-icon">🌀</div>
       <div>
-        <div class="tool-name">Replit, Bolt, v0</div>
-        <div class="tool-desc">Похожие сервисы. Каждый со своими акцентами: Replit — учебный, Bolt — быстрый MVP, v0 от Vercel — красивый UI.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREENSHOT: drop file at img/01-claude-code.png to render -->
-  <div class="screenshot-placeholder">
-    <div class="screenshot-placeholder-inner">
-      <div class="icon">🖼</div>
-      <div class="label">Скрин: интерфейс Claude Code</div>
-      <div class="caption">~ как выглядит claude.ai/code изнутри ~</div>
-      <div class="filename">img/01-claude-code.png</div>
-    </div>
-  </div>
+        <div class="tool-name">Replit, Make</div>
+        <div class="tool-desc">Похожие сервисы. Каждый со своими акцентами: Replit — учебный, Make&nbsp;<span style="font-family: Inter, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;">— создание связок, которые нельзя реализовать через connectors.&nbsp;</span></div></div></div></div>
 
   <hr>
 
@@ -589,12 +654,12 @@
     <div class="term-card">
       <div class="term-name"><span class="term-emoji">🌐</span> Домен</div>
       <div class="term-desc">Имя сайта, которое люди вводят в браузер. Например, <code>astakhovaandrobots.ru</code>. Покупается на год.</div>
-      <div class="term-meta">где: reg.ru, beget.com, namecheap</div>
+      <div class="term-meta">где: reg.ru,&nbsp;<a href="https://beget.com/" target="_blank" style="font-family: Inter, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif; color: rgb(46, 96, 194);">Beget</a></div>
     </div>
 
     <div class="term-card">
       <div class="term-name"><span class="term-emoji">🖥️</span> Облачный сервер (VPS)</div>
-      <div class="term-desc">Виртуальный компьютер в дата-центре, который работает 24/7. Там может «жить» твой бот или сайт.</div>
+      <div class="term-desc">Виртуальный компьютер, который работает 24/7. Там может «жить» твой бот или сайт.</div>
       <div class="term-meta">где: <a href="https://beget.com/" target="_blank">Beget</a>, Timeweb, Yandex Cloud</div>
     </div>
 
@@ -654,7 +719,7 @@
 
   <p>Завайбкодить своё первое работающее приложение/сайт/бота. Что-то, чем ты сама могла бы пользоваться.</p>
 
-  <h3>Пример: трекер личных финансов</h3>
+  <h3>Пример: трекер личных финансов</h3><div><br></div>
 
   <p>Хороший первый проект, потому что простой по логике и сразу полезный:</p>
 
@@ -886,30 +951,190 @@
     });
   });
 
-  // Edit mode toggle
+  // === Edit mode toggle ===
   var editToggle = document.getElementById('editToggle');
+  var imgBtn = document.getElementById('imgInsert');
   var downloadBtn = document.getElementById('downloadHtml');
-  editToggle.addEventListener('click', function() {
-    var on = document.body.classList.toggle('editing');
+  var fileInput = document.getElementById('imgFile');
+  var mainEl = document.querySelector('main');
+
+  function setEditMode(on) {
     if (on) {
-      document.querySelector('main').setAttribute('contenteditable', 'true');
+      document.body.classList.add('editing');
+      mainEl.setAttribute('contenteditable', 'true');
       editToggle.classList.add('active');
       editToggle.textContent = '✓ Редактирую';
+      imgBtn.style.display = 'inline-block';
       downloadBtn.style.display = 'inline-block';
     } else {
-      document.querySelector('main').removeAttribute('contenteditable');
+      document.body.classList.remove('editing');
+      mainEl.removeAttribute('contenteditable');
       editToggle.classList.remove('active');
       editToggle.textContent = '✏️ Редактировать';
+      imgBtn.style.display = 'none';
       downloadBtn.style.display = 'none';
+      document.querySelectorAll('.resizable-image.selected').forEach(function(s) {
+        s.classList.remove('selected');
+      });
     }
+  }
+  editToggle.addEventListener('click', function() {
+    setEditMode(!document.body.classList.contains('editing'));
   });
 
-  // Download edited HTML
+  // === Insert image + resize ===
+  function readImageAsDataUrl(file, cb) {
+    var reader = new FileReader();
+    reader.onload = function() { cb(reader.result); };
+    reader.readAsDataURL(file);
+  }
+
+  function buildImageHTML(src) {
+    return '<span class="resizable-image" contenteditable="false">' +
+      '<img src="' + src + '" alt="">' +
+      '<span class="image-toolbar" contenteditable="false">' +
+        '<button type="button" data-size="25">25%</button>' +
+        '<button type="button" data-size="50">50%</button>' +
+        '<button type="button" data-size="75">75%</button>' +
+        '<button type="button" data-size="100">100%</button>' +
+        '<span class="sep"></span>' +
+        '<button type="button" class="del" data-action="delete">✕</button>' +
+      '</span>' +
+    '</span>';
+  }
+
+  function insertImageHTML(html) {
+    if (!document.body.classList.contains('editing')) setEditMode(true);
+    mainEl.focus();
+    var sel = window.getSelection();
+    var inserted = false;
+    if (sel.rangeCount > 0 && mainEl.contains(sel.anchorNode)) {
+      try {
+        document.execCommand('insertHTML', false, html);
+        inserted = true;
+      } catch (e) {}
+    }
+    if (!inserted) {
+      var div = document.createElement('div');
+      div.innerHTML = html;
+      mainEl.appendChild(div.firstChild);
+    }
+    bindAllImages();
+  }
+
+  imgBtn.addEventListener('click', function() { fileInput.click(); });
+
+  fileInput.addEventListener('change', function() {
+    var files = Array.from(this.files || []);
+    files.forEach(function(file) {
+      if (file.type.indexOf('image/') !== 0) return;
+      readImageAsDataUrl(file, function(dataUrl) {
+        insertImageHTML(buildImageHTML(dataUrl));
+      });
+    });
+    this.value = '';
+  });
+
+  function bindImage(wrap) {
+    if (wrap.dataset.bound) return;
+    wrap.dataset.bound = '1';
+    wrap.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!document.body.classList.contains('editing')) return;
+      document.querySelectorAll('.resizable-image.selected').forEach(function(s) {
+        if (s !== wrap) s.classList.remove('selected');
+      });
+      wrap.classList.add('selected');
+    });
+    var toolbar = wrap.querySelector('.image-toolbar');
+    if (toolbar) {
+      toolbar.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+      toolbar.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var btn = e.target.closest('button');
+        if (!btn) return;
+        if (btn.dataset.size) {
+          wrap.style.width = btn.dataset.size + '%';
+          wrap.style.height = 'auto';
+        }
+        if (btn.dataset.action === 'delete') {
+          if (confirm('Удалить картинку?')) wrap.remove();
+        }
+      });
+    }
+  }
+  function bindAllImages() {
+    document.querySelectorAll('.resizable-image').forEach(bindImage);
+  }
+  bindAllImages();
+
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.resizable-image')) return;
+    document.querySelectorAll('.resizable-image.selected').forEach(function(s) {
+      s.classList.remove('selected');
+    });
+  });
+
+  // Drag-drop image files anywhere on page
+  window.addEventListener('dragover', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    if (e.dataTransfer && Array.from(e.dataTransfer.types || []).indexOf('Files') !== -1) {
+      e.preventDefault();
+      document.body.classList.add('dragging-image');
+    }
+  });
+  window.addEventListener('dragleave', function(e) {
+    if (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+      document.body.classList.remove('dragging-image');
+    }
+  });
+  window.addEventListener('drop', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    document.body.classList.remove('dragging-image');
+    if (!e.dataTransfer) return;
+    var files = Array.from(e.dataTransfer.files || []).filter(function(f) {
+      return f.type.indexOf('image/') === 0;
+    });
+    if (!files.length) return;
+    e.preventDefault();
+    var range = null;
+    if (document.caretRangeFromPoint) {
+      range = document.caretRangeFromPoint(e.clientX, e.clientY);
+    } else if (document.caretPositionFromPoint) {
+      var pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+      if (pos) {
+        range = document.createRange();
+        range.setStart(pos.offsetNode, pos.offset);
+        range.collapse(true);
+      }
+    }
+    if (range && mainEl.contains(range.startContainer)) {
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    files.forEach(function(file) {
+      readImageAsDataUrl(file, function(dataUrl) {
+        insertImageHTML(buildImageHTML(dataUrl));
+      });
+    });
+  });
+
+  // === Download edited HTML ===
   downloadBtn.addEventListener('click', function() {
     var copy = document.documentElement.cloneNode(true);
-    // Clean editing artifacts
     copy.querySelector('main')?.removeAttribute('contenteditable');
-    copy.querySelector('body')?.classList.remove('editing');
+    var b = copy.querySelector('body');
+    if (b) { b.classList.remove('editing'); b.classList.remove('dragging-image'); }
+    copy.querySelectorAll('.resizable-image.selected').forEach(function(s) {
+      s.classList.remove('selected');
+    });
+    var et = copy.querySelector('#editToggle');
+    if (et) { et.classList.remove('active'); et.textContent = '✏️ Редактировать'; }
+    var ib = copy.querySelector('#imgInsert');
+    if (ib) { ib.style.display = 'none'; }
+    var db = copy.querySelector('#downloadHtml');
+    if (db) { db.style.display = 'none'; }
     var html = '<!DOCTYPE html>\n' + copy.outerHTML;
     var blob = new Blob([html], { type: 'text/html' });
     var url = URL.createObjectURL(blob);
@@ -923,5 +1148,6 @@
   });
 </script>
 
-</body>
-</html>
+
+
+</body></html>
