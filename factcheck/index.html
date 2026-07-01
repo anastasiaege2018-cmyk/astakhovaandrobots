@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Анти-галлюциноген: факт-чекинг любой информации через AI</title>
+<meta name="description" content="Как проверять любую информацию с помощью LLM: источники, вердикт, красные флажки. Логика Claim → Evidence → Verdict.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #37352f;
+    --text-mute: #787774;
+    --text-light: #9b9a97;
+    --divider: #ebebea;
+    --hover: #f7f6f3;
+
+    /* Notion-style callout colors */
+    --yellow-bg: #fdecc8;
+    --yellow-text: #5c3a00;
+    --yellow-border: #f0c860;
+
+    --blue-bg: #d3e5ef;
+    --blue-text: #143a5d;
+    --blue-border: #8bb9d5;
+
+    --green-bg: #dbeddb;
+    --green-text: #1f3a1f;
+    --green-border: #8fbf8f;
+
+    --pink-bg: #fbe4e4;
+    --pink-text: #6e1a1a;
+    --pink-border: #e89090;
+
+    --purple-bg: #ebe1f1;
+    --purple-text: #3b1a55;
+    --purple-border: #b89dcc;
+
+    --gray-bg: #f1f1ef;
+    --gray-text: #37352f;
+
+    --orange: #d9730d;
+    --link: #2e60c2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 64px 24px 120px;
+  }
+
+  .eyebrow {
+    color: var(--text-mute);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    color: var(--text);
+  }
+
+  h2 {
+    font-size: 26px;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin-top: 56px;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+
+  h3 {
+    font-size: 18px;
+    line-height: 1.3;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  p {
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  p strong { font-weight: 600; }
+
+  a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+  }
+
+  a:hover { text-decoration-thickness: 2px; }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 48px 0;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 0.88em;
+    background: var(--gray-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #c93838;
+  }
+
+  .code-block {
+    background: var(--gray-bg);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 16px 18px;
+    border-radius: 6px;
+    margin: 20px 0;
+    align-items: flex-start;
+  }
+
+  .callout-icon {
+    font-size: 20px;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+
+  .callout-body { flex: 1; line-height: 1.5; }
+  .callout-body p { margin-bottom: 8px; }
+  .callout-body p:last-child { margin-bottom: 0; }
+
+  .callout.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+  .callout.blue { background: var(--blue-bg); color: var(--blue-text); }
+  .callout.green { background: var(--green-bg); color: var(--green-text); }
+  .callout.pink { background: var(--pink-bg); color: var(--pink-text); }
+  .callout.purple { background: var(--purple-bg); color: var(--purple-text); }
+  .callout.gray { background: var(--gray-bg); color: var(--text); }
+
+  .callout strong { font-weight: 600; }
+
+  .meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 40px;
+    padding: 16px 0;
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    font-size: 14px;
+    color: var(--text-mute);
+  }
+
+  .meta-bar div { display: flex; gap: 8px; align-items: center; }
+  .meta-bar strong { color: var(--text); font-weight: 500; }
+
+  ul, ol {
+    margin: 12px 0;
+    padding-left: 26px;
+  }
+
+  ul li, ol li {
+    margin-bottom: 8px;
+    line-height: 1.55;
+  }
+
+  ul li::marker { color: var(--text-mute); }
+
+  .checklist {
+    list-style: none;
+    padding-left: 0;
+    margin: 16px 0;
+  }
+
+  .checklist li {
+    padding-left: 32px;
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  .checklist li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #2e8e3f;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  details {
+    margin: 12px 0;
+    border-radius: 4px;
+  }
+
+  details summary {
+    cursor: pointer;
+    padding: 6px 0;
+    font-weight: 500;
+    list-style: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  details summary::-webkit-details-marker { display: none; }
+
+  details summary::before {
+    content: '▸';
+    color: var(--text-mute);
+    transition: transform 0.15s;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 12px;
+  }
+
+  details[open] summary::before { transform: rotate(90deg); }
+
+  details > div { padding: 6px 0 12px 20px; color: var(--text); }
+
+  figure.screenshot {
+    margin: 24px 0;
+    border-radius: 8px;
+    background: var(--gray-bg);
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  figure.screenshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  figure.screenshot figcaption {
+    color: var(--text-mute);
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 12px 6px;
+    font-style: italic;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .card {
+    background: var(--hover);
+    border-radius: 6px;
+    padding: 16px 18px;
+    border: 1px solid var(--divider);
+  }
+
+  .card .tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--orange);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    margin: 0 0 6px 0;
+    font-weight: 600;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--text-mute);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .steps {
+    counter-reset: s;
+    list-style: none;
+    padding-left: 0;
+    margin: 20px 0;
+  }
+
+  .steps li {
+    counter-increment: s;
+    padding-left: 44px;
+    position: relative;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .steps li::before {
+    content: counter(s);
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 28px;
+    height: 28px;
+    background: var(--yellow-bg);
+    color: var(--yellow-text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .steps li strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .deadline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 24px 0;
+  }
+
+  .deadline-cell {
+    background: var(--gray-bg);
+    padding: 18px 14px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .deadline-cell .label {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .deadline-cell .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .deadline-cell .sub {
+    font-size: 13px;
+    color: var(--text-mute);
+    margin-top: 4px;
+  }
+
+  .end {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 14px;
+  }
+
+  .end .wave {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: var(--orange);
+  }
+
+  .end-back {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--text-mute);
+    font-size: 14px;
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid var(--divider);
+    border-radius: 100px;
+    transition: all 0.15s;
+  }
+
+  .end-back:hover {
+    background: var(--hover);
+    color: var(--text);
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 18px 80px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 22px; margin-top: 40px; }
+    .grid { grid-template-columns: 1fr; }
+    .deadline { grid-template-columns: 1fr; }
+    .meta-bar { gap: 12px; flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<main class="page">
+
+  <!-- ─── HEADER ─── -->
+  <div class="eyebrow">💊 Факт-чекинг через AI</div>
+  <h1>Анти-галлюциноген</h1>
+
+  <p style="font-size: 18px; color: var(--text-mute); margin-bottom: 28px;">
+    LLM по умолчанию умеет красиво врать. Учимся проверять любое утверждение «под ключ» — с источниками, вердиктом и оценкой рисков.
+  </p>
+
+  <div class="meta-bar">
+    <div><span>⏱</span> <strong>3–5 минут</strong> на настройку</div>
+    <div><span>🎯</span> Проверка <strong>с источниками</strong> и вердиктом</div>
+    <div><span>📱</span> С телефона и <strong>компа</strong></div>
+  </div>
+
+  <!-- ─── ОПОРНАЯ ИДЕЯ ─── -->
+  <div class="callout yellow">
+    <div class="callout-icon">💊</div>
+    <div class="callout-body">
+      <p><strong>Факт-чекинг — твой спасательный круг в работе с нейронкой.</strong> Она всегда может «галлюцинировать». Просишь ответ со ссылками и датами — сразу видишь, откуда факт, и можешь провалиться в источник.</p>
+    </div>
+  </div>
+
+  <figure class="screenshot">
+    <img src="img/img1.webp" alt="Perplexity — режим проверки фактов What do you want to fact check">
+    <figcaption>Perplexity умеет в отдельный режим «Fact Check» — отдаёт список источников</figcaption>
+  </figure>
+
+  <!-- ─── ЗА ЧТО ЛЮБИМ ─── -->
+  <h2>💗 За что любим факт-чекинг с LLM</h2>
+
+  <ul>
+    <li><strong>Видно источники.</strong> Просишь «только проверенные ссылки» — сразу понятно, откуда взялся факт, можно быстро туда «провалиться».</li>
+    <li><strong>Экономит часы.</strong> Одно окно → тезис, проверка, ссылки и краткое резюме.</li>
+    <li><strong>Работает везде.</strong> Не только диалоги с нейросетью, но и статьи, интервью, слайды, материалы Википедии — каркас проверки один.</li>
+    <li><strong>Незаменимо.</strong> База гигиены в работе с LLM, которая по умолчанию может выдумывать.</li>
+  </ul>
+
+  <!-- ─── ЧТО ПОНАДОБИТСЯ ─── -->
+  <div class="callout blue">
+    <div class="callout-icon">🎒</div>
+    <div class="callout-body">
+      <p><strong>Что понадобится:</strong> браузер + VPN (если ты в РФ) и то, что проверяем — утверждение, ссылка или скрин.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── КАК РАБОТАЕТ ─── -->
+  <h2>🧭 Как это работает</h2>
+
+  <p>Логика простая: <strong>Claim → Evidence → Verdict</strong>.</p>
+
+  <ol>
+    <li><strong>Claim</strong> — сначала формализуй тезис: что именно проверяем.</li>
+    <li><strong>Evidence</strong> — собери источники с датами и цитатами.</li>
+    <li><strong>Verdict</strong> — получи вердикт и прими решение.</li>
+  </ol>
+
+  <hr>
+
+  <!-- ─── ЧЕМ ПРОВЕРЯТЬ ─── -->
+  <h2>🛠 Чем проверять</h2>
+
+  <ul>
+    <li><strong><a href="https://www.perplexity.ai/" target="_blank">Perplexity AI</a></strong> — отдаёт список источников (статьи, сайты, PDF), режим Copilot для уточнений. Лучший баланс точности и удобства.</li>
+    <li><strong><a href="https://gemini.google.com/" target="_blank">Google Gemini</a></strong> — ну а кто проверит источники лучше самого гугла 🙂</li>
+    <li><strong><a href="https://chatgpt.com/" target="_blank">ChatGPT</a></strong> — при включённом веб-поиске даёт ссылки. Важно проверять, что не подсовывает псевдо-источники.</li>
+  </ul>
+
+  <div class="callout pink">
+    <div class="callout-icon">☝️</div>
+    <div class="callout-body">
+      <p>В ChatGPT обязательно включи режим <strong>поиска в интернете</strong> — иначе будет отвечать «из головы».</p>
+    </div>
+  </div>
+
+  <figure class="screenshot">
+    <img src="img/img2.webp" alt="ChatGPT — включение Web search через меню More">
+    <figcaption>ChatGPT → меню «➕ / More» → включаем <strong>Web search</strong></figcaption>
+  </figure>
+
+  <div class="callout gray">
+    <div class="callout-icon">🧪</div>
+    <div class="callout-body">
+      <p>Некоторые (в основном китайские) LLM выносят «Проверку фактов» отдельной фичей — например, <a href="https://www.genspark.ai/agents?type=agentic_cross_check" target="_blank">Genspark</a>.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ПОШАГОВО ─── -->
+  <h2>👣 Пошагово</h2>
+
+  <ol class="steps">
+    <li><strong>Запрос к LLM с жёстким форматом</strong>Копируй промпт ниже, вставь свой тезис — и получишь структурный разбор с источниками и вердиктом.</li>
+    <li><strong>Проверь ссылки руками</strong>Убедись, что сайты реальные, а не «галлюцинация ссылок» (и такое бывает). Очень полезная привычка.</li>
+    <li><strong>Кросс-проверка второй LLM</strong>Попроси другую модель кратко оценить тот же тезис и сравнить источники и даты. Это гасит «модель-специфичные» галлюцинации.</li>
+  </ol>
+
+  <p style="font-size:14px; color: var(--text-mute);">Промпт для шага 1:</p>
+  <div class="code-block">Ты — факт-чекер. Проверь утверждение ниже.
+
+ТЕЗИС: «{вставь утверждение / ссылку}»
+
+СДЕЛАЙ:
+1) Краткое резюме (2–3 предложения): о чём тезис и что проверяем.
+2) 5–7 ссылок с высоким доверием (международные и локальные СМИ,
+   официальные реестры, научные базы). Для каждой: название, дата,
+   короткая выдержка, почему источник релевантен.
+3) Верификация: сопоставь цитаты из источников с частями тезиса.
+   Отметь: что подтверждено, что опровергается, где нет данных.
+4) Вердикт: True / Mostly True / Mixed / Mostly False / False — и почему.
+5) Красные флажки: даты, вырванные цитаты, манипуляции графиками,
+   подмена метрик, старые данные.
+6) Что проверить вручную, если остаются сомнения.
+
+ПРАВИЛА:
+— Только проверяемые ссылки (без домыслов).
+— Ясно отмечай даты (ДД.ММ.ГГГГ).
+— Кратко, структурно, с хорошим форматированием.</div>
+
+  <hr>
+
+  <!-- ─── КУДА ПРИКРУТИТЬ ─── -->
+  <h2>🎯 Куда прикрутить уже сегодня</h2>
+
+  <div class="grid">
+    <div class="card">
+      <div class="tag">медиа · контент</div>
+      <h3>Цитата перед постом</h3>
+      <p>Проверить цитату из медиа перед постом или рассылкой — чтобы не разносить фейк.</p>
+    </div>
+    <div class="card">
+      <div class="tag">бизнес · питч</div>
+      <h3>Цифры на слайде</h3>
+      <p>Верифицировать метрики для инвестпитча: откуда цифра, свежая ли, не подменили ли ось.</p>
+    </div>
+    <div class="card">
+      <div class="tag">наука</div>
+      <h3>«Работает ли X»</h3>
+      <p>Сверить утверждение по систематическим обзорам: что доказано, а что гипотеза.</p>
+    </div>
+    <div class="card">
+      <div class="tag">википедия</div>
+      <h3>Кто дописал абзац</h3>
+      <p>Разобраться, кто и когда добавил спорный кусок в статью (Who Wrote That?, WikiBlame).</p>
+    </div>
+    <div class="card">
+      <div class="tag">пресса</div>
+      <h3>Научный пресс-релиз</h3>
+      <p>Разложить: что реально доказано, а что — красивая формулировка ради заголовка.</p>
+    </div>
+    <div class="card">
+      <div class="tag">фото · факты</div>
+      <h3>Проверка картинки</h3>
+      <p>Столкнуть дату и контекст фото с оригиналом — и запросить источники.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗАДАНИЕ СО ЗВЁЗДОЧКОЙ ─── -->
+  <h2>⭐ Задание со звёздочкой</h2>
+
+  <p>Если факт-чекишь часто или по работе — заведи <strong>отдельный проект</strong> и загрузи в него системные инструкции редактора-фактчекера:</p>
+
+  <div class="code-block">Ты — редактор-фактчекер. Проверяешь любые утверждения, статьи,
+интервью и данные. Работай строго и структурно.
+
+Алгоритм:
+1. Определи, что именно проверяем (тезис / набор тезисов).
+2. Найди минимум 3 независимых источника (URL, дата, цитата):
+   — Новости/политика: Fact Check Explorer, AP/Reuters/AFP, Snopes, PolitiFact.
+   — Наука: Consensus, Scite, peer-reviewed базы.
+   — Википедия: Who Wrote That?, WikiBlame.
+   — Код: GitHub, PyPI, npm (без выдумывания пакетов).
+3. Сопоставь факты с тезисами: подтверждено / опровергнуто / нет данных.
+4. Отдели мнения и предположения (Opinion / Assumption).
+5. Вердикт: True / Mostly True / Mixed / Mostly False / False.
+6. Отчёт таблицей: [№ | Тезис | Источники (URL+дата) | Цитата | Статус | Комментарий].
+
+Правила:
+— Никогда не выдумывай ссылки, только реальные URL с датами.
+— Нет достоверных источников → «Недостаточно данных».
+— Всегда указывай дату публикации.
+— При графиках проверяй оси, масштаб, отсечки, манипуляции.</div>
+
+  <hr>
+
+  <!-- ─── НА ЗАМЕТКУ ─── -->
+  <h2>🧼 Хозяйке на заметку</h2>
+
+  <ul>
+    <li><strong>Требуй источники с датами.</strong> Правило: отвечать, только если ≥3 независимых источника высокого доверия, каждый с датой. Меньше — «Недостаточно проверяемых источников».</li>
+    <li><strong>Всегда фиксируй даты.</strong> Старая правда сегодня может быть ложью.</li>
+    <li><strong>Никаких «единственных» источников</strong> для резких выводов — минимум 3 независимых.</li>
+    <li><strong>Допроверяй через факт-чек-базы:</strong> <a href="https://toolbox.google.com/factcheck" target="_blank">Google Fact Check Explorer</a>, <a href="https://www.snopes.com/" target="_blank">Snopes</a>, <a href="https://www.politifact.com/" target="_blank">PolitiFact</a>, <a href="https://apnews.com/ap-fact-check" target="_blank">AP</a>, <a href="https://www.reuters.com/fact-check/" target="_blank">Reuters</a>, <a href="https://factcheck.afp.com/" target="_blank">AFP</a>.</li>
+  </ul>
+
+  <div class="callout green">
+    <div class="callout-icon">📊</div>
+    <div class="callout-body">
+      <p>По свежему <a href="https://github.com/vectara/hallucination-leaderboard" target="_blank">Hallucination Leaderboard</a> (Vectara) у топ-моделей «заземлённые» галлюцинации в коротких ответах уже ~1–2%. Но это сильно зависит от задачи и промпта — так что проверять всё равно надо.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── АЛЬТЕРНАТИВЫ ─── -->
+  <h2>🌀 Альтернативы и полезные базы</h2>
+
+  <details>
+    <summary><strong>Google Fact Check Explorer</strong> — агрегатор проверок</summary>
+    <div>Собирает ClaimReview по Snopes / PolitiFact / AP / Reuters / AFP. <a href="https://toolbox.google.com/factcheck" target="_blank">toolbox.google.com/factcheck</a></div>
+  </details>
+
+  <details>
+    <summary><strong>Consensus &amp; Scite</strong> — для науки</summary>
+    <div>Ответы, собранные из peer-reviewed исследований, с указанием, подтверждают они тезис или опровергают. <a href="https://consensus.app/" target="_blank">consensus.app</a> · <a href="https://scite.ai/" target="_blank">scite.ai</a></div>
+  </details>
+
+  <details>
+    <summary><strong>Who Wrote That? &amp; WikiBlame</strong> — для Википедии</summary>
+    <div>Показывают, кто и когда добавил конкретный фрагмент статьи. Удобно для проверки спорных правок.</div>
+  </details>
+
+  <!-- ─── END ─── -->
+  <div class="end">
+    <p>с любовью, Настя ✦</p>
+  </div>
+
+</main>
+
+</body>
+</html>
