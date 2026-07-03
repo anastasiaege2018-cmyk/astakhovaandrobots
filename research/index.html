@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок №5 · Deep Research — The Breeze</title>
+<meta name="description" content="Урок №5 клуба The Breeze. Как за 15 минут получить структурированное исследование любой темы через Deep Research.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #37352f;
+    --text-mute: #787774;
+    --text-light: #9b9a97;
+    --divider: #ebebea;
+    --hover: #f7f6f3;
+    --yellow-bg: #fdecc8; --yellow-text: #5c3a00;
+    --blue-bg: #d3e5ef; --blue-text: #143a5d;
+    --green-bg: #dbeddb; --green-text: #1f3a1f;
+    --pink-bg: #fbe4e4; --pink-text: #6e1a1a;
+    --purple-bg: #ebe1f1; --purple-text: #3b1a55;
+    --gray-bg: #f1f1ef;
+    --orange: #d9730d;
+    --link: #2e60c2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.55; font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--yellow-bg); color: var(--yellow-text); }
+  .page { max-width: 740px; margin: 0 auto; padding: 64px 24px 120px; }
+
+  .eyebrow {
+    color: var(--text-mute); font-size: 13px; font-weight: 500;
+    letter-spacing: 0.04em; margin-bottom: 16px; text-transform: uppercase;
+  }
+  h1 { font-size: 42px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; color: var(--text); }
+  h2 { font-size: 26px; line-height: 1.25; font-weight: 600; letter-spacing: -0.015em; margin-top: 56px; margin-bottom: 18px; color: var(--text); }
+  h3 { font-size: 18px; line-height: 1.3; font-weight: 600; margin-top: 32px; margin-bottom: 10px; color: var(--text); }
+  p { margin-bottom: 14px; color: var(--text); }
+  p strong { font-weight: 600; }
+  a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-thickness: 2px; }
+  hr { border: none; border-top: 1px solid var(--divider); margin: 48px 0; }
+
+  code {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 0.88em; background: var(--gray-bg);
+    padding: 2px 6px; border-radius: 4px; color: #c93838;
+  }
+
+  .code-block {
+    background: var(--gray-bg); border-radius: 6px;
+    padding: 46px 20px 18px; margin: 16px 0;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 13.5px; line-height: 1.6; color: var(--text);
+    overflow-x: auto; white-space: pre-wrap; position: relative;
+  }
+  .code-block .placeholder {
+    background: var(--yellow-bg); color: var(--yellow-text);
+    padding: 1px 6px; border-radius: 4px; font-weight: 600;
+  }
+
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px;
+    background: #ffffff; border: 1px solid var(--divider); border-radius: 6px;
+    padding: 6px 12px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 12px; font-weight: 500; color: var(--text);
+    cursor: pointer; z-index: 2; transition: all 0.15s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .copy-btn:hover { background: var(--yellow-bg); color: var(--yellow-text); border-color: var(--yellow-text); }
+  .copy-btn.copied { background: #dbeddb; color: #1f3a1f; border-color: #1f3a1f; }
+
+  /* Resizable image (editor) */
+  .resizable-image {
+    display: inline-block; position: relative;
+    resize: none; overflow: hidden;
+    max-width: 100%; width: 60%;
+    margin: 16px 0; border-radius: 6px;
+    vertical-align: top; line-height: 0;
+  }
+  .resizable-image img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; user-select: none; }
+  body.editing .resizable-image { outline: 1px dashed transparent; outline-offset: 2px; cursor: pointer; resize: both; }
+  body.editing .resizable-image:hover { outline-color: var(--orange); }
+  body.editing .resizable-image.selected { outline: 2px solid var(--orange); }
+
+  .image-toolbar {
+    position: absolute; bottom: 100%; left: 0; margin-bottom: 6px;
+    background: #ffffff; border: 1px solid var(--divider); border-radius: 6px;
+    padding: 4px; display: none; gap: 4px; align-items: center;
+    z-index: 5; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.1); line-height: 1.2;
+  }
+  .resizable-image.selected .image-toolbar { display: flex; }
+  body:not(.editing) .image-toolbar { display: none !important; }
+  .image-toolbar button { background: transparent; border: none; padding: 4px 8px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; cursor: pointer; color: var(--text); }
+  .image-toolbar button:hover { background: var(--hover); }
+  .image-toolbar button.del { color: #c93838; }
+  .image-toolbar button.del:hover { background: var(--pink-bg); }
+  .image-toolbar .sep { width: 1px; height: 18px; background: var(--divider); display: inline-block; }
+
+  .editor-drop-overlay { position: fixed; inset: 0; background: rgba(217, 115, 13, 0.06); border: 3px dashed var(--orange); pointer-events: none; z-index: 999; display: none; }
+  body.dragging-image .editor-drop-overlay { display: block; }
+
+  .callout { display: flex; gap: 12px; padding: 16px 18px; border-radius: 6px; margin: 20px 0; align-items: flex-start; }
+  .callout-icon { font-size: 20px; line-height: 1.4; flex-shrink: 0; }
+  .callout-body { flex: 1; line-height: 1.5; }
+  .callout-body p { margin-bottom: 8px; }
+  .callout-body p:last-child { margin-bottom: 0; }
+  .callout.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+  .callout.blue { background: var(--blue-bg); color: var(--blue-text); }
+  .callout.green { background: var(--green-bg); color: var(--green-text); }
+  .callout.pink { background: var(--pink-bg); color: var(--pink-text); }
+  .callout.purple { background: var(--purple-bg); color: var(--purple-text); }
+  .callout.gray { background: var(--gray-bg); color: var(--text); }
+  .callout strong { font-weight: 600; }
+
+  .meta-bar { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 40px; padding: 16px 0; border-top: 1px solid var(--divider); border-bottom: 1px solid var(--divider); font-size: 14px; color: var(--text-mute); }
+  .meta-bar div { display: flex; gap: 8px; align-items: center; }
+  .meta-bar strong { color: var(--text); font-weight: 500; }
+
+  ul, ol { margin: 12px 0; padding-left: 26px; }
+  ul li, ol li { margin-bottom: 8px; line-height: 1.55; }
+  ul li::marker { color: var(--text-mute); }
+
+  .steps { counter-reset: s; list-style: none; padding-left: 0; margin: 20px 0; }
+  .steps li { counter-increment: s; padding-left: 44px; position: relative; margin-bottom: 24px; line-height: 1.6; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: -2px; width: 28px; height: 28px; background: var(--yellow-bg); color: var(--yellow-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+  .steps li strong { display: block; font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+
+  /* Tools cards (where to do it) */
+  .tool-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 20px 0; }
+  .tool { background: var(--hover); border: 1px solid var(--divider); border-radius: 8px; padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
+  .tool.main { background: var(--yellow-bg); border-color: var(--yellow-text); }
+  .tool .tool-icon { font-size: 22px; line-height: 1; flex-shrink: 0; }
+  .tool .tool-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .tool .tool-name .badge { display: inline-block; background: var(--yellow-text); color: white; padding: 1px 8px; border-radius: 100px; font-size: 10px; font-weight: 500; margin-left: 6px; letter-spacing: 0.04em; vertical-align: 1px; }
+  .tool.main .tool-name { color: var(--yellow-text); }
+  .tool .tool-desc { font-size: 14px; color: var(--text); line-height: 1.5; }
+  .tool.main .tool-desc { color: var(--yellow-text); }
+
+  /* Niche cards */
+  .niche-list { margin: 20px 0; }
+  .niche { padding: 14px 0; border-top: 1px solid var(--divider); display: flex; gap: 14px; }
+  .niche:last-child { border-bottom: 1px solid var(--divider); }
+  .niche .n-emoji { font-size: 20px; flex-shrink: 0; }
+  .niche .n-body { flex: 1; }
+  .niche .n-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--orange); font-weight: 600; margin-bottom: 2px; }
+  .niche .n-name { font-weight: 600; margin-bottom: 4px; }
+  .niche .n-desc { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+  /* Deadline row */
+  .deadline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 24px 0; }
+  .deadline-cell { background: var(--gray-bg); padding: 18px 14px; border-radius: 6px; text-align: center; }
+  .deadline-cell .label { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-mute); margin-bottom: 8px; font-weight: 600; }
+  .deadline-cell .value { font-size: 18px; font-weight: 700; color: var(--text); }
+  .deadline-cell .sub { font-size: 13px; color: var(--text-mute); margin-top: 4px; }
+
+  /* Edit toolbar */
+  .edit-toolbar { position: fixed; top: 16px; right: 16px; z-index: 1000; display: flex; gap: 6px; background: #ffffff; border: 1px solid var(--divider); border-radius: 100px; padding: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .edit-toolbar button { background: transparent; border: none; padding: 6px 12px; border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .edit-toolbar button:hover { background: var(--hover); }
+  .edit-toolbar button.active { background: var(--yellow-bg); color: var(--yellow-text); }
+  body.editing { caret-color: var(--orange); }
+  body.editing [contenteditable="true"]:focus { outline: 2px dashed var(--orange); outline-offset: 4px; border-radius: 4px; }
+
+  /* Screenshot placeholder */
+  .screenshot-placeholder { margin: 24px 0; background: var(--gray-bg); border-radius: 8px; padding: 6px; }
+  .screenshot-placeholder-inner { background: #fafaf9; border-radius: 4px; padding: 32px 24px; text-align: center; border: 1px dashed #d0cfca; }
+  .screenshot-placeholder-inner .icon { font-size: 28px; margin-bottom: 8px; opacity: 0.5; }
+  .screenshot-placeholder-inner .label { color: var(--text-mute); font-size: 13px; font-weight: 500; }
+  .screenshot-placeholder-inner .caption { color: var(--text-light); font-size: 12px; margin-top: 6px; font-style: italic; }
+
+  /* Footer */
+  .end { margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--divider); text-align: center; color: var(--text-mute); font-size: 14px; }
+  .end .wave { font-size: 24px; margin-bottom: 8px; color: var(--orange); }
+  .end-back { display: inline-block; margin-top: 20px; color: var(--text-mute); font-size: 14px; text-decoration: none; padding: 6px 14px; border: 1px solid var(--divider); border-radius: 100px; transition: all 0.15s; }
+  .end-back:hover { background: var(--hover); color: var(--text); }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 18px 80px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 22px; margin-top: 40px; }
+    .deadline { grid-template-columns: 1fr; }
+    .meta-bar { gap: 12px; flex-direction: column; }
+    .edit-toolbar { right: 8px; top: 8px; padding: 3px; }
+    .edit-toolbar button { padding: 5px 10px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="edit-toolbar">
+  <button id="editToggle" type="button">✏️ Редактировать</button>
+  <button id="imgInsert" type="button" style="display: none;">🖼 Картинка</button>
+  <button id="downloadHtml" type="button" style="display: none;">💾 Скачать</button>
+</div>
+<div class="editor-drop-overlay"></div>
+<input type="file" id="imgFile" accept="image/*" style="display: none;" multiple>
+
+<main class="page">
+
+  <div class="eyebrow">📘 Урок №5 · The Breeze</div>
+  <h1>Deep Research 🔍</h1>
+
+  <p style="font-size: 18px; color: var(--text-mute); margin-bottom: 28px;">
+    Задаёшь вопрос — AI 15 минут сам ходит по интернету, собирает данные из десятков источников и приносит тебе структурированный отчёт со ссылками. Ни одного открытого таба.
+  </p>
+
+  <div class="meta-bar">
+    <div><span>⏱</span> <strong>15–30 минут</strong> на исследование</div>
+    <div><span>🌐</span> Работает <strong>с VPN</strong></div>
+    <div><span>📱</span> С <strong>телефона и компа</strong></div>
+  </div>
+
+  <div class="callout yellow">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <p><strong>Deep Research — это отдельный режим внутри AI.</strong> В обычном чате Claude/ChatGPT отвечает из «памяти» модели за секунды. В режиме Research он идёт в интернет, читает много статей, сравнивает источники, строит план исследования и выдаёт отчёт с цитатами. То, что руками отняло бы 3 часа гугла — здесь готово за четверть часа.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ГДЕ ЖИВЁТ ─── -->
+  <h2>Где живёт Deep Research</h2>
+
+  <p>Функция появилась почти во всех «главных» AI. Разница между ними — в глубине и в количестве источников. Мой опыт — ниже.</p>
+
+  <div class="tool-grid">
+    <div class="tool main">
+      <div class="tool-icon">🔎</div>
+      <div>
+        <div class="tool-name">Perplexity Deep Research<span class="badge">старт</span></div>
+        <div class="tool-desc">Самый доступный вход — бесплатно даёт несколько исследований в день. Хорошо ищет свежее, всегда даёт ссылки. Отличный вариант, чтобы попробовать сегодня без подписки.</div>
+      </div>
+    </div>
+
+    <div class="tool">
+      <div class="tool-icon">🟧</div>
+      <div>
+        <div class="tool-name">ChatGPT Deep Research</div>
+        <div class="tool-desc">В Pro и Plus. Работает медленнее (10–30 минут), но копает глубже — большие отчёты со структурой, таблицами, разделами.</div>
+      </div>
+    </div>
+
+    <div class="tool">
+      <div class="tool-icon">🎨</div>
+      <div>
+        <div class="tool-name">Claude Research</div>
+        <div class="tool-desc">В Pro. Хорош, когда важна аккуратная подача — читается как экспертный текст, а не машинный дайджест.</div>
+      </div>
+    </div>
+
+    <div class="tool">
+      <div class="tool-icon">✨</div>
+      <div>
+        <div class="tool-name">Gemini Deep Research</div>
+        <div class="tool-desc">У Google самый широкий доступ к веб-индексу. Хорош для локальных и нишевых тем, которые остальные могут проглядеть.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENSHOT: drop img/01-research-mode.png -->
+  <div class="screenshot-placeholder">
+    <div class="screenshot-placeholder-inner">
+      <div class="icon">🖼</div>
+      <div class="label">Скрин: где включить Research в интерфейсе</div>
+      <div class="caption">~ Perplexity или ChatGPT, режим Deep Research ~</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── КОМУ НУЖНО ─── -->
+  <h2>Кому это надо в первую очередь</h2>
+
+  <p>Deep Research не «универсальная штука для всего». Он реально экономит часы там, где ты бы иначе долго гуглила, сравнивала и записывала.</p>
+
+  <div class="niche-list">
+    <div class="niche">
+      <div class="n-emoji">🟠</div>
+      <div class="n-body">
+        <div class="n-tag">контент · стратегии</div>
+        <div class="n-name">Настя</div>
+        <div class="n-desc">Обзор форматов, которые сейчас зашли у блогеров в твоей нише. «Что делают топ-10 экспертных блогов в теме AI/образ жизни за последние 3 месяца». Готовая карта конкурентов и трендов.</div>
+      </div>
+    </div>
+
+    <div class="niche">
+      <div class="n-emoji">🌸</div>
+      <div class="n-body">
+        <div class="n-tag">бьюти · блог</div>
+        <div class="n-name">Настя Сапко</div>
+        <div class="n-desc">Обзор рынка бьюти-услуг в Анапе: средние цены, тренды, как позиционируются топ-салоны. Плюс — что сейчас цепляет в бьюти-контенте в соцсетях.</div>
+      </div>
+    </div>
+
+    <div class="niche">
+      <div class="n-emoji">🟡</div>
+      <div class="n-body">
+        <div class="n-tag">личный помощник</div>
+        <div class="n-name">Аня</div>
+        <div class="n-desc">Обзор AI-инструментов под конкретную задачу: «какие сервисы автоматизируют работу с почтой», «сравнение планировщиков», «что реально помогает не забыть про важное».</div>
+      </div>
+    </div>
+
+    <div class="niche">
+      <div class="n-emoji">🟢</div>
+      <div class="n-body">
+        <div class="n-tag">HR · поиск работы</div>
+        <div class="n-name">Оля</div>
+        <div class="n-desc">Обзор рынка вакансий head of HR: что сейчас требуют в senior-требованиях, какая вилка, какие софт-скиллы приоритетны. Плюс — свежие исследования по практикам найма.</div>
+      </div>
+    </div>
+
+    <div class="niche">
+      <div class="n-emoji">🔵</div>
+      <div class="n-body">
+        <div class="n-tag">психология</div>
+        <div class="n-name">Юля</div>
+        <div class="n-desc">Свежие исследования по конкретной методике или диагнозу. «Что доказательная медицина говорит про КПТ при [X] за последние 5 лет» — отчёт с академическими ссылками.</div>
+      </div>
+    </div>
+
+    <div class="niche">
+      <div class="n-emoji">🟣</div>
+      <div class="n-body">
+        <div class="n-tag">караоке · общепит</div>
+        <div class="n-name">Альбина</div>
+        <div class="n-desc">Обзор трендов в hospitality: что сейчас работает у топ-заведений России. Кейсы, механики продвижения, средние чеки и как их поднимают в будни.</div>
+      </div>
+    </div>
+
+    <div class="niche">
+      <div class="n-emoji">🪷</div>
+      <div class="n-body">
+        <div class="n-tag">тендеры</div>
+        <div class="n-name">Светлана</div>
+        <div class="n-desc">Разбор конкретного заказчика: история контрактов, кто выигрывал, средние цены. Или отраслевой обзор перед подачей — что вообще происходит в сегменте.</div>
+      </div>
+    </div>
+
+    <div class="niche">
+      <div class="n-emoji">⚪</div>
+      <div class="n-body">
+        <div class="n-tag">образование · общепит</div>
+        <div class="n-name">Анна</div>
+        <div class="n-desc">Отраслевые бенчмарки: средние метрики в общепите региона, тренды в образовательных программах. Ответ на «а как у других».</div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗАДАНИЕ ─── -->
+  <h2>🎯 Задание этой недели</h2>
+
+  <p>Возьми одну реальную рабочую тему, которую ты откладываешь именно потому, что «долго разбираться», и прогони её через Deep Research.</p>
+
+  <ol class="steps">
+    <li><strong>Выбери тему</strong>Из блока выше или свою. Формула хорошей темы: <em>«разобраться в [X], чтобы принять решение про [Y]»</em>. Не «расскажи про AI», а «сравни AI-сервисы для монтажа видео, чтобы выбрать один для команды».</li>
+    <li><strong>Открой один из инструментов</strong>Проще всего — Perplexity. Дальше можно сравнить с ChatGPT/Claude/Gemini.</li>
+    <li><strong>Отправь промпт по формуле</strong>Готовый шаблон ниже. Замени плашку на свою тему.</li>
+    <li><strong>Дождись отчёта</strong>15–30 минут — можно закрыть вкладку. AI пришлёт результат.</li>
+    <li><strong>Проверь ключевые факты</strong>Открой 2–3 источника из ссылок — убедись, что модель не придумала. Это 5 минут, но спасает от ошибок.</li>
+  </ol>
+
+  <!-- ─── ФОРМУЛА ─── -->
+  <h2>Как формулировать запрос</h2>
+
+  <p>Deep Research работает тем лучше, чем точнее ты задала <strong>рамку</strong>. Три вещи, которые я всегда добавляю:</p>
+
+  <ul>
+    <li><strong>Роль</strong> — кто должен «проводить» исследование. «Ты аналитик рынка бьюти» / «Ты редактор отраслевого медиа».</li>
+    <li><strong>Формат ответа</strong> — таблица / список / отчёт с разделами. Без этого AI выдаёт «плавающий» текст.</li>
+    <li><strong>Рамки</strong> — за какой период, по каким регионам, какие типы источников считать. Иначе он смешает Википедию с Reddit.</li>
+  </ul>
+
+  <h3>Готовый промпт (можно копировать)</h3>
+
+  <div class="code-block"><button class="copy-btn" type="button">📋 Скопировать</button>Ты опытный аналитик в области <span class="placeholder">[СФЕРА]</span>. Твоя задача — сделать структурированное исследование по теме:
+
+«<span class="placeholder">ТЕМА ИССЛЕДОВАНИЯ</span>»
+
+Контекст:
+— я <span class="placeholder">[кем работаю, какая задача]</span>
+— решение, которое хочу принять после отчёта: <span class="placeholder">[какое]</span>
+— рамки: данные <span class="placeholder">[за какой период, по каким регионам]</span>
+
+Формат отчёта:
+1. Короткое резюме на 5 строк — что важно знать
+2. Основные игроки/сервисы/подходы (таблица: название, что делает, сильные стороны, слабые стороны)
+3. Тренды за последние 12 месяцев
+4. 3 главных риска или подводных камня
+5. 3 практические рекомендации лично мне под мою задачу
+6. Список источников со ссылками (только авторитетные — статьи, исследования, крупные медиа)
+
+Требования:
+— каждый ключевой факт подкрепляй ссылкой
+— если данные противоречивы — покажи обе стороны
+— избегай общих слов, только конкретика и цифры
+— если чего-то не хватает в открытых источниках — прямо напиши «данных нет»
+
+Не пиши «в этой статье мы рассмотрим». Сразу к делу.</div>
+
+  <p style="font-size: 14px; color: var(--text-mute); font-style: italic;">Замени три жёлтые плашки — и отправляй.</p>
+
+  <hr>
+
+  <!-- ─── ПРОВЕРКА ─── -->
+  <h2>Как проверить, что AI ничего не придумал</h2>
+
+  <p>Главная слабость Deep Research — модель может уверенно сослаться на несуществующую статью или напутать цифры. Что делаю всегда:</p>
+
+  <div class="callout gray">
+    <div class="callout-icon">🕵️</div>
+    <div class="callout-body">
+      <p><strong>Открываю 2–3 ссылки на самые важные факты.</strong> Если статья реальная и в ней есть то, что процитировано — окей. Если статьи нет или в ней другое — этот кусок отчёта отбрасываю.</p>
+    </div>
+  </div>
+
+  <div class="callout gray">
+    <div class="callout-icon">🔁</div>
+    <div class="callout-body">
+      <p><strong>Прогоняю тот же вопрос ещё в одном AI.</strong> Если два инструмента говорят одно и то же — почти наверняка правда. Если расходятся — есть о чём подумать.</p>
+    </div>
+  </div>
+
+  <div class="callout gray">
+    <div class="callout-icon">📅</div>
+    <div class="callout-body">
+      <p><strong>Уточняю дату.</strong> AI может подтянуть статистику 2019 года как «актуальную». Отправляю в чат: <em>«актуальны ли эти данные на 2026 год? Если нет — обнови»</em>.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЧТО ПРИСЛАТЬ ─── -->
+  <h2>📬 Что прислать в чат клуба</h2>
+
+  <ul>
+    <li>📄 <strong>Что вышло у AI</strong> — скриншот или файл с отчётом</li>
+    <li>🎯 <strong>Какую тему взяла</strong> и почему именно её</li>
+    <li>🧠 <strong>Один инсайт</strong> — что нового узнала за эти 15 минут</li>
+    <li>⏱ <strong>Сколько заняло</strong> от запроса до готового отчёта</li>
+    <li>🏷 Хештег <strong>#серфим</strong></li>
+  </ul>
+
+  <div class="deadline">
+    <div class="deadline-cell">
+      <div class="label">⏰ Дедлайн</div>
+      <div class="value">вт · 07.07</div>
+      <div class="sub">до 23:59 МСК</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🌊 Вайбы</div>
+      <div class="value">+1 вайб</div>
+      <div class="sub">за выполнение</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🏷 Хештег</div>
+      <div class="value">#серфим</div>
+      <div class="sub">в посте/комменте</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗВЁЗДОЧКА ─── -->
+  <h2>⭐ Задание со звёздочкой</h2>
+
+  <p>Прогони одну и ту же тему через <strong>4 разных AI</strong> — Perplexity, ChatGPT, Claude, Gemini. Сравни отчёты и напиши свой мета-вывод:</p>
+
+  <ul>
+    <li>Кто дал больше конкретики и цифр</li>
+    <li>Кто нашёл источники, которых не было у других</li>
+    <li>Чей отчёт удобнее использовать в работе прямо сейчас</li>
+    <li>Где расхождения — и что это значит для темы</li>
+  </ul>
+
+  <p>Это самый ценный опыт: ты сама начинаешь видеть характер каждой модели.</p>
+
+  <hr>
+
+  <!-- ─── НА ЗАМЕТКУ ─── -->
+  <h2>🌊 Серферам на заметку</h2>
+
+  <ul>
+    <li><strong>Начни с общего плана.</strong> Первый запрос: «составь план исследования по теме [X] — какие вопросы важно раскрыть». Второй: «раскрой пункт 2». Так глубина растёт в разы.</li>
+    <li><strong>Не спрашивай «расскажи про [тему]».</strong> Это отчёт для галочки. Спрашивай «помоги решить [конкретный вопрос] — вот контекст». Это отчёт для дела.</li>
+    <li><strong>Проси разделить факты и мнения.</strong> Одним списком — цифры и цитаты со ссылками. Другим — интерпретации и выводы. Так проще проверять.</li>
+    <li><strong>Если тема свежая — уточняй дату в промпте.</strong> «Учитывай данные за 2025–2026 годы». AI по умолчанию может подтянуть старую статистику.</li>
+    <li><strong>Сохраняй промпты, которые сработали.</strong> Через месяц захочешь такое же исследование по соседней теме — не будешь придумывать с нуля.</li>
+    <li><strong>Заведи отдельную папку под отчёты.</strong> Каждое исследование — отдельный файл с датой и темой. Через полгода будет своя мини-библиотека знаний.</li>
+  </ul>
+
+  <hr>
+
+  <!-- ─── АЛЬТЕРНАТИВЫ ─── -->
+  <h2>🌀 Что ещё умеет похожее</h2>
+
+  <ul>
+    <li><strong>NotebookLM (Google)</strong> — если у тебя уже есть 5–10 своих файлов/статей и надо получить отчёт по ним, а не по интернету.</li>
+    <li><strong>Google Scholar + Consensus</strong> — для академических тем и медицинских вопросов. Поиск по научным статьям с саммари от AI.</li>
+    <li><strong>Elicit</strong> — специализированный AI-поиск по исследованиям. Хорош для магистерских, диссертаций, доказательной практики.</li>
+  </ul>
+
+  <div class="end">
+    <div class="wave">~ серфим ~</div>
+    <p>с любовью, Настя ✦</p>
+    <a href="/" class="end-back">← обратно в клуб</a>
+  </div>
+
+</main>
+
+<script>
+  // Copy buttons
+  document.querySelectorAll('.copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var block = btn.parentElement.cloneNode(true);
+      var clone = block.querySelector('.copy-btn');
+      if (clone) clone.remove();
+      var text = block.textContent.trim();
+      var done = function() {
+        btn.textContent = '✓ Скопировано';
+        btn.classList.add('copied');
+        setTimeout(function() { btn.textContent = '📋 Скопировать'; btn.classList.remove('copied'); }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else { fallback(); }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta); done();
+      }
+    });
+  });
+
+  // Edit mode + image insert
+  var editToggle = document.getElementById('editToggle');
+  var imgBtn = document.getElementById('imgInsert');
+  var downloadBtn = document.getElementById('downloadHtml');
+  var fileInput = document.getElementById('imgFile');
+  var mainEl = document.querySelector('main');
+
+  function setEditMode(on) {
+    if (on) {
+      document.body.classList.add('editing');
+      mainEl.setAttribute('contenteditable', 'true');
+      editToggle.classList.add('active');
+      editToggle.textContent = '✓ Редактирую';
+      imgBtn.style.display = 'inline-block';
+      downloadBtn.style.display = 'inline-block';
+    } else {
+      document.body.classList.remove('editing');
+      mainEl.removeAttribute('contenteditable');
+      editToggle.classList.remove('active');
+      editToggle.textContent = '✏️ Редактировать';
+      imgBtn.style.display = 'none';
+      downloadBtn.style.display = 'none';
+      document.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+    }
+  }
+  editToggle.addEventListener('click', function() { setEditMode(!document.body.classList.contains('editing')); });
+
+  function readImageAsDataUrl(file, cb) {
+    var reader = new FileReader();
+    reader.onload = function() { cb(reader.result); };
+    reader.readAsDataURL(file);
+  }
+
+  function buildImageHTML(src) {
+    return '<span class="resizable-image" contenteditable="false">' +
+      '<img src="' + src + '" alt="">' +
+      '<span class="image-toolbar" contenteditable="false">' +
+        '<button type="button" data-size="25">25%</button>' +
+        '<button type="button" data-size="50">50%</button>' +
+        '<button type="button" data-size="75">75%</button>' +
+        '<button type="button" data-size="100">100%</button>' +
+        '<span class="sep"></span>' +
+        '<button type="button" class="del" data-action="delete">✕</button>' +
+      '</span>' +
+    '</span>';
+  }
+
+  function insertImageHTML(html) {
+    if (!document.body.classList.contains('editing')) setEditMode(true);
+    mainEl.focus();
+    var sel = window.getSelection();
+    var inserted = false;
+    if (sel.rangeCount > 0 && mainEl.contains(sel.anchorNode)) {
+      try { document.execCommand('insertHTML', false, html); inserted = true; } catch (e) {}
+    }
+    if (!inserted) {
+      var div = document.createElement('div');
+      div.innerHTML = html;
+      mainEl.appendChild(div.firstChild);
+    }
+    bindAllImages();
+  }
+
+  imgBtn.addEventListener('click', function() { fileInput.click(); });
+
+  fileInput.addEventListener('change', function() {
+    var files = Array.from(this.files || []);
+    files.forEach(function(file) {
+      if (file.type.indexOf('image/') !== 0) return;
+      readImageAsDataUrl(file, function(dataUrl) { insertImageHTML(buildImageHTML(dataUrl)); });
+    });
+    this.value = '';
+  });
+
+  function bindImage(wrap) {
+    if (wrap.dataset.bound) return;
+    wrap.dataset.bound = '1';
+    wrap.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!document.body.classList.contains('editing')) return;
+      document.querySelectorAll('.resizable-image.selected').forEach(function(s) { if (s !== wrap) s.classList.remove('selected'); });
+      wrap.classList.add('selected');
+    });
+    var toolbar = wrap.querySelector('.image-toolbar');
+    if (toolbar) {
+      toolbar.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+      toolbar.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var btn = e.target.closest('button');
+        if (!btn) return;
+        if (btn.dataset.size) { wrap.style.width = btn.dataset.size + '%'; wrap.style.height = 'auto'; }
+        if (btn.dataset.action === 'delete') { if (confirm('Удалить картинку?')) wrap.remove(); }
+      });
+    }
+  }
+  function bindAllImages() { document.querySelectorAll('.resizable-image').forEach(bindImage); }
+  bindAllImages();
+
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.resizable-image')) return;
+    document.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+  });
+
+  window.addEventListener('dragover', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    if (e.dataTransfer && Array.from(e.dataTransfer.types || []).indexOf('Files') !== -1) {
+      e.preventDefault();
+      document.body.classList.add('dragging-image');
+    }
+  });
+  window.addEventListener('dragleave', function(e) {
+    if (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+      document.body.classList.remove('dragging-image');
+    }
+  });
+  window.addEventListener('drop', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    document.body.classList.remove('dragging-image');
+    if (!e.dataTransfer) return;
+    var files = Array.from(e.dataTransfer.files || []).filter(function(f) { return f.type.indexOf('image/') === 0; });
+    if (!files.length) return;
+    e.preventDefault();
+    var range = null;
+    if (document.caretRangeFromPoint) { range = document.caretRangeFromPoint(e.clientX, e.clientY); }
+    else if (document.caretPositionFromPoint) {
+      var pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+      if (pos) { range = document.createRange(); range.setStart(pos.offsetNode, pos.offset); range.collapse(true); }
+    }
+    if (range && mainEl.contains(range.startContainer)) {
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    }
+    files.forEach(function(file) { readImageAsDataUrl(file, function(dataUrl) { insertImageHTML(buildImageHTML(dataUrl)); }); });
+  });
+
+  downloadBtn.addEventListener('click', function() {
+    var copy = document.documentElement.cloneNode(true);
+    copy.querySelector('main')?.removeAttribute('contenteditable');
+    var b = copy.querySelector('body');
+    if (b) { b.classList.remove('editing'); b.classList.remove('dragging-image'); }
+    copy.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+    var et = copy.querySelector('#editToggle');
+    if (et) { et.classList.remove('active'); et.textContent = '✏️ Редактировать'; }
+    var ib = copy.querySelector('#imgInsert'); if (ib) ib.style.display = 'none';
+    var db = copy.querySelector('#downloadHtml'); if (db) db.style.display = 'none';
+    var html = '<!DOCTYPE html>\n' + copy.outerHTML;
+    var blob = new Blob([html], { type: 'text/html' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'research-index.html';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
