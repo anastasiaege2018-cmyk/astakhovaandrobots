@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vol. 2 · Урок №1 · Cowork — The Breeze</title>
+<meta name="description" content="Второй поток The Breeze, первый урок. Чат vs Cowork: почувствуй разницу на своей реальной задаче.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #37352f;
+    --text-mute: #787774;
+    --text-light: #9b9a97;
+    --divider: #ebebea;
+    --hover: #f7f6f3;
+    --yellow-bg: #fdecc8; --yellow-text: #5c3a00;
+    --blue-bg: #d3e5ef; --blue-text: #143a5d;
+    --green-bg: #dbeddb; --green-text: #1f3a1f;
+    --pink-bg: #fbe4e4; --pink-text: #6e1a1a;
+    --purple-bg: #ebe1f1; --purple-text: #3b1a55;
+    --gray-bg: #f1f1ef;
+    --orange: #d9730d;
+    --link: #2e60c2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.55; font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--yellow-bg); color: var(--yellow-text); }
+  .page { max-width: 740px; margin: 0 auto; padding: 64px 24px 120px; }
+
+  .eyebrow { color: var(--text-mute); font-size: 13px; font-weight: 500; letter-spacing: 0.04em; margin-bottom: 16px; text-transform: uppercase; }
+  h1 { font-size: 42px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; color: var(--text); }
+  h2 { font-size: 26px; line-height: 1.25; font-weight: 600; letter-spacing: -0.015em; margin-top: 56px; margin-bottom: 18px; color: var(--text); }
+  h3 { font-size: 18px; line-height: 1.3; font-weight: 600; margin-top: 32px; margin-bottom: 10px; color: var(--text); }
+  p { margin-bottom: 14px; color: var(--text); }
+  p strong { font-weight: 600; }
+  a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-thickness: 2px; }
+  hr { border: none; border-top: 1px solid var(--divider); margin: 48px 0; }
+
+  code {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 0.88em; background: var(--gray-bg);
+    padding: 2px 6px; border-radius: 4px; color: #c93838;
+  }
+
+  .code-block {
+    background: var(--gray-bg); border-radius: 6px;
+    padding: 46px 20px 18px; margin: 16px 0;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 13.5px; line-height: 1.6; color: var(--text);
+    overflow-x: auto; white-space: pre-wrap; position: relative;
+  }
+  .code-block .placeholder {
+    background: var(--yellow-bg); color: var(--yellow-text);
+    padding: 1px 6px; border-radius: 4px; font-weight: 600;
+  }
+
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px;
+    background: #ffffff; border: 1px solid var(--divider); border-radius: 6px;
+    padding: 6px 12px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 12px; font-weight: 500; color: var(--text);
+    cursor: pointer; z-index: 2; transition: all 0.15s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .copy-btn:hover { background: var(--yellow-bg); color: var(--yellow-text); border-color: var(--yellow-text); }
+  .copy-btn.copied { background: #dbeddb; color: #1f3a1f; border-color: #1f3a1f; }
+
+  /* Resizable image */
+  .resizable-image { display: inline-block; position: relative; resize: none; overflow: hidden; max-width: 100%; width: 60%; margin: 16px 0; border-radius: 6px; vertical-align: top; line-height: 0; }
+  .resizable-image img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; user-select: none; }
+  body.editing .resizable-image { outline: 1px dashed transparent; outline-offset: 2px; cursor: pointer; resize: both; }
+  body.editing .resizable-image:hover { outline-color: var(--orange); }
+  body.editing .resizable-image.selected { outline: 2px solid var(--orange); }
+  .image-toolbar { position: absolute; bottom: 100%; left: 0; margin-bottom: 6px; background: #ffffff; border: 1px solid var(--divider); border-radius: 6px; padding: 4px; display: none; gap: 4px; align-items: center; z-index: 5; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.1); line-height: 1.2; }
+  .resizable-image.selected .image-toolbar { display: flex; }
+  body:not(.editing) .image-toolbar { display: none !important; }
+  .image-toolbar button { background: transparent; border: none; padding: 4px 8px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; cursor: pointer; color: var(--text); }
+  .image-toolbar button:hover { background: var(--hover); }
+  .image-toolbar button.del { color: #c93838; }
+  .image-toolbar button.del:hover { background: var(--pink-bg); }
+  .image-toolbar .sep { width: 1px; height: 18px; background: var(--divider); display: inline-block; }
+  .editor-drop-overlay { position: fixed; inset: 0; background: rgba(217, 115, 13, 0.06); border: 3px dashed var(--orange); pointer-events: none; z-index: 999; display: none; }
+  body.dragging-image .editor-drop-overlay { display: block; }
+
+  .callout { display: flex; gap: 12px; padding: 16px 18px; border-radius: 6px; margin: 20px 0; align-items: flex-start; }
+  .callout-icon { font-size: 20px; line-height: 1.4; flex-shrink: 0; }
+  .callout-body { flex: 1; line-height: 1.5; }
+  .callout-body p { margin-bottom: 8px; }
+  .callout-body p:last-child { margin-bottom: 0; }
+  .callout.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+  .callout.blue { background: var(--blue-bg); color: var(--blue-text); }
+  .callout.green { background: var(--green-bg); color: var(--green-text); }
+  .callout.pink { background: var(--pink-bg); color: var(--pink-text); }
+  .callout.purple { background: var(--purple-bg); color: var(--purple-text); }
+  .callout.gray { background: var(--gray-bg); color: var(--text); }
+  .callout strong { font-weight: 600; }
+
+  .meta-bar { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 40px; padding: 16px 0; border-top: 1px solid var(--divider); border-bottom: 1px solid var(--divider); font-size: 14px; color: var(--text-mute); }
+  .meta-bar div { display: flex; gap: 8px; align-items: center; }
+  .meta-bar strong { color: var(--text); font-weight: 500; }
+
+  ul, ol { margin: 12px 0; padding-left: 26px; }
+  ul li, ol li { margin-bottom: 8px; line-height: 1.55; }
+  ul li::marker { color: var(--text-mute); }
+
+  .steps { counter-reset: s; list-style: none; padding-left: 0; margin: 20px 0; }
+  .steps li { counter-increment: s; padding-left: 44px; position: relative; margin-bottom: 24px; line-height: 1.6; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: -2px; width: 28px; height: 28px; background: var(--yellow-bg); color: var(--yellow-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+  .steps li strong { display: block; font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+
+  /* Chat vs Cowork comparison */
+  .vs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 24px 0;
+  }
+  .vs-col {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border: 1px solid var(--divider);
+    background: var(--hover);
+  }
+  .vs-col.chat { background: var(--hover); }
+  .vs-col.cowork { background: var(--yellow-bg); border-color: var(--yellow-text); }
+  .vs-col .tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: var(--text-mute); margin-bottom: 8px; }
+  .vs-col.cowork .tag { color: var(--yellow-text); }
+  .vs-col h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+  .vs-col.cowork h4 { color: var(--yellow-text); }
+  .vs-col p { font-size: 14px; line-height: 1.5; color: var(--text); margin: 0; }
+  .vs-col.cowork p { color: var(--yellow-text); }
+  .vs-col ul { padding-left: 20px; margin: 8px 0 0; font-size: 13px; line-height: 1.5; }
+  .vs-col ul li { margin-bottom: 4px; }
+
+  /* Niche list */
+  .niche-list { margin: 20px 0; }
+  .niche { padding: 12px 0; border-top: 1px solid var(--divider); display: flex; gap: 14px; }
+  .niche:last-child { border-bottom: 1px solid var(--divider); }
+  .niche .n-emoji { font-size: 20px; flex-shrink: 0; }
+  .niche .n-body { flex: 1; }
+  .niche .n-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--orange); font-weight: 600; margin-bottom: 2px; }
+  .niche .n-desc { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+  .deadline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 24px 0; }
+  .deadline-cell { background: var(--gray-bg); padding: 18px 14px; border-radius: 6px; text-align: center; }
+  .deadline-cell .label { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-mute); margin-bottom: 8px; font-weight: 600; }
+  .deadline-cell .value { font-size: 18px; font-weight: 700; color: var(--text); }
+  .deadline-cell .sub { font-size: 13px; color: var(--text-mute); margin-top: 4px; }
+
+  .edit-toolbar { position: fixed; top: 16px; right: 16px; z-index: 1000; display: flex; gap: 6px; background: #ffffff; border: 1px solid var(--divider); border-radius: 100px; padding: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .edit-toolbar button { background: transparent; border: none; padding: 6px 12px; border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .edit-toolbar button:hover { background: var(--hover); }
+  .edit-toolbar button.active { background: var(--yellow-bg); color: var(--yellow-text); }
+
+  .end { margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--divider); text-align: center; color: var(--text-mute); font-size: 14px; }
+  .end .wave { font-size: 24px; margin-bottom: 8px; color: var(--orange); }
+  .end-back { display: inline-block; margin-top: 20px; color: var(--text-mute); font-size: 14px; text-decoration: none; padding: 6px 14px; border: 1px solid var(--divider); border-radius: 100px; transition: all 0.15s; }
+  .end-back:hover { background: var(--hover); color: var(--text); }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 18px 80px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 22px; margin-top: 40px; }
+    .vs-grid { grid-template-columns: 1fr; }
+    .deadline { grid-template-columns: 1fr; }
+    .meta-bar { gap: 12px; flex-direction: column; }
+    .edit-toolbar { right: 8px; top: 8px; padding: 3px; }
+    .edit-toolbar button { padding: 5px 10px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="edit-toolbar">
+  <button id="editToggle" type="button">✏️ Редактировать</button>
+  <button id="imgInsert" type="button" style="display: none;">🖼 Картинка</button>
+  <button id="downloadHtml" type="button" style="display: none;">💾 Скачать</button>
+</div>
+<div class="editor-drop-overlay"></div>
+<input type="file" id="imgFile" accept="image/*" style="display: none;" multiple>
+
+<main class="page">
+
+  <div class="eyebrow">📘 VOL. 02 · УРОК №1 · The Breeze</div>
+  <h1>Чат vs Cowork 🌊</h1>
+
+  <p style="font-size: 18px; color: var(--text-mute); margin-bottom: 28px;">
+    Один и тот же запрос. В обычном чате — получишь текст. В Cowork — получишь сделанную работу с файлами, ссылками и сохранением куда надо. Разница видна с первого раза.
+  </p>
+
+  <div class="meta-bar">
+    <div><span>⏱</span> <strong>30 минут</strong> на первый прогон</div>
+    <div><span>💻</span> <strong>Claude Desktop</strong> для Cowork</div>
+    <div><span>📱</span> Работает и <strong>с телефона</strong></div>
+  </div>
+
+  <div class="callout yellow">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <p><strong>Cowork — это Claude, у которого есть «руки».</strong> Он видит твои файлы на компе, ходит в интернет по твоей ссылке, сохраняет результат туда, где ты сможешь его открыть. Обычный чат отвечает — Cowork делает работу.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЧТО ПОНАДОБИТСЯ ─── -->
+  <h2>Что понадобится</h2>
+
+  <ul>
+    <li><strong>Claude Desktop</strong> — скачивается на <a href="https://claude.ai/download" target="_blank">claude.ai/download</a>. Работает на Mac и Windows. На iOS есть отдельно.</li>
+    <li><strong>Подписка Claude (Pro / Max)</strong> — Cowork доступен только на платном.</li>
+    <li><strong>Одна реальная рабочая задача</strong> — что ты откладываешь «потому что долго». Именно её и делаем.</li>
+    <li><strong>1–3 файла контекста</strong> — прайс, отчёт, скрин, документ. То, что должен видеть Claude, чтобы понять картину.</li>
+  </ul>
+
+  <div class="callout blue">
+    <div class="callout-icon">🆓</div>
+    <div class="callout-body">
+      <p><strong>Ещё не оплатила Claude?</strong> Сделай это до пятницы. Без Pro Cowork не работает, а это главный инструмент, ради которого мы весь второй поток.</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── БАЗОВОЕ ЗАДАНИЕ ─── -->
+  <h2>🎯 Базовое задание</h2>
+
+  <p>Прогоним одну и ту же задачу через два разных входа. Ты почувствуешь скачок сразу.</p>
+
+  <ol class="steps">
+    <li>
+      <strong>Выбери реальную задачу</strong>
+      Что-то, что реально надо сделать: разобрать конкурентов, обновить прайс, проверить рынок вакансий, собрать отзывы. Никаких «попробуй». Только настоящее.
+    </li>
+    <li>
+      <strong>Прогон 1 — в обычном чате Claude</strong>
+      Открой <a href="https://claude.ai/" target="_blank">claude.ai</a>, задай вопрос. Прими короткий ответ «из головы модели». Заметь, где не хватает конкретики, свежих данных, твоего контекста.
+    </li>
+    <li>
+      <strong>Прогон 2 — в Cowork</strong>
+      Открой Claude Desktop → включи Cowork режим. Задай ТУ ЖЕ задачу, но добавь три обязательные вещи (см. ниже).
+    </li>
+    <li>
+      <strong>Сравни результаты</strong>
+      Скринь оба. Отправляй в чат клуба. Одну строку — где именно почувствовала разницу.
+    </li>
+  </ol>
+
+  <h3>Три обязательные вещи для Cowork-прогона</h3>
+
+  <ol>
+    <li><strong>Прикрепи файл-контекст</strong> — твой прайс, скрин, отчёт, регламент. То, что даёт Claude картину именно ТВОЕГО дела.</li>
+    <li><strong>Дай ссылки на источники</strong> — «сходи на этот сайт», «загляни в этот аккаунт», «проверь эту таблицу». Cowork реально идёт в браузер.</li>
+    <li><strong>Попроси сохранить результат</strong> — таблица в файл на рабочем столе, отчёт в Notion, письмо в черновик Gmail. Что-то материальное, а не «в этой переписке».</li>
+  </ol>
+
+  <hr>
+
+  <!-- ─── ЧАТ vs COWORK ─── -->
+  <h2>Как это выглядит на живом примере</h2>
+
+  <p>Возьмём одну задачу — «понять, где я недооцениваю свои услуги». Смотри, как отличаются два подхода.</p>
+
+  <div class="vs-grid">
+    <div class="vs-col chat">
+      <div class="tag">В обычном чате</div>
+      <h4>«Проанализируй цены на маникюр в Анапе, посоветуй как позиционироваться»</h4>
+      <p>Что получишь:</p>
+      <ul>
+        <li>общий текст из «головы» модели</li>
+        <li>без ссылок на источники</li>
+        <li>без твоего контекста</li>
+        <li>возможно устаревшие данные</li>
+      </ul>
+      <p style="margin-top: 10px;"><em>Полезно на 40%. Как гугл-запрос, только медленнее.</em></p>
+    </div>
+
+    <div class="vs-col cowork">
+      <div class="tag">В Cowork</div>
+      <h4>Тот же запрос + прайс + 3 ссылки + сохранение в файл</h4>
+      <p>Что получишь:</p>
+      <ul>
+        <li>таблицу: услуга / моя цена / их цена / разница</li>
+        <li>с реальными свежими ценами по ссылкам</li>
+        <li>5 услуг, где ты недооцениваешь себя на 20%+</li>
+        <li>всё сохранено в файл на твоём столе</li>
+      </ul>
+      <p style="margin-top: 10px;"><strong>Полезно на 100%. Готовый рабочий документ.</strong></p>
+    </div>
+  </div>
+
+  <h3>Готовый шаблон промпта для Cowork</h3>
+
+  <div class="code-block"><button class="copy-btn" type="button">📋 Скопировать</button>Задача: <span class="placeholder">ОПИШИ СВОЮ РЕАЛЬНУЮ ЗАДАЧУ В 1–2 ПРЕДЛОЖЕНИЯХ</span>
+
+Мой контекст:
+[файл прикреплён — <span class="placeholder">ЧТО ЭТО: прайс / отчёт / документ</span>]
+
+Что нужно сделать:
+1. Сходи в интернет по ссылкам ниже, собери оттуда актуальную информацию:
+   — <span class="placeholder">ССЫЛКА 1</span>
+   — <span class="placeholder">ССЫЛКА 2</span>
+   — <span class="placeholder">ССЫЛКА 3</span>
+
+2. Соедини это с моим контекстом из файла — сделай сравнительный разбор.
+
+3. Оформи результат в виде:
+   — <span class="placeholder">таблицы / отчёта / чек-листа</span>
+   — с конкретикой (цифры, даты, ссылки на источники)
+   — без общих формулировок
+
+4. Сохрани готовый файл на мой рабочий стол под именем <span class="placeholder">имя-файла.docx</span>
+
+Требования:
+— каждый факт с ссылкой на источник
+— если данных не хватает — прямо скажи «не нашёл», а не додумывай
+— тон — деловой, без воды</div>
+
+  <p style="font-size: 14px; color: var(--text-mute); font-style: italic;">Замени жёлтые плашки под свою задачу и отправляй.</p>
+
+  <hr>
+
+  <!-- ─── ИДЕИ ПОД НИШИ ─── -->
+  <h2>Идеи под твою нишу</h2>
+
+  <p>Если не можешь придумать задачу — возьми одну из этих и адаптируй.</p>
+
+  <div class="niche-list">
+    <div class="niche">
+      <div class="n-emoji">🟢</div>
+      <div class="n-body">
+        <div class="n-tag">HR / поиск работы</div>
+        <div class="n-desc">Прикрепи своё резюме. Попроси Cowork сходить на hh.ru / LinkedIn, найти 5 похожих вакансий, собрать вилки и требования, показать где недоплачивают под твой уровень.</div>
+      </div>
+    </div>
+    <div class="niche">
+      <div class="n-emoji">🔵</div>
+      <div class="n-body">
+        <div class="n-tag">психология / коучинг</div>
+        <div class="n-desc">Прикрепи свою страницу с услугами. Дай ссылки на 3 сайта коллег. Попроси разбор их позиционирования и 5 идей, как усилить твоё.</div>
+      </div>
+    </div>
+    <div class="niche">
+      <div class="n-emoji">🌸</div>
+      <div class="n-body">
+        <div class="n-tag">бьюти-бизнес</div>
+        <div class="n-desc">Прикрепи прайс. Дай 3 ссылки на конкурентов в Instagram / 2ГИС. Попроси таблицу сравнения цен и где ты недооцениваешь себя.</div>
+      </div>
+    </div>
+    <div class="niche">
+      <div class="n-emoji">🟣</div>
+      <div class="n-body">
+        <div class="n-tag">общепит / караоке</div>
+        <div class="n-desc">Прикрепи меню. Попроси сходить на Яндекс.Карты и 2ГИС, собрать отзывы 3 конкурентов рядом, показать что чаще всего хвалят и ругают у них.</div>
+      </div>
+    </div>
+    <div class="niche">
+      <div class="n-emoji">🪷</div>
+      <div class="n-body">
+        <div class="n-tag">тендеры</div>
+        <div class="n-desc">Прикрепи ТЗ. Дай ссылку на сайт заказчика. Попроси Cowork найти историю их контрактов, кто выигрывал за 2 года, средние цены — и что это значит для твоей подачи.</div>
+      </div>
+    </div>
+    <div class="niche">
+      <div class="n-emoji">🟠</div>
+      <div class="n-body">
+        <div class="n-tag">контент / блог</div>
+        <div class="n-desc">Прикрепи свой контент-план. Дай ссылки на 3 Instagram-конкурентов. Попроси разбор их последних 10 постов — что цепляет — и 5 идей адаптации под твой блог.</div>
+      </div>
+    </div>
+    <div class="niche">
+      <div class="n-emoji">⚪</div>
+      <div class="n-body">
+        <div class="n-tag">образование</div>
+        <div class="n-desc">Прикрепи программу курса. Дай ссылки на 3 сайта конкурирующих школ. Попроси сравнить структуру, цены, УТП — показать, где твоя программа сильнее и где отстаёт.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЗВЁЗДОЧКА ─── -->
+  <h2>⭐ Задание со звёздочкой</h2>
+
+  <p>Для тех, кто прошёл первый поток и хочет собрать <strong>первую настоящую связку из 3+ инструментов</strong>. Не просто задача, а процесс, который можно запускать регулярно.</p>
+
+  <ol class="steps">
+    <li>
+      <strong>Deep Research по глубокой теме</strong>
+      Возьми большую тему из своей ниши — рынок, тренды, конкуренты. 30–60 минут работы модели. Если не помнишь как — открой наш урок первого потока: <a href="https://astakhovaandrobots.ru/research/" target="_blank">astakhovaandrobots.ru/research/</a>
+    </li>
+    <li>
+      <strong>Прогони результат через свой Skill</strong>
+      Тот самый, что делала в первом потоке. Пусть он приведёт сырой ресёрч в твой формат — чек-лист, таблицу, шаблон отчёта, черновик поста.
+    </li>
+    <li>
+      <strong>Сохрани в подключенный коннектор</strong>
+      Notion, Google Drive, Airtable — что удобно. Готовый документ должен лежать там, где ты сможешь к нему вернуться через месяц. Не в переписке с Claude.
+    </li>
+    <li>
+      <strong>Опиши связку одним абзацем</strong>
+      «Раз в месяц запускаю [X] → получаю [Y] → лежит в [Z]». Это твой первый работающий процесс.
+    </li>
+  </ol>
+
+  <div class="callout purple">
+    <div class="callout-icon">🔁</div>
+    <div class="callout-body">
+      <p><strong>Смысл звёздочки не в том, чтобы сделать «побольше».</strong> Смысл в том, чтобы связать три штуки, которые ты уже знаешь, в один процесс. Именно это отличает «баловалась с AI» от «работаю с AI».</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── ЧТО ПРИСЛАТЬ ─── -->
+  <h2>📬 Что прислать в чат клуба</h2>
+
+  <p><strong>По базе:</strong></p>
+  <ul>
+    <li>📸 <strong>Два скриншота</strong> — что ответил обычный чат и что сделал Cowork</li>
+    <li>📄 <strong>Файлы</strong>, что прикрепляла как контекст</li>
+    <li>🧠 <strong>Одна строка</strong> — где именно почувствовала разницу</li>
+  </ul>
+
+  <p><strong>По звёздочке (если делаешь):</strong></p>
+  <ul>
+    <li>🔁 <strong>Скрин связки</strong> — какие 3 инструмента + куда сохранился результат</li>
+    <li>💬 <strong>Одна фраза про процесс</strong> — «раз в месяц запускаю X → получаю Y → лежит в Z»</li>
+  </ul>
+
+  <p>И — <strong>хештег #серфим</strong> в посте / комменте.</p>
+
+  <div class="deadline">
+    <div class="deadline-cell">
+      <div class="label">⏰ Дедлайн</div>
+      <div class="value">пт · 24.07</div>
+      <div class="sub">до 23:59 МСК</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🌊 Вайбы</div>
+      <div class="value">+1 / +2</div>
+      <div class="sub">база / звёздочка</div>
+    </div>
+    <div class="deadline-cell">
+      <div class="label">🏷 Хештег</div>
+      <div class="value">#серфим</div>
+      <div class="sub">в посте/комменте</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ─── СЕРФЕРАМ НА ЗАМЕТКУ ─── -->
+  <h2>🌊 Серферам на заметку</h2>
+
+  <ul>
+    <li><strong>Cowork нервничает без Pro.</strong> На бесплатном тарифе режим не включится вовсе или упрётся в лимит на первой же задаче. Проверь подписку до старта.</li>
+    <li><strong>Дай Claude доступ к нужным папкам явно.</strong> Он попросит разрешения на первую операцию — не «разреши всё», а «разреши эту папку». Так спокойнее.</li>
+    <li><strong>Не грузи весь компьютер в контекст.</strong> Прикрепляй именно те 1–3 файла, что относятся к задаче. Иначе Claude тонет.</li>
+    <li><strong>Один чат — одна задача.</strong> Не пихай в одну переписку и «разбери конкурентов» и «напиши мне пост». Разбей на разные — Cowork запутается.</li>
+    <li><strong>Проверяй ссылки после ответа.</strong> Даже Cowork иногда может неправильно распарсить страницу. Одну-две главные ссылки открой глазами.</li>
+    <li><strong>Сохраняй промпты, которые сработали.</strong> Через месяц захочешь то же самое по соседней задаче — не будешь придумывать с нуля.</li>
+  </ul>
+
+  <div class="end">
+    <div class="wave">~ серфим ~</div>
+    <p>с любовью, Настя ✦</p>
+    <a href="/" class="end-back">← обратно в клуб</a>
+  </div>
+
+</main>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var block = btn.parentElement.cloneNode(true);
+      var clone = block.querySelector('.copy-btn');
+      if (clone) clone.remove();
+      var text = block.textContent.trim();
+      var done = function() {
+        btn.textContent = '✓ Скопировано';
+        btn.classList.add('copied');
+        setTimeout(function() { btn.textContent = '📋 Скопировать'; btn.classList.remove('copied'); }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else { fallback(); }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta); done();
+      }
+    });
+  });
+
+  var editToggle = document.getElementById('editToggle');
+  var imgBtn = document.getElementById('imgInsert');
+  var downloadBtn = document.getElementById('downloadHtml');
+  var fileInput = document.getElementById('imgFile');
+  var mainEl = document.querySelector('main');
+
+  function setEditMode(on) {
+    if (on) {
+      document.body.classList.add('editing');
+      mainEl.setAttribute('contenteditable', 'true');
+      editToggle.classList.add('active');
+      editToggle.textContent = '✓ Редактирую';
+      imgBtn.style.display = 'inline-block';
+      downloadBtn.style.display = 'inline-block';
+    } else {
+      document.body.classList.remove('editing');
+      mainEl.removeAttribute('contenteditable');
+      editToggle.classList.remove('active');
+      editToggle.textContent = '✏️ Редактировать';
+      imgBtn.style.display = 'none';
+      downloadBtn.style.display = 'none';
+      document.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+    }
+  }
+  editToggle.addEventListener('click', function() { setEditMode(!document.body.classList.contains('editing')); });
+
+  function readImageAsDataUrl(file, cb) { var reader = new FileReader(); reader.onload = function() { cb(reader.result); }; reader.readAsDataURL(file); }
+
+  function buildImageHTML(src) {
+    return '<span class="resizable-image" contenteditable="false"><img src="' + src + '" alt=""><span class="image-toolbar" contenteditable="false"><button type="button" data-size="25">25%</button><button type="button" data-size="50">50%</button><button type="button" data-size="75">75%</button><button type="button" data-size="100">100%</button><span class="sep"></span><button type="button" class="del" data-action="delete">✕</button></span></span>';
+  }
+
+  function insertImageHTML(html) {
+    if (!document.body.classList.contains('editing')) setEditMode(true);
+    mainEl.focus();
+    var sel = window.getSelection();
+    var inserted = false;
+    if (sel.rangeCount > 0 && mainEl.contains(sel.anchorNode)) {
+      try { document.execCommand('insertHTML', false, html); inserted = true; } catch (e) {}
+    }
+    if (!inserted) { var div = document.createElement('div'); div.innerHTML = html; mainEl.appendChild(div.firstChild); }
+    bindAllImages();
+  }
+
+  imgBtn.addEventListener('click', function() { fileInput.click(); });
+  fileInput.addEventListener('change', function() {
+    var files = Array.from(this.files || []);
+    files.forEach(function(file) {
+      if (file.type.indexOf('image/') !== 0) return;
+      readImageAsDataUrl(file, function(dataUrl) { insertImageHTML(buildImageHTML(dataUrl)); });
+    });
+    this.value = '';
+  });
+
+  function bindImage(wrap) {
+    if (wrap.dataset.bound) return;
+    wrap.dataset.bound = '1';
+    wrap.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!document.body.classList.contains('editing')) return;
+      document.querySelectorAll('.resizable-image.selected').forEach(function(s) { if (s !== wrap) s.classList.remove('selected'); });
+      wrap.classList.add('selected');
+    });
+    var toolbar = wrap.querySelector('.image-toolbar');
+    if (toolbar) {
+      toolbar.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+      toolbar.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var btn = e.target.closest('button');
+        if (!btn) return;
+        if (btn.dataset.size) { wrap.style.width = btn.dataset.size + '%'; wrap.style.height = 'auto'; }
+        if (btn.dataset.action === 'delete') { if (confirm('Удалить картинку?')) wrap.remove(); }
+      });
+    }
+  }
+  function bindAllImages() { document.querySelectorAll('.resizable-image').forEach(bindImage); }
+  bindAllImages();
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.resizable-image')) return;
+    document.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+  });
+
+  window.addEventListener('dragover', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    if (e.dataTransfer && Array.from(e.dataTransfer.types || []).indexOf('Files') !== -1) {
+      e.preventDefault();
+      document.body.classList.add('dragging-image');
+    }
+  });
+  window.addEventListener('dragleave', function(e) {
+    if (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+      document.body.classList.remove('dragging-image');
+    }
+  });
+  window.addEventListener('drop', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    document.body.classList.remove('dragging-image');
+    if (!e.dataTransfer) return;
+    var files = Array.from(e.dataTransfer.files || []).filter(function(f) { return f.type.indexOf('image/') === 0; });
+    if (!files.length) return;
+    e.preventDefault();
+    var range = null;
+    if (document.caretRangeFromPoint) { range = document.caretRangeFromPoint(e.clientX, e.clientY); }
+    else if (document.caretPositionFromPoint) {
+      var pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+      if (pos) { range = document.createRange(); range.setStart(pos.offsetNode, pos.offset); range.collapse(true); }
+    }
+    if (range && mainEl.contains(range.startContainer)) { var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range); }
+    files.forEach(function(file) { readImageAsDataUrl(file, function(dataUrl) { insertImageHTML(buildImageHTML(dataUrl)); }); });
+  });
+
+  downloadBtn.addEventListener('click', function() {
+    var copy = document.documentElement.cloneNode(true);
+    copy.querySelector('main')?.removeAttribute('contenteditable');
+    var b = copy.querySelector('body');
+    if (b) { b.classList.remove('editing'); b.classList.remove('dragging-image'); }
+    copy.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+    var et = copy.querySelector('#editToggle');
+    if (et) { et.classList.remove('active'); et.textContent = '✏️ Редактировать'; }
+    var ib = copy.querySelector('#imgInsert'); if (ib) ib.style.display = 'none';
+    var db = copy.querySelector('#downloadHtml'); if (db) db.style.display = 'none';
+    var html = '<!DOCTYPE html>\n' + copy.outerHTML;
+    var blob = new Blob([html], { type: 'text/html' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'cowork-index.html';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
