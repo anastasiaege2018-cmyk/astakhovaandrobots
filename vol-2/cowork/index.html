@@ -77,17 +77,18 @@
   .copy-btn.copied { background: #dbeddb; color: #1f3a1f; border-color: #1f3a1f; }
 
   /* Resizable image */
-  .resizable-image { display: inline-block; position: relative; resize: none; overflow: hidden; max-width: 100%; width: 60%; margin: 16px 0; border-radius: 6px; vertical-align: top; line-height: 0; }
-  .resizable-image img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; user-select: none; }
-  body.editing .resizable-image { outline: 1px dashed transparent; outline-offset: 2px; cursor: pointer; resize: both; }
+  .resizable-image { display: inline-block; position: relative; resize: none; overflow: visible; max-width: 100%; width: 40%; margin: 16px 0; border-radius: 6px; vertical-align: top; line-height: 0; }
+  .resizable-image img { display: block; width: 100%; height: auto; pointer-events: none; user-select: none; border-radius: 6px; }
+  body.editing .resizable-image { outline: 1px dashed transparent; outline-offset: 2px; cursor: pointer; }
   body.editing .resizable-image:hover { outline-color: var(--orange); }
   body.editing .resizable-image.selected { outline: 2px solid var(--orange); }
-  .image-toolbar { position: absolute; bottom: 100%; left: 0; margin-bottom: 6px; background: #ffffff; border: 1px solid var(--divider); border-radius: 6px; padding: 6px 10px; display: none; gap: 8px; align-items: center; z-index: 5; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.1); line-height: 1.2; }
+  /* Плавающий тулбар СНИЗУ ВНУТРИ картинки — всегда виден, куда бы её ни вставили */
+  .image-toolbar { position: absolute; left: 50%; transform: translateX(-50%); bottom: 10px; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--divider); border-radius: 8px; padding: 6px 10px; display: none; gap: 8px; align-items: center; z-index: 5; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.15); line-height: 1.2; }
   .resizable-image.selected .image-toolbar { display: flex; }
   body:not(.editing) .image-toolbar { display: none !important; }
-  .image-toolbar button { background: transparent; border: none; padding: 4px 8px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; cursor: pointer; color: var(--text); }
+  .image-toolbar button { background: transparent; border: 1px solid var(--divider); padding: 4px 10px; border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text); }
   .image-toolbar button:hover { background: var(--hover); }
-  .image-toolbar button.del { color: #c93838; padding: 4px 8px; font-size: 14px; }
+  .image-toolbar button.del { color: #c93838; border-color: #f0c0c0; padding: 4px 8px; font-size: 14px; }
   .image-toolbar button.del:hover { background: var(--pink-bg); }
   .image-toolbar .sep { width: 1px; height: 18px; background: var(--divider); display: inline-block; }
   .image-toolbar .w-slider { width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: var(--divider); border-radius: 100px; outline: none; cursor: pointer; }
@@ -649,11 +650,13 @@
   function readImageAsDataUrl(file, cb) { var reader = new FileReader(); reader.onload = function() { cb(reader.result); }; reader.readAsDataURL(file); }
 
   function buildImageHTML(src, initWidth) {
-    var w = initWidth || 60;
+    var w = initWidth || 40;
     return '<span class="resizable-image" contenteditable="false" style="width:' + w + '%">' +
       '<img src="' + src + '" alt="">' +
       '<span class="image-toolbar" contenteditable="false">' +
+        '<button type="button" data-action="shrink" title="Уменьшить (клавиша −)">−</button>' +
         '<input type="range" min="10" max="100" step="1" value="' + w + '" class="w-slider">' +
+        '<button type="button" data-action="grow" title="Увеличить (клавиша +)">+</button>' +
         '<span class="w-label">' + w + '%</span>' +
         '<span class="sep"></span>' +
         '<button type="button" class="del" data-action="delete" title="Удалить">✕</button>' +
@@ -695,11 +698,23 @@
     var toolbar = wrap.querySelector('.image-toolbar');
     if (toolbar) {
       toolbar.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+      function setWidth(pct) {
+        pct = Math.max(10, Math.min(100, pct));
+        wrap.style.width = pct + '%';
+        wrap.style.height = 'auto';
+        var sl = toolbar.querySelector('.w-slider');
+        var lb = toolbar.querySelector('.w-label');
+        if (sl) sl.value = pct;
+        if (lb) lb.textContent = pct + '%';
+      }
       toolbar.addEventListener('click', function(e) {
         e.stopPropagation();
         var btn = e.target.closest('button');
         if (!btn) return;
-        if (btn.dataset.action === 'delete') { if (confirm('Удалить картинку?')) wrap.remove(); }
+        var act = btn.dataset.action;
+        if (act === 'delete') { if (confirm('Удалить картинку?')) wrap.remove(); }
+        else if (act === 'shrink') { setWidth(parseInt(wrap.style.width) - 10); }
+        else if (act === 'grow')   { setWidth(parseInt(wrap.style.width) + 10); }
       });
       var slider = toolbar.querySelector('.w-slider');
       var label = toolbar.querySelector('.w-label');
@@ -737,6 +752,26 @@
   document.addEventListener('click', function(e) {
     if (e.target.closest('.resizable-image')) return;
     document.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+  });
+  // Клавиатура: [/] или +/- меняют размер выделенной картинки
+  document.addEventListener('keydown', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    var sel = document.querySelector('.resizable-image.selected');
+    if (!sel) return;
+    var k = e.key;
+    var delta = 0;
+    if (k === '[' || k === '-' || k === '_') delta = -5;
+    else if (k === ']' || k === '=' || k === '+') delta = 5;
+    else return;
+    e.preventDefault();
+    var cur = parseInt(sel.style.width) || 40;
+    var next = Math.max(10, Math.min(100, cur + delta));
+    sel.style.width = next + '%';
+    sel.style.height = 'auto';
+    var sl = sel.querySelector('.w-slider');
+    var lb = sel.querySelector('.w-label');
+    if (sl) sl.value = next;
+    if (lb) lb.textContent = next + '%';
   });
 
   window.addEventListener('dragover', function(e) {
