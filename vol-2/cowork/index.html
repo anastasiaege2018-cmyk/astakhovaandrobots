@@ -201,6 +201,7 @@
 
 <div class="edit-toolbar">
   <button id="editToggle" type="button">✏️ Редактировать</button>
+  <button id="linkBtn" type="button" style="display: none;" title="Сделать выделенный текст ссылкой (Cmd/Ctrl+K)">🔗 Ссылка</button>
   <button id="imgInsert" type="button" style="display: none;">🖼 Картинка</button>
   <button id="publishBtn" type="button" style="display: none;">🚀 Опубликовать</button>
   <button id="downloadHtml" type="button" style="display: none;">💾 Скачать</button>
@@ -550,12 +551,15 @@
   var fileInput = document.getElementById('imgFile');
   var mainEl = document.querySelector('main');
 
+  var linkBtn = document.getElementById('linkBtn');
+
   function setEditMode(on) {
     if (on) {
       document.body.classList.add('editing');
       mainEl.setAttribute('contenteditable', 'true');
       editToggle.classList.add('active');
       editToggle.textContent = '✓ Редактирую';
+      linkBtn.style.display = 'inline-block';
       imgBtn.style.display = 'inline-block';
       publishBtn.style.display = 'inline-block';
       downloadBtn.style.display = 'inline-block';
@@ -564,6 +568,7 @@
       mainEl.removeAttribute('contenteditable');
       editToggle.classList.remove('active');
       editToggle.textContent = '✏️ Редактировать';
+      linkBtn.style.display = 'none';
       imgBtn.style.display = 'none';
       publishBtn.style.display = 'none';
       downloadBtn.style.display = 'none';
@@ -571,6 +576,75 @@
     }
   }
   editToggle.addEventListener('click', function() { setEditMode(!document.body.classList.contains('editing')); });
+
+  // === Ссылка ===
+  function makeLink() {
+    if (!document.body.classList.contains('editing')) {
+      setEditMode(true);
+      alert('Сначала выдели фразу, которую хочешь превратить в ссылку.');
+      return;
+    }
+    var sel = window.getSelection();
+    if (!sel.rangeCount) { alert('Сначала выдели текст.'); return; }
+    var range = sel.getRangeAt(0);
+    // Найти существующую ссылку под выделением
+    var node = sel.anchorNode;
+    var existingLink = null;
+    while (node && node !== mainEl) {
+      if (node.nodeType === 1 && node.tagName === 'A') { existingLink = node; break; }
+      node = node.parentNode;
+    }
+    var currentUrl = existingLink ? existingLink.getAttribute('href') : '';
+    if (sel.isCollapsed && !existingLink) {
+      alert('Выдели фразу, которую хочешь сделать ссылкой.');
+      return;
+    }
+    var url = prompt(existingLink ? 'Изменить URL (пусто = убрать ссылку):' : 'Куда ведёт ссылка?', currentUrl || 'https://');
+    if (url === null) return;
+    url = url.trim();
+    if (!url) {
+      // Убрать ссылку
+      if (existingLink) {
+        var textNode = document.createTextNode(existingLink.textContent);
+        existingLink.parentNode.replaceChild(textNode, existingLink);
+      }
+      return;
+    }
+    if (!/^(https?:\/\/|mailto:|tel:|#|\/)/i.test(url)) {
+      url = 'https://' + url;
+    }
+    if (existingLink) {
+      existingLink.setAttribute('href', url);
+      existingLink.setAttribute('target', '_blank');
+      existingLink.setAttribute('rel', 'noopener');
+    } else {
+      // Обернуть выделенное в <a>
+      var a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      try {
+        a.appendChild(range.extractContents());
+        range.insertNode(a);
+        // Снять выделение и поставить курсор после ссылки
+        sel.removeAllRanges();
+        var r2 = document.createRange();
+        r2.setStartAfter(a);
+        r2.collapse(true);
+        sel.addRange(r2);
+      } catch (e) {
+        // fallback
+        try { document.execCommand('createLink', false, url); } catch(_){}
+      }
+    }
+  }
+  linkBtn.addEventListener('click', makeLink);
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k' && document.body.classList.contains('editing')) {
+      e.preventDefault();
+      makeLink();
+    }
+  });
 
   function readImageAsDataUrl(file, cb) { var reader = new FileReader(); reader.onload = function() { cb(reader.result); }; reader.readAsDataURL(file); }
 
