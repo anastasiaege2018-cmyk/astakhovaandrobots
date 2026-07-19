@@ -77,11 +77,14 @@
   .copy-btn.copied { background: #dbeddb; color: #1f3a1f; border-color: #1f3a1f; }
 
   /* Resizable image */
-  .resizable-image { display: inline-block; position: relative; resize: none; overflow: visible; max-width: 100%; width: 40%; margin: 16px 0; border-radius: 6px; vertical-align: top; line-height: 0; }
+  .resizable-image { display: inline-block; position: relative; overflow: visible; max-width: 100%; width: 40%; margin: 16px 0; border-radius: 6px; vertical-align: top; line-height: 0; }
   .resizable-image img { display: block; width: 100%; height: auto; pointer-events: none; user-select: none; border-radius: 6px; }
   body.editing .resizable-image { outline: 1px dashed transparent; outline-offset: 2px; cursor: pointer; }
   body.editing .resizable-image:hover { outline-color: var(--orange); }
   body.editing .resizable-image.selected { outline: 2px solid var(--orange); }
+  /* Кастомный «уголок» для растягивания — тянешь вправо-вниз, ширина меняется */
+  .drag-handle { position: absolute; right: -6px; bottom: -6px; width: 22px; height: 22px; background: var(--orange); border: 2px solid #fff; border-radius: 50%; cursor: nwse-resize; display: none; z-index: 6; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+  body.editing .resizable-image.selected .drag-handle { display: block; }
   /* Плавающий тулбар СНИЗУ ВНУТРИ картинки — всегда виден, куда бы её ни вставили */
   .image-toolbar { position: absolute; left: 50%; transform: translateX(-50%); bottom: 10px; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--divider); border-radius: 8px; padding: 6px 10px; display: none; gap: 8px; align-items: center; z-index: 5; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.15); line-height: 1.2; }
   .resizable-image.selected .image-toolbar { display: flex; }
@@ -95,19 +98,6 @@
   .image-toolbar .w-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: var(--orange); border-radius: 50%; cursor: pointer; border: none; }
   .image-toolbar .w-slider::-moz-range-thumb { width: 14px; height: 14px; background: var(--orange); border-radius: 50%; cursor: pointer; border: none; }
   .image-toolbar .w-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-mute); min-width: 34px; text-align: right; }
-  /* Visible resize corner hint */
-  body.editing .resizable-image.selected::before {
-    content: '';
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 14px;
-    height: 14px;
-    background: linear-gradient(135deg, transparent 50%, var(--orange) 50%);
-    border-radius: 0 0 6px 0;
-    pointer-events: none;
-    z-index: 4;
-  }
   .editor-drop-overlay { position: fixed; inset: 0; background: rgba(217, 115, 13, 0.06); border: 3px dashed var(--orange); pointer-events: none; z-index: 999; display: none; }
   body.dragging-image .editor-drop-overlay { display: block; }
 
@@ -653,6 +643,7 @@
     var w = initWidth || 40;
     return '<span class="resizable-image" contenteditable="false" style="width:' + w + '%">' +
       '<img src="' + src + '" alt="">' +
+      '<span class="drag-handle" contenteditable="false" title="Потяни, чтобы изменить размер"></span>' +
       '<span class="image-toolbar" contenteditable="false">' +
         '<button type="button" data-action="shrink" title="Уменьшить (клавиша −)">−</button>' +
         '<input type="range" min="10" max="100" step="1" value="' + w + '" class="w-slider">' +
@@ -729,23 +720,42 @@
         slider.addEventListener('click', function(e) { e.stopPropagation(); });
       }
     }
-    // Sync slider with CSS resize (user drags corner)
-    var img = wrap.querySelector('img');
-    if (img && window.ResizeObserver) {
-      var ro = new ResizeObserver(function() {
-        var parent = wrap.parentElement;
-        if (!parent) return;
-        var parentW = parent.getBoundingClientRect().width;
-        if (parentW < 1) return;
-        var pct = Math.round((wrap.getBoundingClientRect().width / parentW) * 100);
+    // Оранжевая ручка в углу — перетаскивание меняет ширину
+    var handle = wrap.querySelector('.drag-handle');
+    // Если старый draft без ручки — добавим её на лету
+    if (!handle) {
+      handle = document.createElement('span');
+      handle.className = 'drag-handle';
+      handle.setAttribute('contenteditable', 'false');
+      handle.title = 'Потяни, чтобы изменить размер';
+      wrap.appendChild(handle);
+    }
+    handle.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var startX = e.clientX;
+      var parent = wrap.parentElement;
+      var parentW = parent ? parent.getBoundingClientRect().width : 700;
+      var startW = wrap.getBoundingClientRect().width;
+      function onMove(ev) {
+        var dx = ev.clientX - startX;
+        var newW = Math.max(80, startW + dx);
+        var pct = Math.round((newW / parentW) * 100);
         pct = Math.max(10, Math.min(100, pct));
+        wrap.style.width = pct + '%';
+        wrap.style.height = 'auto';
         var sl = wrap.querySelector('.w-slider');
         var lb = wrap.querySelector('.w-label');
-        if (sl && sl.value != pct) sl.value = pct;
+        if (sl) sl.value = pct;
         if (lb) lb.textContent = pct + '%';
-      });
-      ro.observe(wrap);
-    }
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
   }
   function bindAllImages() { document.querySelectorAll('.resizable-image').forEach(bindImage); }
   bindAllImages();
