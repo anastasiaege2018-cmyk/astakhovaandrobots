@@ -166,9 +166,6 @@
   .deadline-cell .sub { font-size: 13px; color: var(--text-mute); margin-top: 4px; }
 
   .edit-toolbar { position: fixed; top: 16px; right: 16px; z-index: 1000; display: flex; gap: 6px; background: #ffffff; border: 1px solid var(--divider); border-radius: 100px; padding: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-  /* Режим просмотра (для участниц): скрываем весь редакторский UI */
-  html.view-mode .edit-toolbar,
-  html.view-mode #publishModal { display: none !important; }
   .edit-toolbar button { background: transparent; border: none; padding: 6px 12px; border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.15s ease; }
   .edit-toolbar button:hover { background: var(--hover); }
   .edit-toolbar button.active { background: var(--yellow-bg); color: var(--yellow-text); }
@@ -191,15 +188,6 @@
 </style>
 </head>
 <body class="">
-
-<script>
-  // Режим редактирования включается только по ссылке с ?edit=1
-  // Все остальные видят чистую страницу без кнопок
-  (function() {
-    var isEditor = new URLSearchParams(location.search).get('edit') === '1';
-    if (!isEditor) document.documentElement.classList.add('view-mode');
-  })();
-</script>
 
 <div class="edit-toolbar">
   <button id="editToggle" type="button" class="">✏️ Редактировать</button>
@@ -932,22 +920,19 @@
   }
   setInterval(autosave, 5000);
 
-  // При загрузке — если есть черновик, предложить восстановить (только в режиме редактора)
+  // При загрузке — если есть черновик, предложить восстановить
   try {
-    var isEditor = new URLSearchParams(location.search).get('edit') === '1';
-    if (isEditor) {
-      var draft = localStorage.getItem(DRAFT_KEY);
-      if (draft && draft.length > 500 && draft !== mainEl.innerHTML) {
-        setTimeout(function() {
-          if (confirm('Найден несохранённый черновик. Восстановить?')) {
-            setEditMode(true);
-            mainEl.innerHTML = draft;
-            bindAllImages();
-          } else {
-            localStorage.removeItem(DRAFT_KEY);
-          }
-        }, 500);
-      }
+    var draft = localStorage.getItem(DRAFT_KEY);
+    if (draft && draft.length > 500 && draft !== mainEl.innerHTML) {
+      setTimeout(function() {
+        if (confirm('Найден несохранённый черновик. Восстановить?')) {
+          setEditMode(true);
+          mainEl.innerHTML = draft;
+          bindAllImages();
+        } else {
+          localStorage.removeItem(DRAFT_KEY);
+        }
+      }, 500);
     }
   } catch(e) {}
 </script>
