@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vol. 2 · Урок №4 · Оффер + Градусник — The Breeze</title>
+<meta name="description" content="Урок про разбор оффера и градусник Завадского. Как прогревать клиентов на разных ступенях готовности — от «мне не надо» до «беру».">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #37352f;
+    --text-mute: #787774;
+    --text-light: #9b9a97;
+    --divider: #ebebea;
+    --hover: #f7f6f3;
+    --yellow-bg: #fdecc8; --yellow-text: #5c3a00;
+    --blue-bg: #d3e5ef; --blue-text: #143a5d;
+    --green-bg: #dbeddb; --green-text: #1f3a1f;
+    --pink-bg: #fbe4e4; --pink-text: #6e1a1a;
+    --purple-bg: #ebe1f1; --purple-text: #3b1a55;
+    --gray-bg: #f1f1ef;
+    --orange: #d9730d;
+    --link: #2e60c2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.55; font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--yellow-bg); color: var(--yellow-text); }
+  .page { max-width: 740px; margin: 0 auto; padding: 64px 24px 120px; }
+
+  .eyebrow { color: var(--text-mute); font-size: 13px; font-weight: 500; letter-spacing: 0.04em; margin-bottom: 16px; text-transform: uppercase; }
+  h1 { font-size: 42px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; color: var(--text); }
+  h2 { font-size: 26px; line-height: 1.25; font-weight: 600; letter-spacing: -0.015em; margin-top: 56px; margin-bottom: 18px; color: var(--text); }
+  h3 { font-size: 18px; line-height: 1.3; font-weight: 600; margin-top: 32px; margin-bottom: 10px; color: var(--text); }
+  p { margin-bottom: 14px; color: var(--text); }
+  p strong { font-weight: 600; }
+  a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-thickness: 2px; }
+  hr { border: none; border-top: 1px solid var(--divider); margin: 48px 0; }
+
+  code {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 0.88em; background: var(--gray-bg);
+    padding: 2px 6px; border-radius: 4px; color: #c93838;
+  }
+
+  .code-block {
+    background: var(--gray-bg); border-radius: 6px;
+    padding: 46px 20px 18px; margin: 16px 0;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 13.5px; line-height: 1.6; color: var(--text);
+    overflow-x: auto; white-space: pre-wrap; position: relative;
+  }
+  .code-block .placeholder {
+    background: var(--yellow-bg); color: var(--yellow-text);
+    padding: 1px 6px; border-radius: 4px; font-weight: 600;
+  }
+
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px;
+    background: #ffffff; border: 1px solid var(--divider); border-radius: 6px;
+    padding: 6px 12px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 12px; font-weight: 500; color: var(--text);
+    cursor: pointer; z-index: 2; transition: all 0.15s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .copy-btn:hover { background: var(--yellow-bg); color: var(--yellow-text); border-color: var(--yellow-text); }
+  .copy-btn.copied { background: #dbeddb; color: #1f3a1f; border-color: #1f3a1f; }
+
+  /* Resizable image */
+  .resizable-image { display: inline-block; position: relative; overflow: visible; max-width: 100%; width: 40%; margin: 16px 0; border-radius: 6px; vertical-align: top; line-height: 0; }
+  .resizable-image img { display: block; width: 100%; height: auto; pointer-events: none; user-select: none; border-radius: 6px; }
+  body.editing .resizable-image { outline: 1px dashed transparent; outline-offset: 2px; cursor: pointer; }
+  body.editing .resizable-image:hover { outline-color: var(--orange); }
+  body.editing .resizable-image.selected { outline: 2px solid var(--orange); }
+  /* Кастомный «уголок» для растягивания — тянешь вправо-вниз, ширина меняется */
+  .drag-handle { position: absolute; right: -6px; bottom: -6px; width: 22px; height: 22px; background: var(--orange); border: 2px solid #fff; border-radius: 50%; cursor: nwse-resize; display: none; z-index: 6; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+  body.editing .resizable-image.selected .drag-handle { display: block; }
+  /* Плавающий тулбар СНИЗУ ВНУТРИ картинки — всегда виден, куда бы её ни вставили */
+  .image-toolbar { position: absolute; left: 50%; transform: translateX(-50%); bottom: 10px; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--divider); border-radius: 8px; padding: 6px 10px; display: none; gap: 8px; align-items: center; z-index: 5; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.15); line-height: 1.2; }
+  .resizable-image.selected .image-toolbar { display: flex; }
+  body:not(.editing) .image-toolbar { display: none !important; }
+  .image-toolbar button { background: transparent; border: 1px solid var(--divider); padding: 4px 10px; border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text); }
+  .image-toolbar button:hover { background: var(--hover); }
+  .image-toolbar button.del { color: #c93838; border-color: #f0c0c0; padding: 4px 8px; font-size: 14px; }
+  .image-toolbar button.del:hover { background: var(--pink-bg); }
+  .image-toolbar .sep { width: 1px; height: 18px; background: var(--divider); display: inline-block; }
+  .image-toolbar .w-slider { width: 120px; height: 4px; -webkit-appearance: none; appearance: none; background: var(--divider); border-radius: 100px; outline: none; cursor: pointer; }
+  .image-toolbar .w-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: var(--orange); border-radius: 50%; cursor: pointer; border: none; }
+  .image-toolbar .w-slider::-moz-range-thumb { width: 14px; height: 14px; background: var(--orange); border-radius: 50%; cursor: pointer; border: none; }
+  .image-toolbar .w-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-mute); min-width: 34px; text-align: right; }
+  .editor-drop-overlay { position: fixed; inset: 0; background: rgba(217, 115, 13, 0.06); border: 3px dashed var(--orange); pointer-events: none; z-index: 999; display: none; }
+  body.dragging-image .editor-drop-overlay { display: block; }
+
+  .callout { display: flex; gap: 12px; padding: 16px 18px; border-radius: 6px; margin: 20px 0; align-items: flex-start; }
+  .callout-icon { font-size: 20px; line-height: 1.4; flex-shrink: 0; }
+  .callout-body { flex: 1; line-height: 1.5; }
+  .callout-body p { margin-bottom: 8px; }
+  .callout-body p:last-child { margin-bottom: 0; }
+  .callout.yellow { background: var(--yellow-bg); color: var(--yellow-text); }
+  .callout.blue { background: var(--blue-bg); color: var(--blue-text); }
+  .callout.green { background: var(--green-bg); color: var(--green-text); }
+  .callout.pink { background: var(--pink-bg); color: var(--pink-text); }
+  .callout.purple { background: var(--purple-bg); color: var(--purple-text); }
+  .callout.gray { background: var(--gray-bg); color: var(--text); }
+  .callout strong { font-weight: 600; }
+
+  .meta-bar { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 40px; padding: 16px 0; border-top: 1px solid var(--divider); border-bottom: 1px solid var(--divider); font-size: 14px; color: var(--text-mute); }
+  .meta-bar div { display: flex; gap: 8px; align-items: center; }
+  .meta-bar strong { color: var(--text); font-weight: 500; }
+
+  ul, ol { margin: 12px 0; padding-left: 26px; }
+  ul li, ol li { margin-bottom: 8px; line-height: 1.55; }
+  ul li::marker { color: var(--text-mute); }
+
+  .steps { counter-reset: s; list-style: none; padding-left: 0; margin: 20px 0; }
+  .steps li { counter-increment: s; padding-left: 44px; position: relative; margin-bottom: 24px; line-height: 1.6; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: -2px; width: 28px; height: 28px; background: var(--yellow-bg); color: var(--yellow-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+  .steps li strong { display: block; font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+
+  /* Chat vs Cowork comparison */
+  .vs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 24px 0;
+  }
+  .vs-col {
+    border-radius: 8px;
+    padding: 18px 20px;
+    border: 1px solid var(--divider);
+    background: var(--hover);
+  }
+  .vs-col.chat { background: var(--hover); }
+  .vs-col.cowork { background: var(--yellow-bg); border-color: var(--yellow-text); }
+  .vs-col .tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: var(--text-mute); margin-bottom: 8px; }
+  .vs-col.cowork .tag { color: var(--yellow-text); }
+  .vs-col h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+  .vs-col.cowork h4 { color: var(--yellow-text); }
+  .vs-col p { font-size: 14px; line-height: 1.5; color: var(--text); margin: 0; }
+  .vs-col.cowork p { color: var(--yellow-text); }
+  .vs-col ul { padding-left: 20px; margin: 8px 0 0; font-size: 13px; line-height: 1.5; }
+  .vs-col ul li { margin-bottom: 4px; }
+
+  /* Niche list */
+  .niche-list { margin: 20px 0; }
+  .niche { padding: 12px 0; border-top: 1px solid var(--divider); display: flex; gap: 14px; }
+  .niche:last-child { border-bottom: 1px solid var(--divider); }
+  .niche .n-emoji { font-size: 20px; flex-shrink: 0; }
+  .niche .n-body { flex: 1; }
+  .niche .n-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--orange); font-weight: 600; margin-bottom: 2px; }
+  .niche .n-desc { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+  .deadline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 24px 0; }
+  .deadline-cell { background: var(--gray-bg); padding: 18px 14px; border-radius: 6px; text-align: center; }
+  .deadline-cell .label { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-mute); margin-bottom: 8px; font-weight: 600; }
+  .deadline-cell .value { font-size: 18px; font-weight: 700; color: var(--text); }
+  .deadline-cell .sub { font-size: 13px; color: var(--text-mute); margin-top: 4px; }
+
+  .edit-toolbar { position: fixed; top: 16px; right: 16px; z-index: 1000; display: flex; gap: 6px; background: #ffffff; border: 1px solid var(--divider); border-radius: 100px; padding: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  /* Режим просмотра (для участниц): скрываем весь редакторский UI */
+  html.view-mode .edit-toolbar,
+  html.view-mode #publishModal { display: none !important; }
+  .edit-toolbar button { background: transparent; border: none; padding: 6px 12px; border-radius: 100px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .edit-toolbar button:hover { background: var(--hover); }
+  .edit-toolbar button.active { background: var(--yellow-bg); color: var(--yellow-text); }
+
+  .end { margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--divider); text-align: center; color: var(--text-mute); font-size: 14px; }
+  .end .wave { font-size: 24px; margin-bottom: 8px; color: var(--orange); }
+  .end-back { display: inline-block; margin-top: 20px; color: var(--text-mute); font-size: 14px; text-decoration: none; padding: 6px 14px; border: 1px solid var(--divider); border-radius: 100px; transition: all 0.15s; }
+  .end-back:hover { background: var(--hover); color: var(--text); }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 18px 80px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 22px; margin-top: 40px; }
+    .vs-grid { grid-template-columns: 1fr; }
+    .deadline { grid-template-columns: 1fr; }
+    .meta-bar { gap: 12px; flex-direction: column; }
+    .edit-toolbar { right: 8px; top: 8px; padding: 3px; }
+    .edit-toolbar button { padding: 5px 10px; font-size: 11px; }
+  }
+</style>
+</head>
+<body class="">
+
+<script>
+  // Режим редактирования включается только по ссылке с ?edit=1
+  // Все остальные видят чистую страницу без кнопок
+  (function() {
+    var isEditor = new URLSearchParams(location.search).get('edit') === '1';
+    if (!isEditor) document.documentElement.classList.add('view-mode');
+  })();
+</script>
+
+<div class="edit-toolbar">
+  <button id="editToggle" type="button" class="">✏️ Редактировать</button>
+  <button id="linkBtn" type="button" style="display: inline-block;" title="Сделать выделенный текст ссылкой (Cmd/Ctrl+K)">🔗 Ссылка</button>
+  <button id="imgInsert" type="button" style="display: none;">🖼 Картинка</button>
+  <button id="publishBtn" type="button" style="display: none;">🚀 Опубликовать</button>
+  <button id="downloadHtml" type="button" style="display: none;">💾 Скачать</button>
+</div>
+<div class="editor-drop-overlay"></div>
+<input type="file" id="imgFile" accept="image/*" style="display: none;" multiple="">
+
+<div id="publishModal" style="display: none; position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.4); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background:#fff;border-radius:12px;padding:24px 28px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.25);font-family:'Inter',sans-serif;">
+    <div style="font-size:18px;font-weight:600;margin-bottom:8px;">🔑 Настроим публикацию — 1 раз</div>
+    <div style="font-size:14px;color:var(--text-mute);line-height:1.5;margin-bottom:16px;">Тебе нужен GitHub token — это как пароль, который разрешает странице сохранять правки на сайт. Настроим за 2 минуты.</div>
+    <ol style="padding-left:22px;font-size:13px;line-height:1.6;color:var(--text);margin-bottom:16px;">
+      <li>Открой <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" style="color:var(--link);">github.com/settings/personal-access-tokens/new</a></li>
+      <li>Token name: <code>the-breeze-edits</code></li>
+      <li>Expiration: <strong>No expiration</strong></li>
+      <li>Repository access → <strong>Only select repositories</strong> → выбери <code>astakhovaandrobots</code></li>
+      <li>Permissions → Repository → <strong>Contents</strong> → <strong>Read and write</strong></li>
+      <li>Внизу — <strong>Generate token</strong>. Скопируй и вставь ниже.</li>
+    </ol>
+    <input type="password" id="tokenInput" placeholder="github_pat_..." style="width:100%;padding:10px 12px;border:1px solid var(--divider);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;margin-bottom:12px;">
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button id="tokenCancel" type="button" style="padding:8px 16px;border:1px solid var(--divider);background:#fff;border-radius:6px;cursor:pointer;font-size:13px;">Отмена</button>
+      <button id="tokenSave" type="button" style="padding:8px 16px;border:none;background:var(--orange);color:#fff;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;">Сохранить</button>
+    </div>
+    <div style="font-size:11px;color:var(--text-light);margin-top:12px;text-align:center;">Токен сохранится только в твоём браузере. Никуда больше не передаётся.</div>
+  </div>
+</div>
+
+<main class="page">
+  <div class="hero">
+    <div class="crumb">🌡 VOL. 02 · УРОК №4 · THE BREEZE</div>
+    <h1>Твой оффер и градусник продаж 🌡</h1>
+    <p class="lede">Твой продукт нужен не одному человеку — а четырём разным. От «мне ничего не надо» до «беру». И каждому — свои слова, свой контент, свой момент. Разберём любой твой продающий документ — оффер, портфолио, КП, презентацию — тремя разными клиентами. А потом разложим аудиторию по градуснику готовности с готовыми промптами под каждую ступень.</p>
+  </div>
+
+  <div class="meta-bar">
+    <div class="meta-item">
+      <span class="ico">⏱</span>
+      <span class="label">30 минут</span>
+      <span class="value">на оба задания</span>
+    </div>
+    <div class="meta-item">
+      <span class="ico">💻</span>
+      <span class="label">Claude</span>
+      <span class="value">веб или Desktop</span>
+    </div>
+    <div class="meta-item">
+      <span class="ico">📱</span>
+      <span class="label">Работает и</span>
+      <span class="value">с телефона</span>
+    </div>
+  </div>
+
+  <div class="callout callout-yellow">
+    <div class="callout-icon">💡</div>
+    <div class="callout-inner">
+      <strong>Клиенты никогда не находятся все сразу в состоянии «беру».</strong> Одному нужно объяснить, что у него вообще есть проблема. Второму — что решать её пора сейчас. Третьему — почему именно у тебя. Четвёртому — снять одну маленькую боязнь на кнопке «оплатить». Если ты говоришь со всеми одинаково — половина уходит мимо.
+    </div>
+  </div>
+
+  <section class="section">
+    <h2>Что понадобится</h2>
+    <ul class="clean-list">
+      <li><strong>Claude</strong> — веб (claude.ai) или Desktop. Модель <strong>Opus 5</strong> — она глубже понимает контекст.</li>
+      <li><strong>Один твой оффер</strong> — текст лендинга, описание услуги, продающий пост, презентация продукта. Что угодно, где ты сейчас рассказываешь про свой продукт.</li>
+      <li><strong>15 минут на 1-ю часть, 15 на 2-ю.</strong> Можно делать в один заход или разбить на два дня.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>🎯 Часть 1 — Разбор твоего продающего документа</h2>
+    <p>Работает <strong>для чего угодно, что продаёт тебя или твой продукт</strong>: оффер, лендинг, продающий пост, портфолио, кейсы, коммерческое предложение (КП), презентация, резюме, описание услуги на сайте, ссылка на Instagram, даже сториз. Один и тот же принцип: Claude смотрит на документ глазами трёх разных клиентов и находит дыры.</p>
+
+    <div class="callout callout-cream">
+      <div class="callout-icon">🔍</div>
+      <div class="callout-inner">
+        <strong>Ты не видишь свой документ свежим взглядом</strong> — ты помнишь всё, что хотела сказать. Клиент видит только то, что действительно сказано. Claude отыгрывает клиентов и показывает тебе, что там на самом деле читается.
+      </div>
+    </div>
+
+    <h3>Шаг 1 — Скинь документ и запусти разбор</h3>
+    <p>Открой Claude (лучше Opus 5), прикрепи файл или скрин, скопируй промпт и заполни <strong>тип документа</strong> и <strong>цель</strong> — Claude адаптируется. Промпт универсальный.</p>
+    <div class="code-block">
+      <button class="copy-btn" type="button" data-copy="prompt-avatars">Скопировать</button>
+      <pre id="prompt-avatars">Разбери мой документ глазами трёх потенциальных клиентов.
+
+ТИП ДОКУМЕНТА: [оффер / лендинг / портфолио / кейс / КП / презентация / резюме / другое]
+
+ЧТО Я ХОЧУ, ЧТОБЫ ЧЕЛОВЕК СДЕЛАЛ после прочтения:
+[запишись на консультацию / купи курс / позвони / заплати по счёту /
+позови на проект / согласуй бюджет / пригласи на встречу]
+
+КОМУ АДРЕСОВАНО (короткий портрет клиента): [1-2 предложения]
+
+Прикреплённый файл / скрин — сам документ.
+
+Теперь сыграй последовательно за трёх клиентов и дай честный разбор от лица каждого:
+
+АВАТАРКА 1 — СКЕПТИК.
+Ты не веришь ни одному обещанию. Ищешь подвох в каждой формулировке.
+· «Что она недоговаривает? Почему я должна ей верить? Где доказательства?»
+· «Кто реально стоит за этим? Есть ли у неё опыт именно в этом?»
+Что тебя оттолкнёт? Где чувствуется реклама или «продажа»?
+Что должно быть, чтобы ты поверила?
+
+АВАТАРКА 2 — ВОСТОРЖЕННАЯ / ЛЁГКАЯ НА РЕШЕНИЕ.
+Тебе нравится идея, ты уже на 60% готова сказать «да».
+Ищешь причины двигаться.
+· «Что мне ещё было бы приятно узнать? Что усилило бы желание?»
+· «Где кайф, эмоция, красота? Что делает этот выбор особенным?»
+Чего тебе не хватает, чтобы дожать до нужного действия?
+
+АВАТАРКА 3 — ТА-ЧТО-ВЗВЕШИВАЕТ.
+Аккуратная, с ресурсами, не покупает эмоцией. Считает деньги, время, риски.
+· «Точно ли это про меня? Что если не подойдёт? А сроки? А по бюджету?»
+· «Что я реально получу, а что — обещания?»
+Какие сомнения документ НЕ снимает? Что бы тебя переубедило?
+
+По каждой аватарке дай:
+· 1-2 фразы главного впечатления
+· 3 конкретных пробела именно под тип этого документа
+  (для оффера — про доверие и понятность; для КП — про сроки, стоимость,
+  обязательства; для портфолио — про доказательство, эстетику, «почему я»;
+  адаптируй под то, что прислано)
+· 1 предложение — как бы ты закрыла этот пробел
+
+В конце дай общий вывод:
+· что в документе работает сильно
+· что провисает (то, что заметили все три аватарки)
+· что переписать в первую очередь
+· 1 контрольный вопрос, ответом на который должно стать «да»
+  после прочтения документа — сейчас на него отвечается «да» или нет?</pre>
+    </div>
+
+    <h3>Шаг 2 — Обнови документ по пробелам</h3>
+    <p>Claude выдаст 3 разбора + общий вывод. Отметь <strong>2-3 самых острых пробела</strong> — обычно они повторяются у всех трёх аватарок. Дальше — второй промпт, тоже универсальный:</p>
+    <div class="code-block">
+      <button class="copy-btn" type="button" data-copy="prompt-rewrite">Скопировать</button>
+      <pre id="prompt-rewrite">Спасибо. Теперь возьми мой исходный документ и перепиши его,
+закрыв эти три пробела:
+· [ПРОБЕЛ 1]
+· [ПРОБЕЛ 2]
+· [ПРОБЕЛ 3]
+
+Сохрани мою интонацию и структуру. Не переписывай всё с нуля —
+точечно усиль там, где сейчас дыры. Покажи «было / стало» по каждому блоку,
+чтобы я видела что именно изменилось и могла точечно принять правки.
+
+В конце — короткий чек-лист (5 пунктов), по которому я смогу быстро проверить
+любой будущий документ такого же типа перед отправкой клиенту.</pre>
+    </div>
+    <p>На выходе — обновлённая версия документа с точечными правками + чек-лист, который останется с тобой навсегда. Дальше — берёшь любое своё КП / портфолио / оффер и прогоняешь по нему за 30 секунд без Claude.</p>
+
+    <h3>Какой промпт под какой документ</h3>
+    <div class="niche-grid">
+      <div class="niche-card">
+        <div class="niche-emoji">📄</div>
+        <div class="niche-title">Оффер / лендинг</div>
+        <div class="niche-text">Цель: «запишись / купи». Клиент — конечный пользователь. Ищем: понятность, доверие, эмоциональный крючок, снятие возражений.</div>
+      </div>
+      <div class="niche-card">
+        <div class="niche-emoji">🖼</div>
+        <div class="niche-title">Портфолио / кейсы</div>
+        <div class="niche-text">Цель: «пригласи на проект». Клиент — заказчик или бренд. Ищем: доказательство, «почему я», эстетику, релевантные примеры.</div>
+      </div>
+      <div class="niche-card">
+        <div class="niche-emoji">📑</div>
+        <div class="niche-title">Коммерческое предложение</div>
+        <div class="niche-text">Цель: «согласуй бюджет». Клиент — часто ЛПР или закупщик. Ищем: чёткие сроки, стоимость, обязательства, что входит, что нет.</div>
+      </div>
+      <div class="niche-card">
+        <div class="niche-emoji">📊</div>
+        <div class="niche-title">Презентация / питч</div>
+        <div class="niche-text">Цель: «пригласи на встречу / инвестируй». Клиент — партнёр или инвестор. Ищем: главную мысль первого слайда, ясность цифр, историю.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>🌡 Часть 2 — Градусник Завадского</h2>
+    <p>Есть модель, которая объясняет почему одна и та же реклама работает для одного и вообще не долетает до другого. Это <strong>4 ступени готовности клиента</strong> — от «мне не надо» до «беру». Твоя аудитория распределена по всем четырём, и с каждой ступенью надо говорить своими словами.</p>
+
+    <div class="callout callout-cream">
+      <div class="callout-icon">🌡</div>
+      <div class="callout-inner">
+        <strong>Движущая сила во всех этапах — разрыв.</strong> Между «как есть сейчас» и «как может быть, если сделать» (или «как станет хуже, если не сделать»). Ты не продаёшь продукт — ты показываешь разрыв и помогаешь его закрыть.
+      </div>
+    </div>
+
+    <h3>Четыре ступени — коротко</h3>
+    <div class="niche-grid">
+      <div class="niche-card">
+        <div class="niche-emoji">1️⃣</div>
+        <div class="niche-title">«Мне ничего не надо»</div>
+        <div class="niche-text">Реальность = ожидание. «У меня и так клиенты», «блог — для блогеров», «времени нет». Твоя задача: показать <em>невидимые потери</em> и <em>новую норму</em>.</div>
+      </div>
+      <div class="niche-card">
+        <div class="niche-emoji">2️⃣</div>
+        <div class="niche-title">«Может и надо, но не сейчас»</div>
+        <div class="niche-text">Самый большой сегмент — ~40% всей аудитории. Есть интерес, нет срочности. Твоя задача: показать <em>перспективу ухудшения</em> и <em>маленькую первую попытку</em>.</div>
+      </div>
+      <div class="niche-card">
+        <div class="niche-emoji">3️⃣</div>
+        <div class="niche-title">«Мне точно надо, но между кем выбираю»</div>
+        <div class="niche-text">Решение принято, ищет как и с кем. Смотрит конкурентов. Твоя задача: <em>сформировать критерии выбора в свою сторону</em> — сказать для кого ты, для кого не ты.</div>
+      </div>
+      <div class="niche-card">
+        <div class="niche-emoji">4️⃣</div>
+        <div class="niche-title">«Хочу, но что-то держит»</div>
+        <div class="niche-text">Готова купить, но зависла. Мелкие рациональные страхи: «а вдруг не успею? а если не подойдёт?». Твоя задача: <em>снять сомнения и дать дедлайн</em>.</div>
+      </div>
+    </div>
+
+    <h3>Шаг 1 — Разложи свою аудиторию по градуснику</h3>
+    <p>Первый промпт: Claude берёт твой продукт и раскладывает клиентов на 4 ступени с конкретными характеристиками — что говорят, что чувствуют, чего боятся.</p>
+    <div class="code-block">
+      <button class="copy-btn" type="button" data-copy="prompt-audience">Скопировать</button>
+      <pre id="prompt-audience">Разложи мою аудиторию по четырём ступеням градусника Завадского:
+1) «Мне ничего не надо»
+2) «Может и надо, но не сейчас»
+3) «Точно надо, выбираю между конкретными вариантами»
+4) «Хочу, но что-то держит»
+
+Мой продукт: [ОПИШИ ПРОДУКТ / УСЛУГУ ОДНИМ АБЗАЦЕМ]
+
+Для кого он: [АУДИТОРИЯ — 1-2 предложения]
+
+По каждой ступени дай:
+· кто эти люди (2-3 конкретных портрета)
+· что они говорят себе и другим сейчас
+· какое у них ключевое убеждение / возражение
+· какая у них скрытая боль или упущенная выгода, которую они пока не видят
+· что для них должно измениться, чтобы перейти на следующую ступень
+
+Пиши по-человечески, конкретно, без канцелярита.</pre>
+    </div>
+
+    <h3>Шаг 2 — Идеи контента и продуктов под каждую ступень</h3>
+    <p>Второй промпт — Claude даёт тебе конкретный план: какие посты, форматы и продукты работают для каждой из четырёх групп.</p>
+    <div class="code-block">
+      <button class="copy-btn" type="button" data-copy="prompt-content">Скопировать</button>
+      <pre id="prompt-content">Отлично, картина по аудитории есть. Теперь для каждой из четырёх ступеней дай:
+
+1. КОНТЕНТ — 5 конкретных идей постов / рилс / карточек, которые сдвинут человека
+   с этой ступени на следующую. С заголовками и одной строкой сути.
+
+2. АРГУМЕНТ — какая ключевая мысль должна звучать в каждом посте на этой ступени
+   (для «мне не надо» это будет одно, для «выбираю» — совсем другое).
+
+3. ПРОДУКТ — какой формат продукта подходит: бесплатный лид-магнит, недорогой
+   пробник (трипваер), основной продукт, VIP. Что и когда предлагать.
+
+4. ЗАПРЕЩЁННЫЕ ХОДЫ — что НЕ работает на этой ступени и почему.
+   (Пример: на «мне не надо» бесполезно сравнивать себя с конкурентами.)
+
+Соберми это в таблицу с четырьмя колонками — по одной на каждую ступень.</pre>
+    </div>
+    <p>На выходе — практически готовый контент-план и понимание, что предлагать кому и когда.</p>
+
+    <h3>Шаг 3 — Готовые фразы для личных продаж</h3>
+    <p>Отдельно — короткий промпт для продажи в переписке / на консультации. Не заученные скрипты, а рамка, в которой продажа идёт естественно.</p>
+    <div class="code-block">
+      <button class="copy-btn" type="button" data-copy="prompt-sales">Скопировать</button>
+      <pre id="prompt-sales">Дай мне рамку продажи для личной консультации / переписки с клиентом,
+где я НЕ продаю всем подряд, а помогаю человеку самому понять, надо ли ему.
+
+Структура ответа:
+· Как открыть разговор — 2-3 варианта первой фразы, которые сразу
+  задают тон «я помогаю тебе решить, надо оно или нет»
+· 3 вопроса, которые я задам клиенту, чтобы понять его ступень готовности
+· Формулировка «мой продукт подойдёт вам, если...» с 3 маркерами
+· Формулировка «мой продукт НЕ подойдёт вам, если...» с 2 маркерами
+  (это важно — так я показываю, что не втюхиваю)
+· 2 фразы для того, чтобы аккуратно вернуться к клиенту, который замолчал
+  (не «оплати наконец», а по-человечески: «правильно понимаю, что интерес
+  пропал? или просто закрутилась?»)
+
+Мой продукт: [ОПИСАНИЕ]</pre>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Как это выглядит на живых примерах</h2>
+    <p>Одна и та же услуга — а речь на каждой ступени совсем разная.</p>
+    <div class="niche-grid">
+      <div class="niche-card">
+        <div class="niche-emoji">💆</div>
+        <div class="niche-title">Психолог</div>
+        <div class="niche-text"><strong>1.</strong> «Что если тревога — не характер, а решаемая штука?»<br><strong>2.</strong> «10 минут в неделю сейчас против 3 лет проб позже»<br><strong>3.</strong> «Я работаю с матерями 30-45 в декрете. Не работаю с зависимостями»<br><strong>4.</strong> «Первая сессия — 30 минут, если не подходим — не берём вторую»</div>
+      </div>
+      <div class="niche-card">
+        <div class="niche-emoji">🥗</div>
+        <div class="niche-title">Нутрициолог</div>
+        <div class="niche-text"><strong>1.</strong> «Усталость к вечеру — не возраст, а дефицит»<br><strong>2.</strong> «Сначала 2 недели пробника — потом решаешь программу»<br><strong>3.</strong> «Я — про мягкий формат. Не про жёсткие диеты и подсчёт грамм»<br><strong>4.</strong> «Программа с рассрочкой на 3 месяца, старт в понедельник»</div>
+      </div>
+      <div class="niche-card">
+        <div class="niche-emoji">🎓</div>
+        <div class="niche-title">Репетитор</div>
+        <div class="niche-text"><strong>1.</strong> «Оценка не решает — решает уверенность отвечать у доски»<br><strong>2.</strong> «Один пробный урок бесплатно, посмотришь как идёт»<br><strong>3.</strong> «Я работаю с 5-8 классом, не готовлю к ЕГЭ»<br><strong>4.</strong> «Пропустил урок — переносим бесплатно, до 3 раз в семестр»</div>
+      </div>
+      <div class="niche-card">
+        <div class="niche-emoji">💍</div>
+        <div class="niche-title">Ювелирный шоурум</div>
+        <div class="niche-text"><strong>1.</strong> «Как выбирать украшение, которое не устареет через год»<br><strong>2.</strong> «Заказ можно посмотреть офлайн в шоуруме, не покупая»<br><strong>3.</strong> «Мы — про минимализм и повседневность, не про свадебное»<br><strong>4.</strong> «Первое кольцо примерить бесплатно, доставка курьером»</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>📬 Что прислать в чат клуба</h2>
+    <p><strong>По части 1 (разбор документа):</strong></p>
+    <ul class="clean-list">
+      <li>📄 <strong>Что разбирала</strong> — оффер / портфолио / КП / что-то другое</li>
+      <li>📸 <strong>Скрин разбора</strong> — что Claude показал по трём аватаркам</li>
+      <li>✂️ <strong>1 главный пробел</strong>, который ты нашла</li>
+      <li>✏️ <strong>Одна строка</strong> — что переписала после разбора</li>
+    </ul>
+    <p><strong>По части 2 (градусник):</strong></p>
+    <ul class="clean-list">
+      <li>📊 <strong>Скрин таблицы</strong> — как Claude разложил твою аудиторию и контент по ступеням</li>
+      <li>💡 <strong>Один инсайт</strong> — что нового поняла про свою аудиторию</li>
+      <li>📝 <strong>Одна идея поста</strong>, которую ты возьмёшь и сделаешь на этой неделе</li>
+    </ul>
+    <p>Хештег <strong>#серфим</strong> в посте / комменте.</p>
+  </section>
+
+  <div class="deadline-row">
+    <div class="deadline-cell">
+      <span class="deadline-ico">📅</span>
+      <div class="deadline-content">
+        <div class="deadline-label">Дедлайн</div>
+        <div class="deadline-value">пт · 28.08</div>
+        <div class="deadline-time">до 23:59 МСК</div>
+      </div>
+    </div>
+    <div class="deadline-cell">
+      <span class="deadline-ico">🌊</span>
+      <div class="deadline-content">
+        <div class="deadline-label">За задание</div>
+        <div class="deadline-value">+3 вайба</div>
+        <div class="deadline-time">две части или одна</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2>🌊 Серферам на заметку</h2>
+    <ul class="clean-list">
+      <li><strong>Не продавай всем.</strong> Продавай только тем, кому подходит. И явно говори, кому НЕ подходит. Это не отталкивает — это вызывает доверие.</li>
+      <li><strong>40% твоей аудитории — на 1-2 ступенях.</strong> Если весь контент про «купи сейчас» — ты работаешь только с 10%. Остальные 90% просто не про это.</li>
+      <li><strong>Клиент замолчал — не забывай.</strong> «Правильно понимаю, что интерес пропал? Или просто закрутилась?» — короткая фраза возвращает больше людей, чем скидка.</li>
+      <li><strong>Дедлайн — не манипуляция.</strong> Это подарок клиенту с ступени 4, чтобы он перестал бесконечно думать. «Скажи, сколько тебе нужно времени на решение? Я вернусь и уточню».</li>
+      <li><strong>Один контент = одна ступень.</strong> Не пытайся в одном посте зацепить и «мне не надо», и «покупаю». Разные аудитории, разные слова, разные посты.</li>
+      <li><strong>Готовый Project в Claude.</strong> Загрузи туда файлы про градусник, свой оффер, свой контент — и получишь личного помощника по продажам, который помнит контекст.</li>
+    </ul>
+  </section>
+
+  <p class="signoff">с любовью, Настя ✦</p>
+</main>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var block = btn.parentElement.cloneNode(true);
+      var clone = block.querySelector('.copy-btn');
+      if (clone) clone.remove();
+      var text = block.textContent.trim();
+      var done = function() {
+        btn.textContent = '✓ Скопировано';
+        btn.classList.add('copied');
+        setTimeout(function() { btn.textContent = '📋 Скопировать'; btn.classList.remove('copied'); }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else { fallback(); }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta); done();
+      }
+    });
+  });
+
+  var editToggle = document.getElementById('editToggle');
+  var imgBtn = document.getElementById('imgInsert');
+  var publishBtn = document.getElementById('publishBtn');
+  var downloadBtn = document.getElementById('downloadHtml');
+  var fileInput = document.getElementById('imgFile');
+  var mainEl = document.querySelector('main');
+
+  var linkBtn = document.getElementById('linkBtn');
+
+  function setEditMode(on) {
+    if (on) {
+      document.body.classList.add('editing');
+      mainEl.setAttribute('contenteditable', 'true');
+      editToggle.classList.add('active');
+      editToggle.textContent = '✓ Редактирую';
+      linkBtn.style.display = 'inline-block';
+      imgBtn.style.display = 'inline-block';
+      publishBtn.style.display = 'inline-block';
+      downloadBtn.style.display = 'inline-block';
+    } else {
+      document.body.classList.remove('editing');
+      mainEl.removeAttribute('contenteditable');
+      editToggle.classList.remove('active');
+      editToggle.textContent = '✏️ Редактировать';
+      linkBtn.style.display = 'none';
+      imgBtn.style.display = 'none';
+      publishBtn.style.display = 'none';
+      downloadBtn.style.display = 'none';
+      document.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+    }
+  }
+  editToggle.addEventListener('click', function() { setEditMode(!document.body.classList.contains('editing')); });
+
+  // === Ссылка ===
+  function makeLink() {
+    if (!document.body.classList.contains('editing')) {
+      setEditMode(true);
+      alert('Сначала выдели фразу, которую хочешь превратить в ссылку.');
+      return;
+    }
+    var sel = window.getSelection();
+    if (!sel.rangeCount) { alert('Сначала выдели текст.'); return; }
+    var range = sel.getRangeAt(0);
+    // Найти существующую ссылку под выделением
+    var node = sel.anchorNode;
+    var existingLink = null;
+    while (node && node !== mainEl) {
+      if (node.nodeType === 1 && node.tagName === 'A') { existingLink = node; break; }
+      node = node.parentNode;
+    }
+    var currentUrl = existingLink ? existingLink.getAttribute('href') : '';
+    if (sel.isCollapsed && !existingLink) {
+      alert('Выдели фразу, которую хочешь сделать ссылкой.');
+      return;
+    }
+    var url = prompt(existingLink ? 'Изменить URL (пусто = убрать ссылку):' : 'Куда ведёт ссылка?', currentUrl || 'https://');
+    if (url === null) return;
+    url = url.trim();
+    if (!url) {
+      // Убрать ссылку
+      if (existingLink) {
+        var textNode = document.createTextNode(existingLink.textContent);
+        existingLink.parentNode.replaceChild(textNode, existingLink);
+      }
+      return;
+    }
+    if (!/^(https?:\/\/|mailto:|tel:|#|\/)/i.test(url)) {
+      url = 'https://' + url;
+    }
+    if (existingLink) {
+      existingLink.setAttribute('href', url);
+      existingLink.setAttribute('target', '_blank');
+      existingLink.setAttribute('rel', 'noopener');
+    } else {
+      // Обернуть выделенное в <a>
+      var a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      try {
+        a.appendChild(range.extractContents());
+        range.insertNode(a);
+        // Снять выделение и поставить курсор после ссылки
+        sel.removeAllRanges();
+        var r2 = document.createRange();
+        r2.setStartAfter(a);
+        r2.collapse(true);
+        sel.addRange(r2);
+      } catch (e) {
+        // fallback
+        try { document.execCommand('createLink', false, url); } catch(_){}
+      }
+    }
+  }
+  linkBtn.addEventListener('click', makeLink);
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k' && document.body.classList.contains('editing')) {
+      e.preventDefault();
+      makeLink();
+    }
+  });
+
+  function readImageAsDataUrl(file, cb) { var reader = new FileReader(); reader.onload = function() { cb(reader.result); }; reader.readAsDataURL(file); }
+
+  function buildImageHTML(src, initWidth) {
+    var w = initWidth || 40;
+    return '<span class="resizable-image" contenteditable="false" style="width:' + w + '%">' +
+      '<img src="' + src + '" alt="">' +
+      '<span class="drag-handle" contenteditable="false" title="Потяни, чтобы изменить размер"></span>' +
+      '<span class="image-toolbar" contenteditable="false">' +
+        '<button type="button" data-action="shrink" title="Уменьшить (клавиша −)">−</button>' +
+        '<input type="range" min="10" max="100" step="1" value="' + w + '" class="w-slider">' +
+        '<button type="button" data-action="grow" title="Увеличить (клавиша +)">+</button>' +
+        '<span class="w-label">' + w + '%</span>' +
+        '<span class="sep"></span>' +
+        '<button type="button" class="del" data-action="delete" title="Удалить">✕</button>' +
+      '</span>' +
+    '</span>';
+  }
+
+  function insertImageHTML(html) {
+    if (!document.body.classList.contains('editing')) setEditMode(true);
+    mainEl.focus();
+    var sel = window.getSelection();
+    var inserted = false;
+    if (sel.rangeCount > 0 && mainEl.contains(sel.anchorNode)) {
+      try { document.execCommand('insertHTML', false, html); inserted = true; } catch (e) {}
+    }
+    if (!inserted) { var div = document.createElement('div'); div.innerHTML = html; mainEl.appendChild(div.firstChild); }
+    bindAllImages();
+  }
+
+  imgBtn.addEventListener('click', function() { fileInput.click(); });
+  fileInput.addEventListener('change', function() {
+    var files = Array.from(this.files || []);
+    files.forEach(function(file) {
+      if (file.type.indexOf('image/') !== 0) return;
+      readImageAsDataUrl(file, function(dataUrl) { insertImageHTML(buildImageHTML(dataUrl)); });
+    });
+    this.value = '';
+  });
+
+  function bindImage(wrap) {
+    if (wrap.dataset.bound) return;
+    wrap.dataset.bound = '1';
+    wrap.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (!document.body.classList.contains('editing')) return;
+      document.querySelectorAll('.resizable-image.selected').forEach(function(s) { if (s !== wrap) s.classList.remove('selected'); });
+      wrap.classList.add('selected');
+    });
+    var toolbar = wrap.querySelector('.image-toolbar');
+    if (toolbar) {
+      toolbar.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+      function setWidth(pct) {
+        pct = Math.max(10, Math.min(100, pct));
+        wrap.style.width = pct + '%';
+        wrap.style.height = 'auto';
+        var sl = toolbar.querySelector('.w-slider');
+        var lb = toolbar.querySelector('.w-label');
+        if (sl) sl.value = pct;
+        if (lb) lb.textContent = pct + '%';
+      }
+      toolbar.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var btn = e.target.closest('button');
+        if (!btn) return;
+        var act = btn.dataset.action;
+        if (act === 'delete') { if (confirm('Удалить картинку?')) wrap.remove(); }
+        else if (act === 'shrink') { setWidth(parseInt(wrap.style.width) - 10); }
+        else if (act === 'grow')   { setWidth(parseInt(wrap.style.width) + 10); }
+      });
+      var slider = toolbar.querySelector('.w-slider');
+      var label = toolbar.querySelector('.w-label');
+      if (slider && label) {
+        slider.addEventListener('input', function(e) {
+          e.stopPropagation();
+          var v = slider.value;
+          wrap.style.width = v + '%';
+          wrap.style.height = 'auto';
+          label.textContent = v + '%';
+        });
+        slider.addEventListener('click', function(e) { e.stopPropagation(); });
+      }
+    }
+    // Оранжевая ручка в углу — перетаскивание меняет ширину
+    var handle = wrap.querySelector('.drag-handle');
+    // Если старый draft без ручки — добавим её на лету
+    if (!handle) {
+      handle = document.createElement('span');
+      handle.className = 'drag-handle';
+      handle.setAttribute('contenteditable', 'false');
+      handle.title = 'Потяни, чтобы изменить размер';
+      wrap.appendChild(handle);
+    }
+    handle.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var startX = e.clientX;
+      var parent = wrap.parentElement;
+      var parentW = parent ? parent.getBoundingClientRect().width : 700;
+      var startW = wrap.getBoundingClientRect().width;
+      function onMove(ev) {
+        var dx = ev.clientX - startX;
+        var newW = Math.max(80, startW + dx);
+        var pct = Math.round((newW / parentW) * 100);
+        pct = Math.max(10, Math.min(100, pct));
+        wrap.style.width = pct + '%';
+        wrap.style.height = 'auto';
+        var sl = wrap.querySelector('.w-slider');
+        var lb = wrap.querySelector('.w-label');
+        if (sl) sl.value = pct;
+        if (lb) lb.textContent = pct + '%';
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  }
+  function bindAllImages() { document.querySelectorAll('.resizable-image').forEach(bindImage); }
+  bindAllImages();
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.resizable-image')) return;
+    document.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+  });
+  // Клавиатура: [/] или +/- меняют размер выделенной картинки
+  document.addEventListener('keydown', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    var sel = document.querySelector('.resizable-image.selected');
+    if (!sel) return;
+    var k = e.key;
+    var delta = 0;
+    if (k === '[' || k === '-' || k === '_') delta = -5;
+    else if (k === ']' || k === '=' || k === '+') delta = 5;
+    else return;
+    e.preventDefault();
+    var cur = parseInt(sel.style.width) || 40;
+    var next = Math.max(10, Math.min(100, cur + delta));
+    sel.style.width = next + '%';
+    sel.style.height = 'auto';
+    var sl = sel.querySelector('.w-slider');
+    var lb = sel.querySelector('.w-label');
+    if (sl) sl.value = next;
+    if (lb) lb.textContent = next + '%';
+  });
+
+  window.addEventListener('dragover', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    if (e.dataTransfer && Array.from(e.dataTransfer.types || []).indexOf('Files') !== -1) {
+      e.preventDefault();
+      document.body.classList.add('dragging-image');
+    }
+  });
+  window.addEventListener('dragleave', function(e) {
+    if (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+      document.body.classList.remove('dragging-image');
+    }
+  });
+  window.addEventListener('drop', function(e) {
+    if (!document.body.classList.contains('editing')) return;
+    document.body.classList.remove('dragging-image');
+    if (!e.dataTransfer) return;
+    var files = Array.from(e.dataTransfer.files || []).filter(function(f) { return f.type.indexOf('image/') === 0; });
+    if (!files.length) return;
+    e.preventDefault();
+    var range = null;
+    if (document.caretRangeFromPoint) { range = document.caretRangeFromPoint(e.clientX, e.clientY); }
+    else if (document.caretPositionFromPoint) {
+      var pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+      if (pos) { range = document.createRange(); range.setStart(pos.offsetNode, pos.offset); range.collapse(true); }
+    }
+    if (range && mainEl.contains(range.startContainer)) { var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range); }
+    files.forEach(function(file) { readImageAsDataUrl(file, function(dataUrl) { insertImageHTML(buildImageHTML(dataUrl)); }); });
+  });
+
+  // Build clean HTML for save/publish
+  function buildCleanHTML() {
+    var copy = document.documentElement.cloneNode(true);
+    copy.querySelector('main')?.removeAttribute('contenteditable');
+    var b = copy.querySelector('body');
+    if (b) { b.classList.remove('editing'); b.classList.remove('dragging-image'); }
+    copy.querySelectorAll('.resizable-image.selected').forEach(function(s) { s.classList.remove('selected'); });
+    copy.querySelectorAll('.resizable-image').forEach(function(s) { s.removeAttribute('data-bound'); });
+    var et = copy.querySelector('#editToggle');
+    if (et) { et.classList.remove('active'); et.textContent = '✏️ Редактировать'; }
+    var ib = copy.querySelector('#imgInsert'); if (ib) ib.style.display = 'none';
+    var pb = copy.querySelector('#publishBtn'); if (pb) pb.style.display = 'none';
+    var db = copy.querySelector('#downloadHtml'); if (db) db.style.display = 'none';
+    var pm = copy.querySelector('#publishModal'); if (pm) pm.style.display = 'none';
+    return '<!DOCTYPE html>\n' + copy.outerHTML;
+  }
+
+  downloadBtn.addEventListener('click', function() {
+    var html = buildCleanHTML();
+    var blob = new Blob([html], { type: 'text/html' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'cowork-index.html';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  });
+
+  // === Прямая публикация на GitHub ===
+  var GH_OWNER = 'anastasiaege2018-cmyk';
+  var GH_REPO  = 'astakhovaandrobots';
+  var GH_PATH  = 'vol-2/sales/index.html';
+  var GH_BRANCH = 'main';
+  var GH_TOKEN_KEY = 'gh_pat_breeze';
+
+  var publishModal = document.getElementById('publishModal');
+  var tokenInput = document.getElementById('tokenInput');
+  var tokenSave = document.getElementById('tokenSave');
+  var tokenCancel = document.getElementById('tokenCancel');
+  var pendingPublish = false;
+
+  function showModal() { publishModal.style.display = 'flex'; setTimeout(function(){ tokenInput.focus(); }, 50); }
+  function hideModal() { publishModal.style.display = 'none'; tokenInput.value = ''; pendingPublish = false; }
+
+  tokenCancel.addEventListener('click', hideModal);
+  tokenSave.addEventListener('click', function() {
+    var val = (tokenInput.value || '').trim();
+    if (!val) { alert('Вставь токен'); return; }
+    localStorage.setItem(GH_TOKEN_KEY, val);
+    hideModal();
+    if (pendingPublish) publish();
+  });
+  publishModal.addEventListener('click', function(e) { if (e.target === publishModal) hideModal(); });
+
+  async function publish() {
+    var token = localStorage.getItem(GH_TOKEN_KEY);
+    if (!token) { pendingPublish = true; showModal(); return; }
+
+    var origText = publishBtn.textContent;
+    publishBtn.textContent = '⏳ Публикую…';
+    publishBtn.disabled = true;
+
+    try {
+      // 1) Получаем текущий SHA файла
+      var getUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PATH + '?ref=' + GH_BRANCH;
+      var getRes = await fetch(getUrl, {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+      });
+      if (getRes.status === 401) {
+        localStorage.removeItem(GH_TOKEN_KEY);
+        publishBtn.textContent = origText;
+        publishBtn.disabled = false;
+        alert('Токен не работает. Настроим заново.');
+        pendingPublish = true; showModal(); return;
+      }
+      if (!getRes.ok) throw new Error('GET ' + getRes.status);
+      var current = await getRes.json();
+
+      // 2) Собираем очищенный HTML и кодируем в base64 (с поддержкой Unicode)
+      var html = buildCleanHTML();
+      var content = btoa(unescape(encodeURIComponent(html)));
+
+      // 3) PUT — коммитим
+      var now = new Date();
+      var stamp = now.toISOString().replace('T',' ').slice(0,16);
+      var putRes = await fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PATH, {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: 'edit from browser · ' + stamp,
+          content: content,
+          sha: current.sha,
+          branch: GH_BRANCH
+        })
+      });
+      if (!putRes.ok) {
+        var err = await putRes.json().catch(function(){ return {}; });
+        throw new Error(err.message || ('PUT ' + putRes.status));
+      }
+
+      publishBtn.textContent = '✓ Опубликовано';
+      setTimeout(function() { publishBtn.textContent = '🚀 Опубликовать'; publishBtn.disabled = false; }, 3000);
+      // Стираем localStorage-бэкап, раз всё улетело в git
+      try { localStorage.removeItem('draft_' + GH_PATH); } catch(e) {}
+    } catch (e) {
+      publishBtn.textContent = origText;
+      publishBtn.disabled = false;
+      alert('Ошибка публикации: ' + e.message + '\n\nПопробуй ещё раз или скачай файл кнопкой 💾');
+    }
+  }
+
+  publishBtn.addEventListener('click', publish);
+
+  // === Автосохранение в браузер (на всякий случай) ===
+  var DRAFT_KEY = 'draft_' + GH_PATH;
+  var lastSaved = '';
+  function autosave() {
+    if (!document.body.classList.contains('editing')) return;
+    try {
+      var html = mainEl.innerHTML;
+      if (html !== lastSaved) {
+        localStorage.setItem(DRAFT_KEY, html);
+        lastSaved = html;
+      }
+    } catch(e) {}
+  }
+  setInterval(autosave, 5000);
+
+  // При загрузке — если есть черновик, предложить восстановить (только в режиме редактора)
+  try {
+    var isEditor = new URLSearchParams(location.search).get('edit') === '1';
+    if (isEditor) {
+      var draft = localStorage.getItem(DRAFT_KEY);
+      if (draft && draft.length > 500 && draft !== mainEl.innerHTML) {
+        setTimeout(function() {
+          if (confirm('Найден несохранённый черновик. Восстановить?')) {
+            setEditMode(true);
+            mainEl.innerHTML = draft;
+            bindAllImages();
+          } else {
+            localStorage.removeItem(DRAFT_KEY);
+          }
+        }, 500);
+      }
+    }
+  } catch(e) {}
+</script>
+
+
+
+</body></html>
