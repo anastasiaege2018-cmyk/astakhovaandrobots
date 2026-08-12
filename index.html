@@ -768,6 +768,103 @@
     font-style: normal;
   }
 
+  
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+
+  .case-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px 36px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(31, 58, 82, 0.06);
+    border: 1px solid rgba(26,26,26,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .case-card:nth-child(4n+1) { background: var(--sand); }
+  .case-card:nth-child(4n+2) { background: var(--turquoise-soft); }
+  .case-card:nth-child(4n+3) { background: #fff; }
+  .case-card:nth-child(4n+4) { background: var(--yellow-bright); }
+
+  .case-time {
+    align-self: flex-start;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+    background: rgba(255,255,255,0.55);
+    padding: 6px 12px;
+    border-radius: 100px;
+  }
+
+  .case-card:nth-child(4n+3) .case-time {
+    background: var(--paper);
+  }
+
+  .case-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--sea-deep);
+    margin: 0;
+  }
+
+  .case-role {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: rgba(26,26,26,0.65);
+    margin-top: -4px;
+  }
+
+  .case-goal {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--sea-deep);
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.45);
+    border-left: 3px solid var(--orange);
+    border-radius: 4px;
+    margin: 4px 0;
+  }
+
+  .case-card:nth-child(4n+3) .case-goal {
+    background: var(--paper);
+  }
+
+  .case-result-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--orange);
+    margin-top: 4px;
+  }
+
+  .case-result {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .cases-grid { grid-template-columns: 1fr; gap: 20px; }
+    .case-card { padding: 28px 24px; }
+    .case-card h3 { font-size: 26px; }
+    .case-goal { font-size: 16px; padding: 14px 16px; }
+  }
+
   /* ───────── STORY (журнальная статья) ───────── */
   .story {
     background: var(--paper);
@@ -1434,13 +1531,48 @@
     <div class="reviews-header reveal">
       <h2>Что говорят те,<br>кто уже <em>сёрфит</em></h2>
       <p class="reviews-sub">
-        <strong>Отзывы — с челленджей по AI</strong>, которые я проводила, и от людей, кому помогала внедрять AI в работу и жизнь.
+        <strong>Реальные кейсы</strong> участников клуба — что они пришли решать и что успели за 2 месяца.
       </p>
     </div>
 
-    <div class="reviews-placeholder reveal">
-      Здесь будут отзывы<br>
-      <span>скоро добавим</span>
+    <div class="cases-grid reveal-stagger">
+
+      <article class="case-card">
+        <div class="case-time">2 месяца в клубе</div>
+        <h3>Анастасия</h3>
+        <div class="case-role">Ищет новую работу и переезд</div>
+        <blockquote class="case-goal">«Хочу сменить работу и переехать в Дубай, автоматизировать поиск и научиться делать что-то своё — хотя я не технарь»</blockquote>
+        <div class="case-result-label">Что получилось</div>
+        <p class="case-result">Собрала бота для случайных встреч, настроила AI-агента для LinkedIn с автоматизацией, готовится к конференции в Дубае — генерирует контент через AI.</p>
+      </article>
+
+      <article class="case-card">
+        <div class="case-time">2 месяца в клубе</div>
+        <h3>Светлана</h3>
+        <div class="case-role">Специалист, ищет применение AI в работе</div>
+        <blockquote class="case-goal">«Хочу просто разобраться, как применить AI в работе — без сложностей»</blockquote>
+        <div class="case-result-label">Что получилось</div>
+        <p class="case-result">Внедрила AI в рабочие процессы, собрала помощника по тендерам, получила новое предложение — просто рассказав, как использует AI в работе.</p>
+      </article>
+
+      <article class="case-card">
+        <div class="case-time">2 месяца в клубе</div>
+        <h3>Майя</h3>
+        <div class="case-role">Wellness-индустрия</div>
+        <blockquote class="case-goal">«Упаковывать бизнес-материалы быстрее и качественнее, без дизайнера»</blockquote>
+        <div class="case-result-label">Что получилось</div>
+        <p class="case-result">Автоматизирует создание презентаций, делает аналитику через AI, готовит контент для соцсетей, планирует собрать свой сайт.</p>
+      </article>
+
+      <article class="case-card">
+        <div class="case-time">2 месяца в клубе</div>
+        <h3>Альбина</h3>
+        <div class="case-role">Управляющая караоке-клубом</div>
+        <blockquote class="case-goal">«Применить AI в офлайн-бизнесе — снять рутину со звонков и аналитики»</blockquote>
+        <div class="case-result-label">Что получилось</div>
+        <p class="case-result">Собрала AI-помощника, который обрабатывает входящие звонки и анализирует данные по клубу.</p>
+      </article>
+
     </div>
   </div>
 </section>
