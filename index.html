@@ -417,10 +417,28 @@
 
   .feature:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
 
-  .feature.f1 { grid-column: span 7; min-height: 320px; background: var(--orange); color: var(--paper); }
-  .feature.f2 { grid-column: span 5; min-height: 320px; background: var(--turquoise); color: var(--paper); }
-  .feature.f3 { grid-column: span 12; min-height: 280px; background: var(--sand); color: var(--ink); padding-right: 180px; }
-  .feature.f4 { grid-column: span 7; min-height: 280px; background: var(--yellow-bright); color: var(--ink); }
+  .feature.f1 { grid-column: span 7; min-height: 300px; background: var(--orange); color: var(--paper); }
+  .feature.f2 { grid-column: span 5; min-height: 300px; background: var(--turquoise); color: var(--paper); }
+  .feature.f3 { grid-column: span 5; min-height: 260px; background: var(--sand); color: var(--ink); }
+  .feature.f4 { grid-column: span 7; min-height: 260px; background: var(--yellow-bright); color: var(--ink); }
+  .feature.f5 { grid-column: span 4; min-height: 260px; background: var(--turquoise-soft); color: var(--ink); }
+  .feature.f6 { grid-column: span 8; min-height: 260px; background: var(--sea-deep); color: var(--paper); }
+  .feature.f7 { grid-column: span 12; min-height: 220px; background: var(--orange); color: var(--paper); }
+
+  .inside-track-label {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--yellow-bright);
+    margin: 56px 0 20px;
+    letter-spacing: 0.02em;
+  }
+  .inside-track-label:first-of-type { margin-top: 0; }
+  .inside-track-label .dash { color: rgba(240,220,42,0.5); margin-right: 12px; }
+
+  .feature.f6 .feature-num,
+  .feature.f7 .feature-num { color: rgba(245,237,228,0.6); }
 
   .feature-num { font-family: 'Fraunces', serif; font-style: italic; font-size: 14px; opacity: 0.6; margin-bottom: 24px; }
 
@@ -1148,8 +1166,8 @@
 
     .inside-header, .reviews-header { grid-template-columns: 1fr; gap: 32px; }
     .inside-grid { grid-template-columns: 1fr; }
-    .feature.f3 { padding-right: 32px; }
-    .feature.f1, .feature.f2, .feature.f3, .feature.f4 { grid-column: 1 / -1; }
+    .feature.f1, .feature.f2, .feature.f3, .feature.f4, .feature.f5, .feature.f6, .feature.f7 { grid-column: 1 / -1; }
+    .inside-track-label { font-size: 16px; margin-top: 32px; }
     .feature { padding: 32px 24px; min-height: 240px !important; }
     .feature h3 { font-size: 28px; }
     .feature .freq { font-size: 36px; right: 20px; bottom: 20px; }
@@ -1346,30 +1364,64 @@
       <h2>Не курс.<br><span class="yellow">Среда.</span></h2>
     </div>
     <div class="inside-sub">
-      Каждую неделю — новый инструмент, который вы внедряете прямо сейчас. Не «когда-нибудь потом», а в этот же день.
+      Всё, чтобы AI начал работать на ваш рост уже сегодня. Отдельная база — для новичков; для опытных — эфиры, разборы и deep dive каждую неделю.
     </div>
   </div>
+
+  <div class="inside-track-label reveal"><span class="dash">—</span>для новичков</div>
 
   <div class="inside-grid reveal-stagger">
     <div class="feature f1">
       <div class="feature-num">— 01</div>
-      <h3>Новое <em>задание</em> каждую неделю</h3>
-      <p>Чередуем задания для новичков и для продвинутых — чтобы результат получил каждый, на своём уровне.</p>
-      <div class="freq">1×/нед</div>
+      <h3><em>3 урока</em> в записи по базе</h3>
+      <p>Как установить и оплатить, чем отличается Chat от Cowork, что такое Skills и Plugins. Смотрите в любое время — сразу на входе.</p>
+      <div class="freq">база</div>
     </div>
 
     <div class="feature f2">
       <div class="feature-num">— 02</div>
-      <h3>Живой <em>созвон</em> каждую неделю</h3>
+      <h3><em>Welcome-эфир</em> для новичков</h3>
+      <p>Знакомство с клубом и с участниками, отвечаю на первые вопросы, помогаю выбрать, с чего начать именно вам.</p>
+      <div class="freq">1×/мес</div>
+    </div>
+  </div>
+
+  <div class="inside-track-label reveal"><span class="dash">—</span>для опытных · основной поток</div>
+
+  <div class="inside-grid reveal-stagger">
+    <div class="feature f3">
+      <div class="feature-num">— 03</div>
+      <h3><em>Живой эфир</em> раз в неделю</h3>
       <p>Разбираем вопросы на ваших примерах, вайбкодим вместе и доводим до результата.</p>
       <div class="freq">1×/нед</div>
     </div>
 
-    <div class="feature f3">
-      <div class="feature-num">— 03</div>
-      <h3>Посты с <em>промптами</em> и обзорами</h3>
-      <p>Полезные промпты и обзоры сервисов — раз в неделю. Конкретный инструмент под конкретную задачу.</p>
+    <div class="feature f4">
+      <div class="feature-num">— 04</div>
+      <h3><em>Урок</em> с инструментом</h3>
+      <p>Каждую неделю — новый AI-инструмент под жизнь и работу. Конкретный промпт, конкретный сервис, конкретный результат.</p>
       <div class="freq">1×/нед</div>
+    </div>
+
+    <div class="feature f5">
+      <div class="feature-num">— 05</div>
+      <h3><em>Полезный пост</em></h3>
+      <p>Обзоры сервисов и промпты — то, что даёт результат, коротко и по делу.</p>
+      <div class="freq">1×/нед</div>
+    </div>
+
+    <div class="feature f6">
+      <div class="feature-num">— 06</div>
+      <h3><em>Deep dive</em> от Артёма</h3>
+      <p>Раз в неделю — пост или эфир от Артёма. Промптинг, аналитика, продвижение (SEO), вайбкодинг. Глубже, чем в основном потоке.</p>
+      <div class="freq">1×/нед</div>
+    </div>
+
+    <div class="feature f7">
+      <div class="feature-num">— 07</div>
+      <h3><em>Эфир-распаковка</em></h3>
+      <p>Раз в месяц собираемся вместе — распаковываем идеи друг об друга, разгоняем, делимся находками и придумываем свои решения.</p>
+      <div class="freq">1×/мес</div>
     </div>
   </div>
 </section>
